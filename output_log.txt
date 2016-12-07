@@ -1,2 +1,0 @@
-There should be 'client_Data'
-folder next to the executable
