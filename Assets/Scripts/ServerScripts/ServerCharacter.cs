@@ -2,8 +2,9 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class ServerCharacter : ServerObject {
+	public class ServerCharacter : StardaciousObject {
 		private const float posSyncTime = 0.03f;
+
 		private int networkId = -1;
 		public int NetworkId{
 			get{return networkId;}
@@ -25,16 +26,22 @@ namespace ServerSide{
 
 		public void StartSendPos(){
 			msgHeader = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
-			msgBody = new MsgSegment();
+			msgBody = new MsgSegment(new Vector3());
 			StartCoroutine(SendPosRoutine());
 		}
 
 		private IEnumerator SendPosRoutine(){
-			while(true){
+			while(true){				
 				msgBody.SetContent(transform.position);
 				Network_Server.BroadCast(new NetworkMessage(msgHeader, msgBody));
 
 				yield return new WaitForSeconds(posSyncTime);
+			}
+		}
+
+		public override void OnRecvMsg (MsgSegment[] bodies){
+			if(bodies[0].Equals(MsgSegment.AttrPos)){
+				transform.position = bodies[0].ConvertToV3();
 			}
 		}
 	}

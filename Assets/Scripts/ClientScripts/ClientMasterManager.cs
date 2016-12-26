@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//클라이언트 시작부
 public class ClientMasterManager : MonoBehaviour {
 	public static ClientMasterManager instance;
 
 	public NetworkCharacterManager netChManager;
-
-	public bool asdf = false;
 
 	void Awake(){
 		instance = this;
@@ -28,7 +27,8 @@ public class ClientMasterManager : MonoBehaviour {
 		CharacterController.instance = pCharacter.AddComponent<CharacterController>();
 		CharacterController.instance.Initialize();
 		CharacterController.instance.StartSendPos();
+		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterController.instance.transform);
 
-		asdf = true;
+
 	}
 }

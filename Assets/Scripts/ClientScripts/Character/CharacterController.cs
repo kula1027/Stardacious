@@ -9,7 +9,7 @@ public class CharacterController : MonoBehaviour {
 	private const float posSyncTime = 0.03f;
 
 	public void Initialize(){
-		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment());
+		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
 		baseCharacter = GetComponent<BaseCharacter>();
 	}
 

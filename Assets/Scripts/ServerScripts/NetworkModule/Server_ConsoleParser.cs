@@ -9,9 +9,10 @@ namespace ServerSide{
 		private const string Close = "close";
 		private const string ConsoleState = "console";
 		private const string Begin = "begin";
-		private const string Hide = "hide";
 
-		public void Parse(string command){
+		public override void Parse(string command){
+			base.Parse(command);
+
 			string[] splitCommand = command.Split(' ');
 
 			try{
@@ -28,14 +29,6 @@ namespace ServerSide{
 					if(splitCommand[1].Equals("game")){
 						ServerMasterManager.instance.BeginGame();
 					}
-					break;
-
-				case Hide:
-					ConsoleSystem.Hide();
-					break;
-
-				default:
-					ConsoleMsgQueue.EnqueMsg("Invalid Command");
 					break;
 				}
 			}catch(Exception e){
