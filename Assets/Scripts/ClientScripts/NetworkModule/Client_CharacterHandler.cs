@@ -10,8 +10,12 @@ public class Client_CharacterHandler : MsgHandler {
 	}
 	public override void HandleMsg (NetworkMessage networkMessage){
 		int chId = int.Parse(networkMessage.Header.Content);
-		if(chId == -1)return;
 
-		netChManager.SetChPosition(chId, networkMessage.Body[0].ConvertToV3());
+		NetworkCharacter targetChr = netChManager.GetNetCharacter (chId);
+		if (targetChr != null) {
+			targetChr.OnRecvMsg (networkMessage.Body);
+		} else {
+			print (chId);
+		}
 	}
 }

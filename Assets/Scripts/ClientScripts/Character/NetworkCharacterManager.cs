@@ -23,8 +23,17 @@ public class NetworkCharacterManager : MonoBehaviour {
 			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
 			otherCharacter[idx_].NetworkId = idx_;
 		}
-
-
+			
 		otherCharacter[idx_].TargetPos = pos_;
+	}
+
+	public NetworkCharacter GetNetCharacter(int idx_){
+		if(otherCharacter[idx_] == null){
+			GameObject go = (GameObject)Instantiate(prefabCharacter);
+			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
+			otherCharacter[idx_].NetworkId = idx_;
+		}
+
+		return otherCharacter [idx_];
 	}
 }

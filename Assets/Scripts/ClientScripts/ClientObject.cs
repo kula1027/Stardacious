@@ -8,7 +8,7 @@ public abstract class ClientObject : MonoBehaviour {
 		set{currentHp = value;}
 	}
 
-	public virtual void OnRecvMsg(NetworkMessage msg){}
+	public virtual void OnRecvMsg(MsgSegment[] msg){}
 
 	public abstract void Die();
 }

@@ -37,5 +37,9 @@ namespace ServerSide{
 				yield return new WaitForSeconds(posSyncTime);
 			}
 		}
+
+		public override void OnRecvMsg (MsgSegment[] bodies) {
+			transform.position = bodies [0].ConvertToV3 ();
+		}
 	}
 }

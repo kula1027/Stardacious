@@ -14,7 +14,7 @@ namespace ServerSide{
 			//대상 캐릭터 찾아서 OnRecvMsg에 메세지 전달
 			int sender = int.Parse(networkMessage.Adress.Attribute);
 			if(chManager.GetCharacter(sender) != null){
-				chManager.GetCharacter(sender).transform.position = networkMessage.Body[0].ConvertToV3();
+				chManager.GetCharacter (sender).OnRecvMsg (networkMessage.Body);
 			}else{
 
 			}

@@ -22,6 +22,7 @@ namespace ServerSide{
 		public void SetCharacter(int idx_, ServerCharacter character_){
 			character[idx_] = character_;
 		}
+
 		public ServerCharacter GetCharacter(int idx_){
 			return character[idx_];
 		}

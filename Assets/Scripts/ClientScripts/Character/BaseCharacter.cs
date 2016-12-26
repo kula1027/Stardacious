@@ -15,4 +15,6 @@ public abstract class BaseCharacter : ClientObject {
 	public override void Die (){
 		throw new System.NotImplementedException ();
 	}
+
+
 }

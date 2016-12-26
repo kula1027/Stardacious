@@ -27,4 +27,8 @@ public class NetworkCharacter : BaseCharacter {
 			yield return null;
 		}
 	}
+		
+	public override void OnRecvMsg (MsgSegment[] msg){
+		transform.position = msg [0].ConvertToV3 ();
+	}
 }
