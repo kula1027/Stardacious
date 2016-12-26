@@ -16,8 +16,7 @@ namespace ServerSide{
 			chManager = GetComponent<ServerCharacterManager>();
 		}
 
-		void Start(){
-			chManager.TestSetUp();
+		void Start(){			
 			ConsoleSystem.Show();
 		}
 

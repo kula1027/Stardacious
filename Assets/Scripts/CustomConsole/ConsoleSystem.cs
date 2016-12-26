@@ -88,14 +88,11 @@ public class ConsoleSystem : MonoBehaviour {
 	private IEnumerator PerformanceChecker(){
 		float timeAcc = 0;
 		int fpsCount = 0;
-		int msgAcc = 0;
 		while(true){
 			timeAcc += Time.deltaTime;
-			msgAcc += ReceiveQueue.GetCount();
 			fpsCount++;
 			if(timeAcc >= 1){
-				fpsText.text = fpsCount.ToString() + " / " + msgAcc;
-				msgAcc = 0;
+				fpsText.text = fpsCount.ToString();
 				fpsCount = 0;
 				timeAcc = 0;
 			}

@@ -11,12 +11,11 @@ public class Client_ConsoleParser : ConsoleParser {
 	private const string Send = "send";
 	private const string BroadCast = "broadcast";
 	private const string Disconnect = "disconnect";
-	private const string ConsoleLvl = "lvl";
 	private const string Connect = "con";
-	private const string Hide = "hide";
 
+	public override void Parse(string command){
+		base.Parse(command);
 
-	public void Parse(string command){
 		string[] splitCommand = command.Split(' ');
 
 		try{
@@ -36,18 +35,6 @@ public class Client_ConsoleParser : ConsoleParser {
 					Network_Client.serverAddress = splitCommand[1];
 				}
 				KingGodClient.instance.Begin();
-				break;
-
-			case ConsoleLvl:
-				ConsoleMsgQueue.level = int.Parse(splitCommand[1]);
-				break;
-
-			case Hide:
-				ConsoleSystem.Hide();
-				break;
-
-			default:
-				ConsoleMsgQueue.EnqueMsg("Invalid Command");
 				break;
 			}
 		}catch(Exception e){

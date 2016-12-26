@@ -16,15 +16,14 @@ public class NetworkCharacterManager : MonoBehaviour {
 
 	}
 
-	public void SetChPosition(int idx_, Vector3 pos_){
-		if(idx_ == KingGodClient.instance.NetClient.NetworkId)return;
+	public NetworkCharacter GetNetCharacter(int idx_){
+		if(idx_ == KingGodClient.instance.NetClient.NetworkId)return null;
 		if(otherCharacter[idx_] == null){
 			GameObject go = (GameObject)Instantiate(prefabCharacter);
 			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
 			otherCharacter[idx_].NetworkId = idx_;
 		}
 
-
-		otherCharacter[idx_].TargetPos = pos_;
+		return otherCharacter[idx_];
 	}
 }

@@ -19,12 +19,17 @@ public class NetworkCharacter : BaseCharacter {
 		StartCoroutine(PositionRoutine());
 	}
 
-
 	public IEnumerator PositionRoutine(){
 		while(true){
 			transform.position = Vector3.Lerp(transform.position, targetPos, 0.4f);
 
 			yield return null;
+		}
+	}
+
+	public override void OnRecvMsg (MsgSegment[] bodies){
+		if(bodies[0].Equals(MsgSegment.AttrPos)){
+			targetPos = bodies[0].ConvertToV3();
 		}
 	}
 }
