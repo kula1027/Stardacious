@@ -20,5 +20,8 @@ public class InputModule : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Space)){
 			CharacterController.instance.Jump();
 		}
+		if(Input.GetKeyDown(KeyCode.LeftControl)){
+			CharacterController.instance.NormalAttack();
+		}
 	}
 }

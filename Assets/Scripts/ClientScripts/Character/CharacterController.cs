@@ -21,7 +21,10 @@ public class CharacterController : MonoBehaviour {
 		GetComponent<Rigidbody2D>().AddForce(Vector2.up * baseCharacter.characterData.jumpPower);
 	}
 		
-	public void NormalAttack(){}
+	public void NormalAttack(){
+		GameObject p = (GameObject)Resources.Load("testProjectile");
+		GameObject a = Instantiate(p);
+	}
 	public void UseSkill0(){}
 	public void UseSkill1(){}
 	public void UseSkill2(){}
