@@ -11,5 +11,5 @@ public abstract class BaseCharacter : StardaciousObject {
 	public CharacterGraphicCtrl cgCtrl{
 		get{return characterGraphicCtrl;}
 	}
-
+		
 }

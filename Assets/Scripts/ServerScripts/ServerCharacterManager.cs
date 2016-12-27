@@ -9,7 +9,7 @@ namespace ServerSide{
 		void Awake(){
 			prefabServerCharacter = (GameObject)Resources.Load("chTestServer");
 		}
-
+			
 		public ServerCharacter GetCharacter(int idx_){
 			if(character[idx_] == null){
 				character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();

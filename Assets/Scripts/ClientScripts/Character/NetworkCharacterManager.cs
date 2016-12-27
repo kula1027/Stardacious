@@ -23,7 +23,7 @@ public class NetworkCharacterManager : MonoBehaviour {
 			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
 			otherCharacter[idx_].NetworkId = idx_;
 		}
-
+			
 		return otherCharacter[idx_];
 	}
 }

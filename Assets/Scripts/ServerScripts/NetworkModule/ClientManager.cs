@@ -45,10 +45,13 @@ namespace ServerSide{
 		public static void BroadCast(NetworkMessage nm_){
 			if(arrayClient == null)return;
 
+
 			for(int loop = 0; loop < maxClientCount; loop++){
 				if(arrayClient[loop] != null){
-					if(arrayClient[loop].IsConnected)
-						arrayClient[loop].Send(nm_.ToString());
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].Send (nm_.ToString ());
+					}
 				}
 			}
 		}

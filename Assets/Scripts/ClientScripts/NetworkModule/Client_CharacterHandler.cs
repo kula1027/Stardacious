@@ -11,7 +11,6 @@ public class Client_CharacterHandler : MsgHandler {//캐릭터에 관련된 메�
 
 	public override void HandleMsg (NetworkMessage networkMessage){
 		int chId = int.Parse(networkMessage.Header.Content);
-		if(chId == -1)return;
 
 		NetworkCharacter targetChar = netChManager.GetNetCharacter(chId);
 		if(targetChar != null){

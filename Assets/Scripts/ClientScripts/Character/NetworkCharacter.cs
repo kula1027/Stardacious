@@ -31,5 +31,6 @@ public class NetworkCharacter : BaseCharacter {
 		if(bodies[0].Equals(MsgSegment.AttrPos)){
 			targetPos = bodies[0].ConvertToV3();
 		}
+
 	}
 }
