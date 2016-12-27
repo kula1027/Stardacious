@@ -8,7 +8,9 @@ namespace ServerSide{
 		}
 
 		public override void HandleMsg (NetworkMessage networkMessage){
-			
+			if(networkMessage.Body[0].Attribute.Equals("dead")){
+				Debug.Log(networkMessage.Body[0].Content + " is Dead");
+			}
 		}
 	}
 }

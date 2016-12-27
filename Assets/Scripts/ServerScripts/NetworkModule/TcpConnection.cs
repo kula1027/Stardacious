@@ -56,6 +56,7 @@ namespace ServerSide{
 		private void ReceivingOperation(){
 			IdSync();
 
+			NetworkMessage dyingMsg = new NetworkMessage("dead", clientId.ToString());
 			string recStr;
 			try{
 				while(isConnected){
@@ -70,6 +71,7 @@ namespace ServerSide{
 				}
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(clientId + ": ReceiveOperation: " + e.Message);
+					ReceiveQueue.EnqueMsg(dyingMsg);
 			}
 
 			ConsoleMsgQueue.EnqueMsg(clientId + ": Disconnected.");

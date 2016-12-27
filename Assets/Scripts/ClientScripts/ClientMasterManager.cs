@@ -28,7 +28,5 @@ public class ClientMasterManager : MonoBehaviour {
 		CharacterController.instance.Initialize();
 		CharacterController.instance.StartSendPos();
 		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterController.instance.transform);
-
-
 	}
 }

@@ -2,14 +2,17 @@
 using System.Collections;
 
 public class ServerStageManager : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
+	private int currentStage;//0번 스테이지부터 시작한다
+	public int CurrentStage{
+		get{return currentStage;}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public void BeginStage(){
+		ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
+
+	}
+
+	public void MoveNextStage(){
+		currentStage++;
 	}
 }
