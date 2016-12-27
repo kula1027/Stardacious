@@ -75,5 +75,20 @@ public class MsgSegment {
 	public const string AttrReqId = "reqId";
 	public const string AttrPos = "pos";
 	public const string AttrCharacter = "chr";
+	public const string AttrBullet = "bullet";
 	#endregion
+}
+
+
+public class Attr{
+	public class Player{
+		
+	}
+	public class Enemy{
+		
+	}
+	public class Bullet{
+		public const string Server = "abs";
+		public const string Client = "abc";
+	}
 }

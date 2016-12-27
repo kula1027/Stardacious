@@ -1,0 +1,76 @@
+
+spine.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+spider_split0
+  rotate: false
+  xy: 2, 462
+  size: 294, 264
+  orig: 294, 264
+  offset: 0, 0
+  index: -1
+spider_split1
+  rotate: false
+  xy: 2, 213
+  size: 252, 247
+  orig: 252, 247
+  offset: 0, 0
+  index: -1
+spider_split2
+  rotate: false
+  xy: 2, 728
+  size: 294, 279
+  orig: 294, 279
+  offset: 0, 0
+  index: -1
+spider_split3
+  rotate: false
+  xy: 2, 2
+  size: 123, 209
+  orig: 123, 209
+  offset: 0, 0
+  index: -1
+spider_split4
+  rotate: false
+  xy: 298, 692
+  size: 206, 315
+  orig: 206, 315
+  offset: 0, 0
+  index: -1
+spider_split5
+  rotate: false
+  xy: 506, 710
+  size: 182, 297
+  orig: 182, 297
+  offset: 0, 0
+  index: -1
+spider_split6
+  rotate: false
+  xy: 862, 822
+  size: 138, 185
+  orig: 138, 185
+  offset: 0, 0
+  index: -1
+spider_split7
+  rotate: false
+  xy: 127, 116
+  size: 117, 95
+  orig: 117, 95
+  offset: 0, 0
+  index: -1
+spider_split8
+  rotate: false
+  xy: 298, 470
+  size: 159, 220
+  orig: 159, 220
+  offset: 0, 0
+  index: -1
+spider_split9
+  rotate: false
+  xy: 690, 736
+  size: 170, 271
+  orig: 170, 271
+  offset: 0, 0
+  index: -1
