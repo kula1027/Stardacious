@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlayerData {
-	public static string name;
+	public static string nickName;
 	public static ChIdx chosenCharacter = ChIdx.TEST;
 
 	public static CharacterData characterData;

@@ -4,6 +4,7 @@ using System;
 public class ConsoleParser {
 	private const string ConsoleLvl = "lvl";
 	private const string Hide = "hide";
+	private const string ScrollLock = "slock";
 
 	public virtual void Parse(string command){
 		string[] splitCommand = command.Split(' ');
@@ -16,6 +17,10 @@ public class ConsoleParser {
 
 			case Hide:
 				ConsoleSystem.Hide();
+				break;
+
+			case ScrollLock:
+				ConsoleSystem.scrollLock = !ConsoleSystem.scrollLock;
 				break;
 			}
 		}catch(Exception e){

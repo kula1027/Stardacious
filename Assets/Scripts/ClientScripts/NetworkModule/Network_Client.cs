@@ -21,7 +21,10 @@ public class Network_Client {
 	private int networkId = -1;
 	public int NetworkId{
 		get{return networkId;}
-		set{networkId = value;}
+		set{
+			networkId = value;
+			NetworkMessage.SenderId = networkId.ToString();
+		}
 	}
 
 	private bool isConnected = false;
@@ -31,12 +34,14 @@ public class Network_Client {
 
 	public Network_Client(){
 		tcpClient = new TcpClient();
+		NetworkId = -1;
 
 		thread_connect = new Thread(BeginConnection);
 		thread_connect.Start();
 	}
 
-	public void BeginConnection(){
+	private void BeginConnection(){
+		int conCount = 0;
 		while(isConnected == false){
 			try{
 				ConsoleMsgQueue.EnqueMsg("Connecting to..." + serverAddress + ":" + PORT);
@@ -45,6 +50,12 @@ public class Network_Client {
 
 			}catch(SocketException e){
 				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString());
+				conCount++;
+				if(conCount > 5){
+					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
+					isConnected = false;
+					return;
+				}
 
 				Thread.Sleep(4000);
 			}catch(Exception e){
@@ -72,6 +83,7 @@ public class Network_Client {
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg("Send: " + e.Message);
 				isConnected = false;
+				networkId = -1;
 			}
 		}else{
 			ConsoleMsgQueue.EnqueMsg("Send: Network Disconnected.");

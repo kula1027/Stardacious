@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//개쩌는 클라이언트가 시작하는 부분
+//개쩌는 클라이언트가 시작하는 부분, 유니티 메인 쓰레드에서 통신을 담당한다
 public class KingGodClient : MonoBehaviour {
 	private Network_Client netClient;//2개 이상의 서버에도 접속 가능하다
 	public Network_Client NetClient{
@@ -13,6 +13,7 @@ public class KingGodClient : MonoBehaviour {
 	public static KingGodClient instance;
 
 	void Awake(){
+		DontDestroyOnLoad(gameObject);
 		instance = this;
 		networkTranslator = GetComponent<NetworkTranslator>();
 
@@ -21,10 +22,19 @@ public class KingGodClient : MonoBehaviour {
 
 	void Start () {
 		networkTranslator.AddMsgHandler(new Client_DefaultHandler());
-		networkTranslator.AddMsgHandler(new Client_CharacterHandler());
+		//networkTranslator.AddMsgHandler(new Client_CharacterHandler());
+		//BeginNetworking();
 	}
 
-	public void Begin(){
+	public void OnExitPlayScene(){
+
+	}
+
+	public void OnEnterPlayScene(){
+
+	}
+
+	public void BeginNetworking(){//네트워킹이 최초 시동되는 부분
 		netClient = new Network_Client();
 
 		StartCoroutine(NetworkSetup());
@@ -39,17 +49,18 @@ public class KingGodClient : MonoBehaviour {
 		NetworkMessage msgRequestId = 
 			new NetworkMessage(new MsgSegment(MsgSegment.AttrReqId, ""));
 
+		NetworkMessage.SenderId = netClient.NetworkId.ToString();
 		while(netClient.NetworkId == -1){
 			ConsoleMsgQueue.EnqueMsg("Request Id to Server...");
 			netClient.Send(msgRequestId);
 			yield return new WaitForSeconds(3);
 		}
-		NetworkMessage.SenderId = netClient.NetworkId.ToString();
+
 		netClient.Send(new NetworkMessage(new MsgSegment()));//id가 갱신되었음을 알리는 빈 메시지 전송
 
 		ConsoleMsgQueue.EnqueMsg("Received Id: " + netClient.NetworkId);
 
-		ClientMasterManager.instance.OnNetworkSetupDone();
+		StartSceneManager.instance.OnNetworkSetupDone();
 	}
 
 	public void Send(NetworkMessage nm_){

@@ -7,19 +7,16 @@ public class ClientMasterManager : MonoBehaviour {
 
 	public NetworkCharacterManager netChManager;
 
-	void Awake(){
+	void Awake(){		
 		instance = this;
-		netChManager = GetComponent<NetworkCharacterManager>();
+		//netChManager = GetComponent<NetworkCharacterManager>();
 	}
 
 	void Start(){
 		ConsoleSystem.Show();
-	}
-
-	public void OnNetworkSetupDone(){
 		InitiatePlayerCharacter();
 	}
-
+		
 	private void InitiatePlayerCharacter(){
 		PlayerData.characterData = new CharacterData(PlayerData.chosenCharacter);
 		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("chPlayableTest"));
