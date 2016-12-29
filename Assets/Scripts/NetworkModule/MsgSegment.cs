@@ -85,6 +85,7 @@ public class MsgSegment {
 
 public class MsgAttr{
 	public const string projectile = "proj";
+	public const string monster = "mons";
 
 	public class Character{
 

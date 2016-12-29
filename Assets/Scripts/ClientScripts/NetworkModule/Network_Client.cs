@@ -99,7 +99,7 @@ public class Network_Client {
 
 				if(recStr != null){
 					ConsoleMsgQueue.EnqueMsg("Received: " + recStr, 0);
-					ReceiveQueue.EnqueMsg(new NetworkMessage(recStr));
+					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
 				}else{
 					isConnected = false;
 				}

@@ -7,13 +7,15 @@ public class ClientMasterManager : MonoBehaviour {
 
 	public NetworkCharacterManager netChManager;
 	public NetworkProjectileManager netProjManager;
+	public ClientStageManager stageManager;
 
-	void Awake(){		
+	void Awake(){
 		instance = this;
+
 		netChManager = GetComponent<NetworkCharacterManager>();
-		KingGodClient.instance.OnEnterPlayScene();
-		//netChManager = GetComponent<NetworkCharacterManager>();
+		stageManager = GetComponent<ClientStageManager>();
 		netProjManager = GetComponent<NetworkProjectileManager> ();
+		KingGodClient.instance.OnEnterPlayScene();
 	}
 
 	void Start(){		
