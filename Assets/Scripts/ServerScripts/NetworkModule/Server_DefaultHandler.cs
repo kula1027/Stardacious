@@ -7,9 +7,10 @@ namespace ServerSide{
 			headerAttr = MsgSegment.AttrDefault;
 		}
 
-		public override void HandleMsg (NetworkMessage networkMessage){
-			if(networkMessage.Body[0].Attribute.Equals("dead")){
-				Debug.Log(networkMessage.Body[0].Content + " is Dead");
+		public override void HandleMsg (NetworkMessage networkMessage){			
+			if(networkMessage.Body[0].Attribute.Equals("dead")){				
+				int exitIdx = int.Parse(networkMessage.Body[0].Content);
+				ServerMasterManager.instance.OnExitClient(exitIdx);
 			}
 		}
 	}

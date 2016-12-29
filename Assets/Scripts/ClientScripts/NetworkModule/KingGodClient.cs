@@ -21,17 +21,15 @@ public class KingGodClient : MonoBehaviour {
 	}
 
 	void Start () {
-		networkTranslator.AddMsgHandler(new Client_DefaultHandler());
-		//networkTranslator.AddMsgHandler(new Client_CharacterHandler());
-		//BeginNetworking();
-	}
+		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_DefaultHandler>());
+	}		
 
 	public void OnExitPlayScene(){
 
 	}
 
 	public void OnEnterPlayScene(){
-
+		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_CharacterHandler>());
 	}
 
 	public void BeginNetworking(){//네트워킹이 최초 시동되는 부분

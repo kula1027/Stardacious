@@ -42,6 +42,7 @@ public class NetworkMessage {
 
 		
 	#region constructor
+	//교훈. 생성자를 계획적으로 만들자
 
 	/// <summary>
 	/// 수신자 미기재시 디폴트로 서버를 수신자로 함

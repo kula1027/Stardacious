@@ -17,6 +17,7 @@ public class ObjectPool {
 	public int AddObject(IObjectPoolable obj){
 		int objectIndex = GetNextValidIndex ();
 		objectPool [objectIndex] = obj;
+		obj.SetOpIndex(objectIndex);
 
 		return objectIndex;
 	}
@@ -32,7 +33,7 @@ public class ObjectPool {
 		return objectPool [index];
 	}
 
-	public void DeletaObject(IObjectPoolable obj){
+	public void DeleteObject(IObjectPoolable obj){
 		DeleteObject (obj.GetOpIndex ());
 	}
 

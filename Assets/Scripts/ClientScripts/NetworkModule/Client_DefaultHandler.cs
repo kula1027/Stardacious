@@ -8,12 +8,16 @@ public class Client_DefaultHandler : MsgHandler {//header의 attribute가 defaul
 	}
 
 	public override void HandleMsg (NetworkMessage networkMessage){
-		if(networkMessage.Body[0].Attribute.Equals(MsgSegment.AttrReqId)){
+		switch(networkMessage.Body[0].Attribute){
+		case MsgSegment.AttrReqId:
 			string givenId = networkMessage.Body[0].Content;
 			KingGodClient.instance.NetClient.NetworkId = int.Parse(givenId);
-		}else{
-			Debug.Log(networkMessage.Header.Attribute);
-			Debug.Log("C: " + networkMessage.Header.Content);
+			break;
+
+		case MsgSegment.AttrExitClient:
+			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
+			break;
 		}
 	}
 }

@@ -25,8 +25,13 @@ namespace ServerSide{
 
 		}
 
-		public void OnExitClient(int idx_){
-
+		public void OnExitClient(int idx_){			
+			NetworkMessage exitMsg = new NetworkMessage(
+				new MsgSegment(),
+				new MsgSegment(MsgSegment.AttrExitClient, idx_.ToString())
+			);
+			Network_Server.BroadCast(exitMsg);
+			chManager.RemoveCharacter(idx_);
 		}
 	}
 }

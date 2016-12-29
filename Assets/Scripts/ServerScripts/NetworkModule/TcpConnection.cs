@@ -57,6 +57,7 @@ namespace ServerSide{
 			IdSync();
 
 			NetworkMessage dyingMsg = new NetworkMessage("dead", clientId.ToString());
+
 			string recStr;
 			try{
 				while(isConnected){
@@ -64,14 +65,14 @@ namespace ServerSide{
 
 					if(recStr != null){
 						ConsoleMsgQueue.EnqueMsg(clientId + ": Received: " + recStr, 0);
-						ReceiveQueue.EnqueMsg(new NetworkMessage(recStr));
+						ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
 					}else{
 						isConnected = false;
 					}
 				}
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(clientId + ": ReceiveOperation: " + e.Message);
-					ReceiveQueue.EnqueMsg(dyingMsg);
+				ReceiveQueue.EnqueMsg(dyingMsg);
 			}
 
 			ConsoleMsgQueue.EnqueMsg(clientId + ": Disconnected.");

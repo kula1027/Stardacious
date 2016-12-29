@@ -9,11 +9,12 @@ public class ClientMasterManager : MonoBehaviour {
 
 	void Awake(){		
 		instance = this;
+		netChManager = GetComponent<NetworkCharacterManager>();
+		KingGodClient.instance.OnEnterPlayScene();
 		//netChManager = GetComponent<NetworkCharacterManager>();
 	}
 
-	void Start(){
-		ConsoleSystem.Show();
+	void Start(){		
 		InitiatePlayerCharacter();
 	}
 		

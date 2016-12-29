@@ -27,9 +27,15 @@ public class NetworkCharacter : BaseCharacter {
 		}
 	}
 
-	public override void OnRecvMsg (MsgSegment[] bodies){
-		if(bodies[0].Equals(MsgSegment.AttrPos)){
+	public override void OnRecvMsg (MsgSegment[] bodies){		
+		switch(bodies[0].Attribute){
+		case MsgSegment.AttrPos:
 			targetPos = bodies[0].ConvertToV3();
+			break;
+
+		case MsgSegment.AttrDeleteObj:
+			Destroy(gameObject);
+			break;
 		}
 
 	}

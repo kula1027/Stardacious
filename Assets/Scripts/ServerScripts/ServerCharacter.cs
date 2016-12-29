@@ -40,9 +40,17 @@ namespace ServerSide{
 		}
 
 		public override void OnRecvMsg (MsgSegment[] bodies){
-			if(bodies[0].Equals(MsgSegment.AttrPos)){
+			if(bodies[0].Attribute.Equals(MsgSegment.AttrPos)){
 				transform.position = bodies[0].ConvertToV3();
 			}
+		}
+
+		void OnDestroy(){			
+			MsgSegment h = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
+			MsgSegment b = new MsgSegment(MsgSegment.AttrDeleteObj, "");
+			NetworkMessage deleteMsg = new NetworkMessage(h, b);
+
+			Network_Server.BroadCast(deleteMsg);
 		}
 	}
 }

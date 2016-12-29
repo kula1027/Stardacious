@@ -17,5 +17,14 @@ namespace ServerSide{
 			}
 			return character[idx_];
 		}
+
+		public void RemoveCharacter(int idx_){
+			if(character[idx_] == null){
+				ConsoleMsgQueue.EnqueMsg("Remove Character " + idx_ + ": not exist");
+			}else{				
+				Destroy(character[idx_].gameObject);
+				character[idx_] = null;
+			}
+		}
 	}
 }

@@ -49,6 +49,9 @@ public class MsgSegment {
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
 	}
 
+	/// <summary>
+	/// content를 Vector3로 치환하여 리턴한다
+	/// </summary>
 	public Vector3 ConvertToV3(){
 		string[] split = content.Split(',');
 		return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
@@ -75,5 +78,7 @@ public class MsgSegment {
 	public const string AttrReqId = "reqId";
 	public const string AttrPos = "pos";
 	public const string AttrCharacter = "chr";
+	public const string AttrDeleteObj = "dlobj";
+	public const string AttrExitClient = "exit";
 	#endregion
 }

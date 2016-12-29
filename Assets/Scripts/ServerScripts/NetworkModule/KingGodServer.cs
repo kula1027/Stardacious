@@ -13,8 +13,8 @@ namespace ServerSide{
 		}
 
 		void Start () {
-			networkTranslator.AddMsgHandler(new Server_DefaultHandler());
-			networkTranslator.AddMsgHandler(new Server_CharacterHandler());
+			networkTranslator.AddMsgHandler(gameObject.AddComponent<Server_DefaultHandler>());
+			networkTranslator.AddMsgHandler(gameObject.AddComponent<Server_CharacterHandler>());
 
 			NetworkMessage.SenderId = NetworkMessage.ServerId;
 			ServerSide.Network_Server.Begin();

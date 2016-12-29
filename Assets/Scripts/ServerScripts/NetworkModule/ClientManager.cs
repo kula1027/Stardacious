@@ -69,7 +69,6 @@ namespace ServerSide{
 				freeQueue.Enqueue(idx_);
 			}
 
-			ServerMasterManager.instance.OnExitClient(idx_);
 			ConsoleMsgQueue.EnqueMsg(idx_ + ": Client Thread Closed.");
 		}
 
