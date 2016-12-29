@@ -22,6 +22,7 @@ public class KingGodClient : MonoBehaviour {
 	void Start () {
 		networkTranslator.AddMsgHandler(new Client_DefaultHandler());
 		networkTranslator.AddMsgHandler(new Client_CharacterHandler());
+		networkTranslator.AddMsgHandler(new Client_ProjectileHandler());
 	}
 
 	public void Begin(){

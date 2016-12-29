@@ -25,9 +25,10 @@ public class NetworkProjectile : StardaciousObject {
 	}
 
 	public override void OnRecvMsg (MsgSegment[] bodies){
-		if(bodies[0].Equals(MsgSegment.AttrPos)){
-			targetPos = bodies[0].ConvertToV3();
+		if (bodies [0].Equals (MsgSegment.AttrPos)) {
+			targetPos = bodies [0].ConvertToV3 ();
+		} else if (bodies [0].Equals (MsgAttr.Projectile.delete)) {
+			GameObject.Destroy (gameObject);
 		}
-
 	}
 }

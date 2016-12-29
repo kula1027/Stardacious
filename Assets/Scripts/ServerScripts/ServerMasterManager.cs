@@ -10,10 +10,16 @@ namespace ServerSide{
 			get{return chManager;}
 		}
 
+		private ServerProjectileManager prManager;
+		public ServerProjectileManager PrManager{
+			get{return prManager;}
+		}
+
 		void Awake(){
 			instance = this;
 			DontDestroyOnLoad(gameObject);
 			chManager = GetComponent<ServerCharacterManager>();
+			prManager = GetComponent<ServerProjectileManager>();
 		}
 
 		void Start(){			

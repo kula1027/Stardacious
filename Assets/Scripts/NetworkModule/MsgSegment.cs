@@ -77,3 +77,14 @@ public class MsgSegment {
 	public const string AttrCharacter = "chr";
 	#endregion
 }
+
+public class MsgAttr{
+	public const string projectile = "proj";
+
+	public class Character{
+
+	}
+	public class Projectile{
+		public const string delete = "delProj";
+	}
+}

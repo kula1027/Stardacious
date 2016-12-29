@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class NetworkProjectileManager : MonoBehaviour {
-	private const int maxProjectileCount = 20;
+	private const int maxProjectileCount = 30;
 
 	private GameObject prefabProjectile;
 
@@ -16,7 +16,7 @@ public class NetworkProjectileManager : MonoBehaviour {
 
 	}
 
-	public NetworkProjectile GetNetCharacter(int idx_){
+	public NetworkProjectile GetNetProjectile(int idx_){
 		if(idx_ == KingGodClient.instance.NetClient.NetworkId)return null;
 		if(otherProjectile[idx_] == null){
 			GameObject go = (GameObject)Instantiate(prefabProjectile);

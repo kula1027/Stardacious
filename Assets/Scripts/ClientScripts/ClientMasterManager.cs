@@ -6,10 +6,12 @@ public class ClientMasterManager : MonoBehaviour {
 	public static ClientMasterManager instance;
 
 	public NetworkCharacterManager netChManager;
+	public NetworkProjectileManager netProjManager;
 
 	void Awake(){
 		instance = this;
 		netChManager = GetComponent<NetworkCharacterManager>();
+		netProjManager = GetComponent<NetworkProjectileManager> ();
 	}
 
 	void Start(){

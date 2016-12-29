@@ -18,7 +18,7 @@ public class ClientProjectile : MonoBehaviour, ICollidable {
 	private const float posSyncTime = 0.03f;
 
 	void Awake(){
-		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
+		nm = new NetworkMessage(new MsgSegment(MsgAttr.projectile, ""), new MsgSegment(new Vector3()));
 	}
 
 	void Start(){
@@ -37,7 +37,9 @@ public class ClientProjectile : MonoBehaviour, ICollidable {
 	}
 
 	public void ProjectileDestroy(){
-		
+		StopCoroutine (shshRoutine());
+		nm.Body [0] = new MsgSegment (MsgAttr.Projectile.delete, "");
+		KingGodClient.instance.Send(nm);
 		GameObject.Destroy (gameObject);
 	}
 
