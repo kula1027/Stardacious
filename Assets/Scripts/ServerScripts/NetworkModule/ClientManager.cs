@@ -6,6 +6,7 @@ using System;
 namespace ServerSide{
 	public static class ClientManager {
 		public const int maxClientCount = 3;
+		public const int maxProjectileCount = 20;
 
 		private static TcpConnection[] arrayClient;
 		public static TcpConnection getClient(int idx){

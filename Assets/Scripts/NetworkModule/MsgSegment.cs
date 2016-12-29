@@ -82,3 +82,14 @@ public class MsgSegment {
 	public const string AttrExitClient = "exit";
 	#endregion
 }
+
+public class MsgAttr{
+	public const string projectile = "proj";
+
+	public class Character{
+
+	}
+	public class Projectile{
+		public const string delete = "delProj";
+	}
+}
