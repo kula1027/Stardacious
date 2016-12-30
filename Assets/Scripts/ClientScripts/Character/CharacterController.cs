@@ -7,6 +7,7 @@ public class CharacterController : MonoBehaviour {
 	private BaseCharacter baseCharacter;
 
 	private const float posSyncTime = 0.03f;
+	private Vector3 moveVector;
 
 	public void Initialize(){
 		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
@@ -15,6 +16,7 @@ public class CharacterController : MonoBehaviour {
 
 	public void Move(Vector3 vec3_){
 		transform.position += vec3_ * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+		moveVector = vec3_;
 	} 
 
 	public void Jump(){
@@ -23,7 +25,7 @@ public class CharacterController : MonoBehaviour {
 		
 	public void NormalAttack(){
 		GameObject p = (GameObject)Resources.Load("testProjectile");
-		GameObject a = Instantiate(p);
+		GameObject a = Instantiate(p, transform.position, transform.rotation) as GameObject;
 	}
 	public void UseSkill0(){}
 	public void UseSkill1(){}

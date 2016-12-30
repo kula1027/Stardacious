@@ -7,7 +7,7 @@ namespace ServerSide {
 		private ServerProjectile[] projectile = new ServerProjectile[ClientManager.maxProjectileCount];
 
 		void Awake () {
-			prefabServerCharacter = (GameObject)Resources.Load ("testProjectile");
+			prefabServerCharacter = (GameObject)Resources.Load ("testServerProjectile");
 		}
 
 		public ServerProjectile GetProjectile (int idx_) {

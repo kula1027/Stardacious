@@ -12,8 +12,12 @@ namespace ServerSide
 		#endregion
 
 		private const float posSyncTime = 0.03f;
-
 		private int networkId = -1;
+
+		private bool isFiredByServer = true;
+		private Vector3 dir = new Vector3(1, 0, 0);
+		private const float speed = 2f;
+		private const float flightTimeLimit = 3f;
 
 		public int NetworkId {
 			get{ return networkId; }
@@ -32,7 +36,18 @@ namespace ServerSide
 
 		void Start ()
 		{
+			StartCoroutine(shshRoutine());
 			StartSendPos ();
+		}
+
+		private IEnumerator shshRoutine(){
+			float flightTime = 0f;
+			while(flightTimeLimit > flightTime){
+				transform.position += dir * speed * Time.deltaTime;
+				flightTime += Time.deltaTime;
+
+				yield return null;
+			}
 		}
 
 		public void StartSendPos ()
@@ -62,6 +77,10 @@ namespace ServerSide
 
 		public override void OnRecvMsg (MsgSegment[] bodies)
 		{
+			if (isFiredByServer) {
+				StopCoroutine (shshRoutine());
+				isFiredByServer = false;
+			}
 			if (bodies [0].Equals (MsgSegment.AttrPos)) {
 				transform.position = bodies [0].ConvertToV3 ();
 			} else if (bodies [0].Equals (MsgAttr.Projectile.delete)) {

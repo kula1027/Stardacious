@@ -12,10 +12,14 @@ public class ClientProjectile : MonoBehaviour, ICollidable {
 
 	private Vector3 dir = new Vector3(1, 0, 0);
 	private const float speed = 2f;
-	private const float flightTimeLimit = 20f;
+	private const float flightTimeLimit = 3f;
 
 	private NetworkMessage nm;
 	private const float posSyncTime = 0.03f;
+
+	public void init(Vector3 dir_){//addcomponent 후 initialize용으로 사용 -> .AddComponent<ClientProjectile> ().init(...);
+		dir = dir_;
+	}
 
 	void Awake(){
 		nm = new NetworkMessage(new MsgSegment(MsgAttr.projectile, ""), new MsgSegment(new Vector3()));
@@ -28,12 +32,13 @@ public class ClientProjectile : MonoBehaviour, ICollidable {
 
 	private IEnumerator shshRoutine(){
 		float flightTime = 0f;
-		while(flightTimeLimit < flightTime){
+		while(flightTimeLimit > flightTime){
 			transform.position += dir * speed * Time.deltaTime;
 			flightTime += Time.deltaTime;
 
 			yield return null;
 		}
+		ProjectileDestroy ();
 	}
 
 	public void ProjectileDestroy(){
