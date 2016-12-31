@@ -26,9 +26,9 @@ public class ClientMasterManager : MonoBehaviour {
 		PlayerData.characterData = new CharacterData(PlayerData.chosenCharacter);
 		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("chPlayableTest"));
 		pCharacter.AddComponent<TestCharacter>().Initialize();
-		CharacterController.instance = pCharacter.AddComponent<CharacterController>();
-		CharacterController.instance.Initialize();
-		CharacterController.instance.StartSendPos();
-		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterController.instance.transform);
+		CharacterCtrl.instance = pCharacter.AddComponent<CharacterCtrl>();
+		CharacterCtrl.instance.Initialize();
+		CharacterCtrl.instance.StartSendPos();
+		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
 	}
 }

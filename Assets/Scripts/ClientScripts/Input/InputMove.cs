@@ -18,8 +18,8 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	private IEnumerator InputMoveRoutine(){
 		while(true){
-			if(CharacterController.instance)
-				CharacterController.instance.Move(dir);
+			if(CharacterCtrl.instance)
+				CharacterCtrl.instance.Move(dir);
 
 			yield return null;
 		}

@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterController : MonoBehaviour {
-	public static CharacterController instance;
+public class CharacterCtrl : MonoBehaviour {
+	public static CharacterCtrl instance;
 	private NetworkMessage nm;
 	private BaseCharacter baseCharacter;
 
 	private const float posSyncTime = 0.03f;
+	private Vector3 moveVector;
 
 	public void Initialize(){
 		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
 		baseCharacter = GetComponent<BaseCharacter>();
+		transform.position = new Vector3(4, 4.5f, 0);
 	}
 
 	public void Move(Vector3 vec3_){
@@ -29,7 +31,7 @@ public class CharacterController : MonoBehaviour {
 		
 	public void NormalAttack(){
 		GameObject p = (GameObject)Resources.Load("testProjectile");
-		GameObject a = Instantiate(p);
+		GameObject a = Instantiate(p, transform.position, transform.rotation) as GameObject;
 	}
 	public void UseSkill0(){}
 	public void UseSkill1(){}

@@ -5,9 +5,11 @@ namespace ServerSide {
 	public class ServerProjectileManager : MonoBehaviour {
 		private GameObject prefabServerCharacter;
 		private ServerProjectile[] projectile = new ServerProjectile[ClientManager.maxProjectileCount];
+		private ObjectPool projectilePool;
 
 		void Awake () {
-			prefabServerCharacter = (GameObject)Resources.Load ("testProjectile");
+			prefabServerCharacter = (GameObject)Resources.Load ("testServerProjectile");
+			projectilePool = new ObjectPool ();
 		}
 
 		public ServerProjectile GetProjectile (int idx_) {

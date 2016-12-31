@@ -15,6 +15,7 @@ namespace ServerSide{
 		void Start () {
 			networkTranslator.AddMsgHandler(gameObject.AddComponent<Server_DefaultHandler>());
 			networkTranslator.AddMsgHandler(gameObject.AddComponent<Server_CharacterHandler>());
+			networkTranslator.AddMsgHandler(gameObject.AddComponent<Server_ProjectileHandler>());
 
 			NetworkMessage.SenderId = NetworkMessage.ServerId;
 			ServerSide.Network_Server.Begin();

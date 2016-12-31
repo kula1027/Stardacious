@@ -14,11 +14,11 @@ public class ClientStageManager : MonoBehaviour {
 	}
 
 	void Start(){
-		/*goStage[0] = Instantiate(goStage[0]);
+		goStage[0] = Instantiate(goStage[0]);
 		goStage[0].transform.position = Vector3.zero;
 		goStage[0].GetComponent<ClientStage>().Initialize();
 
-		LoadStage(1);*/
+		//LoadStage(1);
 	}
 		
 	public void LoadStage(int idx){
