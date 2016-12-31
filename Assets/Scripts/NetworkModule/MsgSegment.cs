@@ -86,6 +86,12 @@ public class MsgAttr{
 	public const string projectile = "proj";
 	public const string monster = "mons";
 	public const string position = "pos";
+	public const string stage = "stg";
+
+	public class Stage{
+		public const string gatherSign = "stggsign";
+		public const string moveStg = "stgmnext";
+	}
 
 	public class Character{
 

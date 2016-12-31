@@ -5,17 +5,22 @@ namespace ServerSide{
 	public class ServerCharacterManager : MonoBehaviour {
 		private GameObject prefabServerCharacter;
 		private ServerCharacter[] character = new ServerCharacter[ClientManager.maxClientCount];
+		public int currentPlayerCount = 0;
 
 		void Awake(){
 			prefabServerCharacter = (GameObject)Resources.Load("chTestServer");
 		}
 			
 		public ServerCharacter GetCharacter(int idx_){
-			if(character[idx_] == null){
-				character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
-				character[idx_].NetworkId = idx_;
-				character[idx_].BuildSendMsg();
-			}
+			return character[idx_];
+		}
+
+		public ServerCharacter CreateCharacter(int idx_){
+			character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
+			character[idx_].NetworkId = idx_;
+			character[idx_].BuildSendMsg();
+			currentPlayerCount++;
+
 			return character[idx_];
 		}
 
@@ -23,6 +28,7 @@ namespace ServerSide{
 			if(character[idx_] == null){
 				ConsoleMsgQueue.EnqueMsg("Remove Character " + idx_ + ": not exist");
 			}else{				
+				currentPlayerCount--;
 				Destroy(character[idx_].gameObject);
 				character[idx_] = null;
 			}

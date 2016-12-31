@@ -32,6 +32,7 @@ public class KingGodClient : MonoBehaviour {
 		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_CharacterHandler>());
 		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_ProjectileHandler>());
 		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_MonsterHandler>());
+		networkTranslator.AddMsgHandler(gameObject.AddComponent<Client_StageHandler>());
 	}
 
 	public void BeginNetworking(){//네트워킹이 최초 시동되는 부분

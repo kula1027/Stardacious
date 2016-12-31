@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	private Vector3 centerPos;
-	private const float radius = 80;
+	private const float radius = 70;
 
 	void Awake(){
 		centerPos = transform.position;

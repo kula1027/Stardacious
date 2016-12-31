@@ -3,10 +3,16 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerMonster : MonoBehaviour, IObjectPoolable {
+		private static ServerStageManager stgManager;
 		private int monsterIdx;
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
 		private MonsterType monsType = MonsterType.NotInitialized;
+
+		void Awake(){
+			if(stgManager == null)
+				stgManager = ServerMasterManager.instance.StgManager;
+		}
 
 		public void Ready(){
 			nmPos = new NetworkMessage(
@@ -52,5 +58,9 @@ namespace ServerSide{
 		}
 
 		#endregion
+
+		void OnDestroy(){			
+			stgManager.OnMonsterDelete(monsterIdx);
+		}
 	}
 }

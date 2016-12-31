@@ -16,7 +16,7 @@ public class ClientMonster : MonoBehaviour, IObjectPoolable {
 
 	public void OnRecv(MsgSegment[] bodies){
 		if(bodies[0].Attribute.Equals(MsgAttr.position)){
-			transform.position = bodies[0].ConvertToV3();
+			transform.position = Vector3.Lerp(transform.position, bodies[0].ConvertToV3(), 20f * Time.deltaTime);
 		}
 	}
 

@@ -33,7 +33,7 @@ namespace ServerSide{
 		}
 
 		public void BeginGame(){
-			stgManager.BeginStage();
+			stgManager.BeginStage(0);
 		}
 
 		public void OnExitClient(int idx_){			

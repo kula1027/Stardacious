@@ -30,5 +30,5 @@ public class ClientMasterManager : MonoBehaviour {
 		CharacterCtrl.instance.Initialize();
 		CharacterCtrl.instance.StartSendPos();
 		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
-	}
+	}				
 }
