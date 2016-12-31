@@ -14,5 +14,11 @@ public class ClientMonster : MonoBehaviour, IObjectPoolable {
 		monsterIdx = index;
 	}
 
+	public void OnRecv(MsgSegment[] bodies){
+		if(bodies[0].Attribute.Equals(MsgAttr.position)){
+			transform.position = bodies[0].ConvertToV3();
+		}
+	}
+
 	#endregion
 }

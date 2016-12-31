@@ -18,7 +18,7 @@ public class CameraControl : MonoBehaviour {
 			if(targetTr != null){
 				transform.position = new Vector3(
 					targetTr.position.x,
-					targetTr.position.y,
+					0,
 					camDepth
 				);
 			}

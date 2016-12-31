@@ -26,9 +26,7 @@ namespace ServerSide{
 					break;
 
 				case Begin:
-					if(splitCommand[1].Equals("game")){
-						ServerMasterManager.instance.BeginGame();
-					}
+					ServerMasterManager.instance.BeginGame();
 					break;
 				}
 			}catch(Exception e){

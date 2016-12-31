@@ -71,6 +71,7 @@ public class ObjectPool {
 public interface IObjectPoolable{
 	int GetOpIndex ();
 	void SetOpIndex (int index);
+	void OnRecv(MsgSegment[] boides);
 }
 
 public class ObjectPoolException: Exception{

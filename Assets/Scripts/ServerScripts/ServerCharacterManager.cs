@@ -14,6 +14,7 @@ namespace ServerSide{
 			if(character[idx_] == null){
 				character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
 				character[idx_].NetworkId = idx_;
+				character[idx_].BuildSendMsg();
 			}
 			return character[idx_];
 		}

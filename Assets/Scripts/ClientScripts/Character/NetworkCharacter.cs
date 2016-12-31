@@ -29,7 +29,7 @@ public class NetworkCharacter : BaseCharacter {
 
 	public override void OnRecvMsg (MsgSegment[] bodies){		
 		switch(bodies[0].Attribute){
-		case MsgSegment.AttrPos:
+		case MsgAttr.position:
 			targetPos = bodies[0].ConvertToV3();
 			break;
 

@@ -15,15 +15,17 @@ namespace ServerSide{
 		}
 
 		void Start(){
+			
+		}
+
+		public void BeginStage(){
+			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
+
 			for(int loop = 0; loop < 10; loop++){
 				GameObject monster = (GameObject)Instantiate(Resources.Load<GameObject>("TestMonster_S"));
 				monsterPool.AddObject(monster.GetComponent<IObjectPoolable>());
 				monster.GetComponent<ServerMonster>().Ready();
 			}
-		}
-
-		public void BeginStage(){
-			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
 		}
 
 		public void MoveNextStage(){

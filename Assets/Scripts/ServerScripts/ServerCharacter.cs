@@ -10,38 +10,22 @@ namespace ServerSide{
 			get{return networkId;}
 			set{networkId = value;}
 		}
-
-		private MsgSegment msgHeader;
-		private MsgSegment msgBody;
+		private NetworkMessage msgPos;
 
 		private ChIdx chIdx = ChIdx.TEST;
 
-		void Awake(){			
-			
-		}
-
-		void Start(){
-			StartSendPos();
-		}
-
-		public void StartSendPos(){
-			msgHeader = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
-			msgBody = new MsgSegment(new Vector3());
-			StartCoroutine(SendPosRoutine());
-		}
-
-		private IEnumerator SendPosRoutine(){
-			while(true){				
-				msgBody.SetContent(transform.position);
-				Network_Server.BroadCast(new NetworkMessage(msgHeader, msgBody));
-
-				yield return new WaitForSeconds(posSyncTime);
-			}
+		public void BuildSendMsg(){			
+			MsgSegment msgHeader = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
+			MsgSegment msgBody = new MsgSegment(new Vector3());
+			msgPos = new NetworkMessage(msgHeader, msgBody);
 		}
 
 		public override void OnRecvMsg (MsgSegment[] bodies){
-			if(bodies[0].Attribute.Equals(MsgSegment.AttrPos)){
+			if(bodies[0].Attribute.Equals(MsgAttr.position)){
 				transform.position = bodies[0].ConvertToV3();
+
+				msgPos.Body[0].SetContent(transform.position);
+				Network_Server.BroadCast(msgPos);
 			}
 		}
 

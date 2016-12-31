@@ -72,7 +72,7 @@ namespace ServerSide{
 				}
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(clientId + ": ReceiveOperation: " + e.Message);
-				ReceiveQueue.EnqueMsg(dyingMsg);
+				ReceiveQueue.SyncEnqueMsg(dyingMsg);
 			}
 
 			ConsoleMsgQueue.EnqueMsg(clientId + ": Disconnected.");

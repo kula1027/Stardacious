@@ -6,6 +6,7 @@ namespace ServerSide{
 		private int monsterIdx;
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
+		private MonsterType monsType = MonsterType.NotInitialized;
 
 		public void Ready(){
 			nmPos = new NetworkMessage(
@@ -13,7 +14,18 @@ namespace ServerSide{
 				new MsgSegment(new Vector3())
 			);
 
+			NotifyAppearence();
+
 			StartCoroutine(PosSyncRoutine());
+		}
+
+		private void NotifyAppearence(){
+			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.Monster.appear);
+			MsgSegment b = new MsgSegment(((int)monsType).ToString(), monsterIdx.ToString());
+
+			NetworkMessage nmAppear = new NetworkMessage(h, b);
+
+			Network_Server.BroadCast(nmAppear);
 		}
 
 		private IEnumerator PosSyncRoutine(){
@@ -33,6 +45,10 @@ namespace ServerSide{
 
 		public void SetOpIndex (int index){
 			monsterIdx = index;
+		}
+
+		public void OnRecv(MsgSegment[] bodies){
+
 		}
 
 		#endregion

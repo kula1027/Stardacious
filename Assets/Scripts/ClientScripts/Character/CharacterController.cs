@@ -14,7 +14,13 @@ public class CharacterController : MonoBehaviour {
 	}
 
 	public void Move(Vector3 vec3_){
-		transform.position += vec3_ * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+		Vector3 one = new Vector3(1, 0, 0);
+		if(vec3_.x > 0){
+			transform.position += one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+		}
+		if(vec3_.x < 0){
+			transform.position -= one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+		}
 	} 
 
 	public void Jump(){

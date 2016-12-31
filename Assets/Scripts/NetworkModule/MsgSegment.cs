@@ -30,12 +30,12 @@ public class MsgSegment {
 	}
 
 	public MsgSegment(Vector2 vec2_){
-		attribute = AttrPos;
+		attribute = MsgAttr.position;
 		content = vec2_.x + "," + vec2_.y;
 	}
 
 	public MsgSegment(Vector3 vec3_){
-		attribute = AttrPos;
+		attribute = MsgAttr.position;
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
 	}
 
@@ -76,7 +76,6 @@ public class MsgSegment {
 	#region predef attrs
 	public const string AttrDefault = "ad";
 	public const string AttrReqId = "reqId";
-	public const string AttrPos = "pos";
 	public const string AttrCharacter = "chr";
 	public const string AttrDeleteObj = "dlobj";
 	public const string AttrExitClient = "exit";
@@ -86,11 +85,16 @@ public class MsgSegment {
 public class MsgAttr{
 	public const string projectile = "proj";
 	public const string monster = "mons";
+	public const string position = "pos";
 
 	public class Character{
 
 	}
 	public class Projectile{
 		public const string delete = "delProj";
+	}
+
+	public class Monster{
+		public const string appear = "monsappear";
 	}
 }

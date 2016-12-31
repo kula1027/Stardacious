@@ -15,11 +15,17 @@ namespace ServerSide{
 			get{return prManager;}
 		}
 
+		private ServerStageManager stgManager;
+		public ServerStageManager StgManager{
+			get{return stgManager;}
+		}
+
 		void Awake(){
 			instance = this;
 			DontDestroyOnLoad(gameObject);
 			chManager = GetComponent<ServerCharacterManager>();
 			prManager = GetComponent<ServerProjectileManager>();
+			stgManager = GetComponent<ServerStageManager>();
 		}
 
 		void Start(){			
@@ -27,8 +33,7 @@ namespace ServerSide{
 		}
 
 		public void BeginGame(){
-			//server character가 먼저 세팅된 상태여야 함
-
+			stgManager.BeginStage();
 		}
 
 		public void OnExitClient(int idx_){			
