@@ -4,6 +4,20 @@ using System.Collections;
 public class ClientMonster : MonoBehaviour, IObjectPoolable {
 	private int monsterIdx;
 
+	Interpolater itpl = new Interpolater();
+
+	void Start(){
+		StartCoroutine(PositionRoutine());
+	}
+
+	private IEnumerator PositionRoutine(){		
+		while(true){
+			transform.position = itpl.Interpolate();
+
+			yield return null;
+		}
+	}
+
 	#region IObjectPoolable implementation
 
 	public int GetOpIndex (){
@@ -16,7 +30,7 @@ public class ClientMonster : MonoBehaviour, IObjectPoolable {
 
 	public void OnRecv(MsgSegment[] bodies){
 		if(bodies[0].Attribute.Equals(MsgAttr.position)){
-			transform.position = Vector3.Lerp(transform.position, bodies[0].ConvertToV3(), 20f * Time.deltaTime);
+			itpl = new Interpolater(transform.position, bodies[0].ConvertToV3(), 0.05f);
 		}
 	}
 

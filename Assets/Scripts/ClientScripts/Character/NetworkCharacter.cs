@@ -15,13 +15,16 @@ public class NetworkCharacter : BaseCharacter {
 		set{targetPos = value;}
 	}
 
+	Interpolater itpl = new Interpolater();
+
 	void Start(){
 		StartCoroutine(PositionRoutine());
 	}
 
-	public IEnumerator PositionRoutine(){
+
+	public IEnumerator PositionRoutine(){		
 		while(true){
-			transform.position = Vector3.Lerp(transform.position, targetPos, 0.4f);
+			transform.position = itpl.Interpolate();
 
 			yield return null;
 		}
@@ -29,8 +32,9 @@ public class NetworkCharacter : BaseCharacter {
 
 	public override void OnRecvMsg (MsgSegment[] bodies){		
 		switch(bodies[0].Attribute){
-		case MsgAttr.position:
+		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
+			itpl = new Interpolater(transform.position, targetPos, NetworkCons.chPosSyncTime);
 			break;
 
 		case MsgSegment.AttrDeleteObj:
@@ -40,3 +44,4 @@ public class NetworkCharacter : BaseCharacter {
 
 	}
 }
+

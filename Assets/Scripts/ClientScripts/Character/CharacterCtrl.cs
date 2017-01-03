@@ -6,7 +6,6 @@ public class CharacterCtrl : MonoBehaviour {
 	private NetworkMessage nm;
 	private BaseCharacter baseCharacter;
 
-	private const float posSyncTime = 0.03f;
 	private Vector3 moveVector;
 
 	public void Initialize(){
@@ -43,10 +42,10 @@ public class CharacterCtrl : MonoBehaviour {
 
 	private IEnumerator SendPosRoutine(){
 		while(true){
-			nm.Body[0].SetContent(transform.position);
+			nm.Body[0].SetContent(transform.position); 
 			KingGodClient.instance.Send(nm);
 
-			yield return new WaitForSeconds(posSyncTime);
+			yield return new WaitForSeconds(NetworkCons.chPosSyncTime);
 		}
 	}
 }

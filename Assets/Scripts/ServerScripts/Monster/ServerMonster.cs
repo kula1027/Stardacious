@@ -4,6 +4,8 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerMonster : MonoBehaviour, IObjectPoolable {
 		private static ServerStageManager stgManager;
+		protected static ServerCharacterManager chManager;
+
 		private int monsterIdx;
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
@@ -12,6 +14,9 @@ namespace ServerSide{
 		void Awake(){
 			if(stgManager == null)
 				stgManager = ServerMasterManager.instance.StgManager;
+
+			if(chManager == null)
+				chManager = ServerMasterManager.instance.ChManager;
 		}
 
 		public void Ready(){
