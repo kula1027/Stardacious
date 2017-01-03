@@ -4,6 +4,9 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerMonster : MonoBehaviour, IObjectPoolable {
 		private static ServerStageManager stgManager;
+		protected static ServerCharacterManager chManager;
+
+
 		private int monsterIdx;
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
@@ -12,6 +15,9 @@ namespace ServerSide{
 		void Awake(){
 			if(stgManager == null)
 				stgManager = ServerMasterManager.instance.StgManager;
+
+			if (chManager == null)
+				chManager = ServerMasterManager.instance.ChManager;
 		}
 
 		public void Ready(){
@@ -61,6 +67,34 @@ namespace ServerSide{
 
 		void OnDestroy(){			
 			stgManager.OnMonsterDelete(monsterIdx);
+		}
+
+		/******* Monster's behavior methods. it will used by AI *******/
+		private Vector3 monsterDefaultSpeed = new Vector3(3, 0, 0);
+		private Vector3 monsterDashSpeed = new Vector3(2, 0, 0);
+
+		protected void MonsterJump(){
+			GetComponent<Rigidbody2D>().AddForce(Vector2.up * 520f);
+		}
+
+		protected void MonsterApproach(Vector3 closestCharacterPos_){
+			if (this.transform.position.x < closestCharacterPos_.x ) {
+				transform.position += monsterDefaultSpeed * Time.deltaTime;
+			} else {
+				transform.position -= monsterDefaultSpeed * Time.deltaTime;
+			}
+		}
+
+		protected void MonsterShootProjectile(){
+			//Debug.Log (GetOpIndex() + "th Shoot");
+		}
+
+		protected void MonsterBackStep(Vector3 closestCharacterPos_){
+			if (this.transform.position.x < closestCharacterPos_.x ) {
+				transform.position -= monsterDashSpeed * Time.deltaTime;
+			} else {
+				transform.position += monsterDashSpeed * Time.deltaTime;
+			}
 		}
 	}
 }
