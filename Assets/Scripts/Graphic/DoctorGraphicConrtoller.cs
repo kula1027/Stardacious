@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum MoveAnimState{Idle, Walk, Run, Jump, Hover}
 public class DoctorGraphicConrtoller : MonoBehaviour {
 
 	private Animator lowerAnimator;
@@ -10,7 +11,6 @@ public class DoctorGraphicConrtoller : MonoBehaviour {
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 	}
-	
 
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.A)) {
@@ -19,5 +19,9 @@ public class DoctorGraphicConrtoller : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.S)) {
 			lowerAnimator.Play("LongJump");
 		}
+	}
+
+	public void SetMoveState(){
+		
 	}
 }
