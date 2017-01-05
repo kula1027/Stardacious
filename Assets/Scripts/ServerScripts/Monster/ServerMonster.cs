@@ -96,5 +96,25 @@ namespace ServerSide{
 				transform.position += monsterDashSpeed * Time.deltaTime;
 			}
 		}
+		protected Vector3 SetClosestCharacterPos(Vector3[] currentCharacterPos_){
+			int i = 0;
+
+			Vector3 returnCharacterPos = currentCharacterPos_[i];
+			float currentCharacterDistance = 
+				Mathf.Pow(currentCharacterPos_[i].x - this.transform.position.x, 2) 
+				+ Mathf.Pow(currentCharacterPos_[i].y - this.transform.position.y, 2);
+			float tempCharacterDistance;
+
+
+			for (i = 1; i < NetworkCons.maxPlayer; i++) {
+				tempCharacterDistance = 
+					Mathf.Pow (currentCharacterPos_ [i].x - this.transform.position.x, 2)
+					+ Mathf.Pow (currentCharacterPos_ [i].y - this.transform.position.y, 2);
+				if (tempCharacterDistance < currentCharacterDistance)
+					returnCharacterPos = currentCharacterPos_ [i];
+			}
+
+			return returnCharacterPos;
+		}
 	}
 }

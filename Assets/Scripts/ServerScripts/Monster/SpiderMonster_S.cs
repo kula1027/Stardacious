@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class TestMonster_S : ServerMonster {
+	public class SpiderMonster_S : ServerMonster {
 		private Vector3[] currentCharacterPos = new Vector3[NetworkCons.maxPlayer];		/* give current all character's position */
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
@@ -16,23 +16,25 @@ namespace ServerSide{
 		void Update(){
 			if (!isStop)
 				MonsterApproach (closestCharacterPos);
-			if (isBack)
+			else if (isBack)
 				MonsterBackStep (closestCharacterPos);
 		}
 
 		private IEnumerator TestAI(){
 			while(true){
+				int beHaviorFactor = Random.Range (0,9);	// set random range
+
 				// check every character's position first
 				for (int i = 0 ; i < NetworkCons.maxPlayer; i++) {
 					if(chManager.GetCharacter (i) != null)
-						closestCharacterPos = chManager.GetCharacter(i).transform.position;
+						currentCharacterPos[i] = chManager.GetCharacter(i).transform.position;
 				}
-				//closestCharacterPos = SetClosestCharacterPos (currentCharacterPos);
+
+				closestCharacterPos = SetClosestCharacterPos (currentCharacterPos);
 
 				// main AIpart
 				if (Mathf.Abs (this.transform.position.x - closestCharacterPos.x) > 5) {
 					// 몬스터가 근접하는 코드 
-					int beHaviorFactor = Random.Range (0,9);	// set random range
 					isStop = false;
 
 					if (beHaviorFactor == 0 && isJump == false) {
@@ -46,8 +48,7 @@ namespace ServerSide{
 					}
 
 				} else {
-					// 몬스터가 근접햇을때
-					int beHaviorFactor = Random.Range (0,9);	// set random range
+					// 몬스터가 근접햇을때	
 					isStop = true;
 					isBack = false;
 
@@ -58,16 +59,9 @@ namespace ServerSide{
 					}
 				}
 
-				yield return new WaitForSeconds(0.5f);
+				yield return new WaitForSeconds((Random.Range(0.3f, 0.7f)));
 			}
 		}
 
-
-		/*
-		private Vector3 SetClosestCharacterPos(Vector3[] currentCharacterPos_){
-			for (int i = 0; i < NetworkCons.maxPlayer; i++) {
-				currentCharacterPos_ [i].x - this.transform.position.x;
-			}
-		}*/
 	}
 }
