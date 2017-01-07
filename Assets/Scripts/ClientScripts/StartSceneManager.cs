@@ -33,7 +33,7 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnNetworkSetupDone(){
 		configPanel.Hide();	
-		selCharPanel.Show();
+		readyPanel.Show();
 	}
 
 	public void OnBtnJoinClick(){
@@ -59,9 +59,7 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnBtnSelBackClick(){
 		selCharPanel.Hide();
-		configPanel.Show();
-		KingGodClient.instance.NetClient.ShutDown();
-		txtConfigState.text = "BLAH BLAH";
+		readyPanel.Show();
 	}
 
 	public void OnBtnReadyClick(){
@@ -69,7 +67,10 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnBtnReadyBackClick(){
-		selCharPanel.Show();
+		KingGodClient.instance.NetClient.ShutDown();
+		txtConfigState.text = "BLAH BLAH";
+
+		configPanel.Show();
 		readyPanel.Hide();
 	}
 }

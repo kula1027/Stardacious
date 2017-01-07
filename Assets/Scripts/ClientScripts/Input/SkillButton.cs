@@ -2,14 +2,5 @@
 using System.Collections;
 
 public class SkillButton : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+	public int skillIdx;
 }

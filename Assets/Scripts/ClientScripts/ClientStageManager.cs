@@ -14,7 +14,7 @@ public class ClientStageManager : MonoBehaviour {
 
 	void Awake(){
 		monsterPool = new ObjectPool();
-		goStage[0] = Resources.Load<GameObject>("Stage/C_TestStage0");
+		goStage[0] = Resources.Load<GameObject>("Stage/C_Stage0");
 		goStage[1] = Resources.Load<GameObject>("Stage/C_TestStage");
 		goStage[2] = Resources.Load<GameObject>("Stage/C_TestStage");
 		goStage[3] = Resources.Load<GameObject>("Stage/C_TestStage");

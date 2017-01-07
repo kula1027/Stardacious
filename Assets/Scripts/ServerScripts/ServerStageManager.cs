@@ -19,7 +19,7 @@ namespace ServerSide{
 
 		void Awake(){
 			monsterPool = new ObjectPool();
-			goStage[0] = Resources.Load<GameObject>("Stage/S_TestStage0");
+			goStage[0] = Resources.Load<GameObject>("Stage/S_Stage0");
 			goStage[1] = Resources.Load<GameObject>("Stage/S_TestStage");
 			goStage[2] = Resources.Load<GameObject>("Stage/S_TestStage");
 			goStage[3] = Resources.Load<GameObject>("Stage/S_TestStage");
