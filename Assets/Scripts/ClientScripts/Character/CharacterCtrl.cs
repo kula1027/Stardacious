@@ -8,12 +8,23 @@ public class CharacterCtrl : MonoBehaviour {
 	private NetworkMessage nm;
 	private BaseCharacter baseCharacter;
 
+	private SkillBehaviour[] skillBehaviour = new SkillBehaviour[4];//0 -> normal, 1 -> skill0
+
+
 	private Vector3 moveVector;
 
 	public void Initialize(){
 		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
 		baseCharacter = GetComponent<BaseCharacter>();
-		transform.position = new Vector3(4, 4.5f, 0);
+		transform.position = new Vector3(5, 4.5f, 0);
+
+		switch(baseCharacter.characterData.ChIndex){
+		case ChIdx.TEST:
+			
+
+
+			break;
+		}
 	}
 
 	public void Move(Vector3 vec3_){
@@ -21,6 +32,7 @@ public class CharacterCtrl : MonoBehaviour {
 		if(vec3_.x > 0){
 			transform.position += one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
 		}
+
 		if(vec3_.x < 0){
 			transform.position -= one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
 		}
@@ -35,6 +47,15 @@ public class CharacterCtrl : MonoBehaviour {
 		GameObject p = (GameObject)Resources.Load("testProjectile");
 		GameObject a = Instantiate(p, transform.position, transform.rotation) as GameObject;
 	}
+
+	public void UseSkill(int idx){
+		switch(idx){
+		case 0:
+
+			break;
+		}
+	}
+
 	public void UseSkill0(){}
 	public void UseSkill1(){}
 	public void UseSkill2(){}

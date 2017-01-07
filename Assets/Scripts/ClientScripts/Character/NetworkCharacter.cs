@@ -16,7 +16,6 @@ public class NetworkCharacter : BaseCharacter {
 	}
 
 	Interpolater itpl = new Interpolater();
-
 	void Start(){
 		StartCoroutine(PositionRoutine());
 	}
