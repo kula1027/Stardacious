@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CharacterCtrl : MonoBehaviour {
 	public static CharacterCtrl instance;
+	public bool isGround = false;
+
 	private NetworkMessage nm;
 	private BaseCharacter baseCharacter;
 
@@ -25,7 +27,8 @@ public class CharacterCtrl : MonoBehaviour {
 	} 
 
 	public void Jump(){
-		GetComponent<Rigidbody2D>().AddForce(Vector2.up * baseCharacter.characterData.jumpPower);
+		if(isGround)
+			GetComponent<Rigidbody2D>().AddForce(Vector2.up * baseCharacter.characterData.jumpPower);
 	}
 		
 	public void NormalAttack(){

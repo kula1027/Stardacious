@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Stage : MonoBehaviour {
 	public Vector3[] param = new Vector3[2];
+	public StageObject[] stageObject;
 
 	void Awake(){
 		
