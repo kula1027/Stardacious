@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ServerSide{
 	public class SpiderMonster_S : ServerMonster {
-		private Vector3[] currentCharacterPos = new Vector3[NetworkCons.maxPlayer];		/* give current all character's position */
+		private Vector3[] currentCharacterPos = new Vector3[NetworkConst.maxPlayer];		/* give current all character's position */
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
 		private bool isJump = false;
@@ -25,7 +25,7 @@ namespace ServerSide{
 				int beHaviorFactor = Random.Range (0,9);	// set random range
 
 				// check every character's position first
-				for (int i = 0 ; i < NetworkCons.maxPlayer; i++) {
+				for (int i = 0 ; i < NetworkConst.maxPlayer; i++) {
 					if(chManager.GetCharacter (i) != null)
 						currentCharacterPos[i] = chManager.GetCharacter(i).transform.position;
 				}

@@ -105,7 +105,7 @@ namespace ServerSide{
 			float tempCharacterDistance;
 
 
-			for (i = 1; i < NetworkCons.maxPlayer; i++) {
+			for (i = 1; i < NetworkConst.maxPlayer; i++) {
 				tempCharacterDistance = 
 					Mathf.Pow (currentCharacterPos_ [i].x - this.transform.position.x, 2)
 					+ Mathf.Pow (currentCharacterPos_ [i].y - this.transform.position.y, 2);

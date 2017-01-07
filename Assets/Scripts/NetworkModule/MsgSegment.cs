@@ -49,6 +49,12 @@ public class MsgSegment {
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
 	}
 
+	public MsgSegment(string attribute_, params int[] list){
+		attribute = attribute_;
+		foreach(int num in list)
+			content += num + ",";
+	}
+
 	/// <summary>
 	/// content를 Vector3로 치환하여 리턴한다
 	/// </summary>
@@ -60,6 +66,15 @@ public class MsgSegment {
 	public Vector2 ConvertToV2(){
 		string[] split = content.Split(',');
 		return new Vector2(float.Parse(split[0]), float.Parse(split[1]));
+	}
+
+	public int[] ConvertToIntList(){
+		string[] split = content.Split (',');
+		int[] result = new int[split.Length - 1];
+		for (int loop = 0; loop < result.Length; loop++) {
+			result [loop] = int.Parse (split[loop]);
+		}
+		return result;
 	}
 
 	/// <summary>

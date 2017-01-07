@@ -48,7 +48,7 @@ public class CharacterCtrl : MonoBehaviour {
 			nm.Body[0].SetContent(transform.position); 
 			KingGodClient.instance.Send(nm);
 
-			yield return new WaitForSeconds(NetworkCons.chPosSyncTime);
+			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}
 	}
 }

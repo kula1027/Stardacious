@@ -34,7 +34,7 @@ public class NetworkCharacter : BaseCharacter {
 		switch(bodies[0].Attribute){
 		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
-			itpl = new Interpolater(transform.position, targetPos, NetworkCons.chPosSyncTime);
+			itpl = new Interpolater(transform.position, targetPos, NetworkConst.chPosSyncTime);
 			break;
 
 		case MsgSegment.AttrDeleteObj:
