@@ -79,6 +79,7 @@ public class NetworkMessage {
 		header = new MsgSegment();
 		body = body_;
 	}
+
 	/// Exception...? muk nun go im?
 	public NetworkMessage(string rawString){
 		string[] segment = rawString.Split('/');

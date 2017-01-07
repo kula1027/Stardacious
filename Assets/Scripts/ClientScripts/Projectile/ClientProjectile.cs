@@ -22,7 +22,7 @@ public class ClientProjectile : MonoBehaviour, ICollidable {
 	}
 
 	void Awake(){
-		nm = new NetworkMessage(new MsgSegment(MsgAttr.projectile, ""), new MsgSegment(new Vector3()));
+		nm = new NetworkMessage(new MsgSegment(MsgAttr.projectile, KingGodClient.instance.NetClient.NetworkId, ), new MsgSegment(new Vector3()));
 	}
 
 	void Start(){

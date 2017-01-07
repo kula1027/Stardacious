@@ -15,7 +15,6 @@ namespace ServerSide {
 		public ServerProjectile GetProjectile (int idx_) {
 			if (projectile [idx_] == null) {
 				projectile [idx_] = Instantiate (prefabServerCharacter).GetComponent<ServerProjectile> ();
-				projectile [idx_].NetworkId = idx_;
 			}
 			return projectile [idx_];
 		}

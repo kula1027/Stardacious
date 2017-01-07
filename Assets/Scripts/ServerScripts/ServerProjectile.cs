@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ServerSide
 {
-	public class ServerProjectile : StardaciousObject, ICollidable, IObjectPoolable
+	public class ServerProjectile : MonoBehaviour, ICollidable, IObjectPoolable
 	{
 		#region ICollidable implementation
 		public void OnCollision (Collider2D col) {
@@ -26,14 +26,16 @@ namespace ServerSide
 
 		public void OnRecv (MsgSegment[] bodies)
 		{
-			if (isFiredByServer) {
-				StopCoroutine (shshRoutine());
-				isFiredByServer = false;
+			Debug.Log ("OnRecv");
+			if (isFireByServer) {
+				isFireByServer = false;
+				StopCoroutine (shsh);
 			}
 			if (bodies [0].Attribute.Equals (MsgAttr.position)) {
-				print ("asdsd");
+				Debug.Log  ("position Updated");
 				transform.position = bodies [0].ConvertToV3 ();
 			} else if (bodies [0].Attribute.Equals (MsgAttr.Projectile.delete)) {
+				Debug.Log  ("destoried");
 				ProjectileDestroy ();
 			}
 		}
@@ -44,10 +46,10 @@ namespace ServerSide
 		private const float posSyncTime = 0.03f;
 		private int networkId = -1;
 
-		private bool isFiredByServer = true;
 		private Vector3 dir = new Vector3(1, 0, 0);
 		private const float speed = 2f;
 		private const float flightTimeLimit = 3f;
+		private bool isFireByServer = true;
 
 		public int NetworkId {
 			get{ return networkId; }
@@ -59,29 +61,36 @@ namespace ServerSide
 
 		private PrIdx prIdx = PrIdx.TEST;
 
-		void Awake ()
-		{			
+		private IEnumerator shsh;
 
+		void Awake ()
+		{
+			Debug.Log ("projectile Awake");
+			shsh = shshRoutine ();
+			StartCoroutine(shsh);
 		}
 
 		void Start ()
 		{
-			StartCoroutine(shshRoutine());
+			Debug.Log ("projectile Start");
 			StartSendPos ();
 		}
 
 		private IEnumerator shshRoutine(){
 			float flightTime = 0f;
 			while(flightTimeLimit > flightTime){
+				Debug.Log  ("shshRoutine");
 				transform.position += dir * speed * Time.deltaTime;
 				flightTime += Time.deltaTime;
 
 				yield return null;
 			}
+			ProjectileDestroy ();
 		}
 
 		public void StartSendPos ()
 		{
+			Debug.Log  ("StartSendPos");
 			msgHeader = new MsgSegment (MsgAttr.projectile, networkId.ToString ());
 			msgBody = new MsgSegment (new Vector3 ());
 			StartCoroutine (SendPosRoutine ());
@@ -89,7 +98,8 @@ namespace ServerSide
 
 		private IEnumerator SendPosRoutine ()
 		{
-			while (true) {				
+			while (true) {
+				Debug.Log  ("SendPosRoutine");
 				msgBody.SetContent (transform.position);
 				Network_Server.BroadCast (new NetworkMessage (msgHeader, msgBody));
 
@@ -98,7 +108,6 @@ namespace ServerSide
 		}
 
 		public void ProjectileDestroy(){
-			print ("destoried");
 			StopCoroutine (SendPosRoutine());
 
 			msgBody = new MsgSegment (MsgAttr.Projectile.delete, "");

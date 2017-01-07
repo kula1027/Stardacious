@@ -24,6 +24,7 @@ namespace ServerSide{
 			for(int loop = 0; loop < 10; loop++){
 				GameObject monster = (GameObject)Instantiate(Resources.Load<GameObject>("TestMonster_S"));
 				monsterPool.AddObject(monster.GetComponent<IObjectPoolable>());
+				monster.transform.position = new Vector3 (8, 5, 0);
 				monster.GetComponent<ServerMonster>().Ready();
 			}
 		}
