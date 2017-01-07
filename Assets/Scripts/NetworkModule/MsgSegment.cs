@@ -112,10 +112,12 @@ public class MsgAttr{
 
 	}
 	public class Projectile{
-		public const string delete = "delProj";
+		public const string delete = "delproj";
+
 	}
 
 	public class Monster{
 		public const string appear = "monsappear";
+		public const string AttrBullet = "bullet";
 	}
 }

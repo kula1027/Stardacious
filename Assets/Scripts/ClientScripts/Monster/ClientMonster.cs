@@ -34,5 +34,12 @@ public class ClientMonster : MonoBehaviour, IObjectPoolable {
 		}
 	}
 
+	public void OnRequested (){
+		//throw new System.NotImplementedException ();
+	}
+
+	public void OnReturned (){
+		//throw new System.NotImplementedException ();
+	}
 	#endregion
 }

@@ -7,28 +7,25 @@ public class ClientStageManager : MonoBehaviour {
 		get{return currentStage;}
 	}
 
-	private GameObject[] goStage = new GameObject[5];
+	private GameObject[] goStage = new GameObject[3];	
 	private Transform safeBar;
 
-	private ObjectPool monsterPool;
+	private ObjectPooler monsterPooler;
 
 	void Awake(){
-		monsterPool = new ObjectPool();
-		goStage[0] = Resources.Load<GameObject>("Stage/C_Stage0");
-		goStage[1] = Resources.Load<GameObject>("Stage/C_TestStage");
-		goStage[2] = Resources.Load<GameObject>("Stage/C_TestStage");
-		goStage[3] = Resources.Load<GameObject>("Stage/C_TestStage");
-		goStage[4] = Resources.Load<GameObject>("Stage/C_TestStage");
+		monsterPooler = gameObject.AddComponent<ObjectPooler>();
 
 		safeBar = GameObject.Find("SafeBar").transform;
 	}
 
 	void Start(){
-		goStage[0] = Instantiate(goStage[0]);
-		goStage[0].transform.position = Vector3.zero;
+		for(int loop = 0; loop < goStage.Length; loop++){
+			goStage[loop] = GameObject.Find("Stages").transform.GetChild(loop).gameObject;
+		}
+
 		Stage cStg = goStage[0].GetComponent<Stage>();
 		cStg.Initialize();
-		safeBar.position = cStg.GetComponent<Stage>().param[1];
+		safeBar.position = cStg.param[1];
 		Camera.main.GetComponent<CameraControl>().SetLimit(cStg.param[0].x, cStg.param[1].x);
 	}
 		
@@ -39,14 +36,12 @@ public class ClientStageManager : MonoBehaviour {
 		}
 
 		goStage[idx] = Instantiate(goStage[idx]);
-		goStage[idx].transform.position = goStage[idx - 1].GetComponent<Stage>().param[1];
-		goStage[idx].GetComponent<Stage>().Initialize();
 		currentStage = idx;
 		safeBar.position = goStage[idx].GetComponent<Stage>().param[1];
 	}
 
 	public void DelegateMsg(int idx, MsgSegment[] bodies){
-		monsterPool.GetObject(idx).OnRecv(bodies);
+		monsterPooler.GetObject(idx).OnRecv(bodies);
 	}
 
 	public void CreateMonster(MsgSegment[] bodies){		
@@ -56,13 +51,11 @@ public class ClientStageManager : MonoBehaviour {
 		IObjectPoolable mons = null;
 		switch(monsType){
 		case MonsterType.NotInitialized:
-			mons = ((GameObject)Instantiate(Resources.Load<GameObject>("mon"))).GetComponent<IObjectPoolable>();
+			mons = monsterPooler.RequestObject((GameObject)Resources.Load("mon")).GetComponent<IObjectPoolable>();
 			break;
 		}
 
-		int rIdx = monsterPool.AddObject(mons);
-
-		if(rIdx != monsIdx){
+		if(mons.GetOpIndex() != monsIdx){
 			Debug.LogError("몬스터 인덱스 꼬임");
 		}
 	}

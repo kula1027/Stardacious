@@ -62,6 +62,14 @@ namespace ServerSide{
 
 		}
 
+		public void OnRequested (){
+			
+		}
+		public void OnReturned (){
+			
+		}
+
+	
 		#endregion
 
 		void OnDestroy(){			

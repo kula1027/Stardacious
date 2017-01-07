@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Interpolater{
 	float progress = 0;
-	Vector3 to;
-	Vector3 from;
-	float timeTake;
+	Vector3 to = Vector3.zero;
+	Vector3 from = Vector3.zero;
+	float timeTake = 1;
 
 	public Interpolater(){}
 

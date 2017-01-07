@@ -6,23 +6,32 @@ public class CharacterCtrl : MonoBehaviour {
 	public bool isGround = false;
 
 	private NetworkMessage nm;
-	private BaseCharacter baseCharacter;
 
-	private SkillBehaviour[] skillBehaviour = new SkillBehaviour[4];//0 -> normal, 1 -> skill0
+	private SkillBehaviour normalAttack;
+	private SkillBehaviour[] skillBehaviour = new SkillBehaviour[3];
 
+	protected CharacterGraphicCtrl characterGraphicCtrl;
+	public CharacterGraphicCtrl cgCtrl{
+		get{return characterGraphicCtrl;}
+	}
 
 	private Vector3 moveVector;
 
-	public void Initialize(){
+	#region chStat
+	float maxHp = 100f;
+	public float moveSpeed = 5f;
+	public float jumpPower = 520f;
+	#endregion
+
+
+	public void Initialize(ChIdx chIdex){
 		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
-		baseCharacter = GetComponent<BaseCharacter>();
+		characterGraphicCtrl = GetComponent<CharacterGraphicCtrl>();
 		transform.position = new Vector3(5, 4.5f, 0);
 
-		switch(baseCharacter.characterData.ChIndex){
+		switch(chIdex){
 		case ChIdx.TEST:
-			
-
-
+			normalAttack = gameObject.AddComponent<TestSkill>();
 			break;
 		}
 	}
@@ -30,22 +39,21 @@ public class CharacterCtrl : MonoBehaviour {
 	public void Move(Vector3 vec3_){
 		Vector3 one = new Vector3(1, 0, 0);
 		if(vec3_.x > 0){
-			transform.position += one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+			transform.position += one * moveSpeed * Time.deltaTime;
 		}
 
 		if(vec3_.x < 0){
-			transform.position -= one * baseCharacter.characterData.moveSpeed * Time.deltaTime;
+			transform.position -= one * moveSpeed * Time.deltaTime;
 		}
 	} 
 
 	public void Jump(){
 		if(isGround)
-			GetComponent<Rigidbody2D>().AddForce(Vector2.up * baseCharacter.characterData.jumpPower);
+			GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpPower);
 	}
 		
 	public void NormalAttack(){
-		GameObject p = (GameObject)Resources.Load("testProjectile");
-		GameObject a = Instantiate(p, transform.position, transform.rotation) as GameObject;
+		normalAttack.Use(transform);
 	}
 
 	public void UseSkill(int idx){

@@ -23,11 +23,10 @@ public class ClientMasterManager : MonoBehaviour {
 	}
 		
 	private void InitiatePlayerCharacter(){
-		PlayerData.characterData = new CharacterData(PlayerData.chosenCharacter);
 		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("chPlayableTest"));
 		pCharacter.GetComponent<TestCharacter>().Initialize();
 		CharacterCtrl.instance = pCharacter.AddComponent<CharacterCtrl>();
-		CharacterCtrl.instance.Initialize();
+		CharacterCtrl.instance.Initialize(ChIdx.TEST);
 		CharacterCtrl.instance.StartSendPos();
 		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
 	}				

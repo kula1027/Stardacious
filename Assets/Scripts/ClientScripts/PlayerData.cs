@@ -5,6 +5,6 @@ public class PlayerData {
 	public static string nickName;
 	public static ChIdx chosenCharacter = ChIdx.TEST;
 
-	public static CharacterData characterData;
+	//public static CharacterData characterData;
 
 }

@@ -15,21 +15,22 @@ namespace ServerSide{
 		private GameObject[] goStage = new GameObject[5];
 		private Transform safeBar;
 
-		private ObjectPool monsterPool;
+		ObjectPooler monsterPooler;
 
 		void Awake(){
-			monsterPool = new ObjectPool();
 			goStage[0] = Resources.Load<GameObject>("Stage/S_Stage0");
 			goStage[1] = Resources.Load<GameObject>("Stage/S_TestStage");
 			goStage[2] = Resources.Load<GameObject>("Stage/S_TestStage");
 			goStage[3] = Resources.Load<GameObject>("Stage/S_TestStage");
 			goStage[4] = Resources.Load<GameObject>("Stage/S_TestStage");
 
-
 			safeBar = GameObject.Find("SafeBar").transform;
+			monsterPooler = gameObject.AddComponent<ObjectPooler>();
 		}
 
 		void Start(){
+			
+
 			goStage[0] = Instantiate(goStage[0]);
 			goStage[0].transform.position = Vector3.zero;
 			goStage[0].GetComponent<Stage>().Initialize();
@@ -38,6 +39,7 @@ namespace ServerSide{
 			LoadStage(2);
 			LoadStage(3);
 			LoadStage(4);
+
 		}
 
 		public void LoadStage(int idx){
@@ -52,27 +54,26 @@ namespace ServerSide{
 		}			
 
 		public void BeginStage(int idx){
+			//monsterPooler.RequestObject
 			currentStage = idx;
 			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
 
 			safeBar.position = goStage[currentStage].GetComponent<Stage>().param[1];
 
-			GameObject mSet = Instantiate(Resources.Load<GameObject>("Stage/MonsterSet0"));
-			currentMonsterCount = mSet.transform.childCount;
-			mSet.transform.position = goStage[currentStage].transform.position;
+			currentMonsterCount = goStage[currentStage].transform.FindChild("MonsterPos").childCount;
 
 			if(currentMonsterCount > 0){
 				for(int loop = 0; loop < currentMonsterCount; loop++){
-					monsterPool.AddObject(mSet.transform.GetChild(loop).GetComponent<IObjectPoolable>());
-					mSet.transform.GetChild(loop).GetComponent<ServerMonster>().Ready();
+					GameObject mGo = monsterPooler.RequestObject((GameObject)Resources.Load("TestMonster_S"));
+					mGo.transform.position = goStage[currentStage].transform.FindChild("MonsterPos").GetChild(loop).position;
+					mGo.GetComponent<ServerMonster>().Ready();
 				}
 			}else{
 				OnMonsterAllKill();
 			}
 		}
 
-		public void OnMonsterDelete(int idx){
-			monsterPool.DeleteObject(idx);
+		public void OnMonsterDelete(int idx){			
 			currentMonsterCount--;
 			if(currentMonsterCount < 1){
 				OnMonsterAllKill();

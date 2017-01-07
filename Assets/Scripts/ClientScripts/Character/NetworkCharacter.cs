@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 네트워크로 제어되는 다른 클라이언트들의 캐릭터 객체
 /// </summary>
-public class NetworkCharacter : BaseCharacter {
+public class NetworkCharacter : MonoBehaviour {
 	private int networkId;
 	public int NetworkId{
 		get{return networkId;}
@@ -29,7 +29,7 @@ public class NetworkCharacter : BaseCharacter {
 		}
 	}
 
-	public override void OnRecvMsg (MsgSegment[] bodies){		
+	public void OnRecvMsg (MsgSegment[] bodies){		
 		switch(bodies[0].Attribute){
 		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
