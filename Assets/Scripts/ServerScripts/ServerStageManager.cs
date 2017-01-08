@@ -3,6 +3,10 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerStageManager : MonoBehaviour {
+		ServerStageManager instance;
+
+		private ObjectPooler monsterPooler;
+
 		private int currentStage;//0번 스테이지부터 시작한다
 		public int CurrentStage{
 			get{return currentStage;}
@@ -12,49 +16,27 @@ namespace ServerSide{
 			get{return currentMonsterCount;}
 		}
 
-		private GameObject[] goStage = new GameObject[5];
+		private GameObject[] goStage = new GameObject[3];
 		private Transform safeBar;
 
-		ObjectPooler monsterPooler;
-
 		void Awake(){
-			goStage[0] = Resources.Load<GameObject>("Stage/S_Stage0");
-			goStage[1] = Resources.Load<GameObject>("Stage/S_TestStage");
-			goStage[2] = Resources.Load<GameObject>("Stage/S_TestStage");
-			goStage[3] = Resources.Load<GameObject>("Stage/S_TestStage");
-			goStage[4] = Resources.Load<GameObject>("Stage/S_TestStage");
+			instance = this;
 
 			safeBar = GameObject.Find("SafeBar").transform;
 			monsterPooler = gameObject.AddComponent<ObjectPooler>();
 		}
 
 		void Start(){
-			
-
-			goStage[0] = Instantiate(goStage[0]);
-			goStage[0].transform.position = Vector3.zero;
-			goStage[0].GetComponent<Stage>().Initialize();
-
-			LoadStage(1);
-			LoadStage(2);
-			LoadStage(3);
-			LoadStage(4);
-
-		}
-
-		public void LoadStage(int idx){
-			if(idx < 1){
-				Debug.Log("Stage Idx has to be bigger than 0");
-				return;
+			for(int loop = 0; loop < goStage.Length; loop++){
+				goStage[loop] = GameObject.Find("Stages").transform.GetChild(loop).gameObject;
 			}
 
-			goStage[idx] = Instantiate(goStage[idx]);
-			goStage[idx].transform.position = goStage[idx - 1].GetComponent<Stage>().param[1];
-			goStage[idx].GetComponent<Stage>().Initialize();
-		}			
-
-		public void BeginStage(int idx){
-			//monsterPooler.RequestObject
+			Stage cStg = goStage[0].GetComponent<Stage>();
+			cStg.Initialize();
+			safeBar.position = cStg.param[1];
+		}
+			
+		public void BeginStage(int idx){			
 			currentStage = idx;
 			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
 

@@ -25,7 +25,7 @@ public class Client_ConsoleParser : ConsoleParser {
 				break;
 
 			case Disconnect:
-				netClient.ShutDown();
+				Network_Client.ShutDown();
 				break;
 
 			case Connect:

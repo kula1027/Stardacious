@@ -14,13 +14,12 @@ public class NetworkCharacter : MonoBehaviour {
 	public Vector3 TargetPos{
 		set{targetPos = value;}
 	}
-
-	Interpolater itpl = new Interpolater();
+		
 	void Start(){
 		StartCoroutine(PositionRoutine());
 	}
 
-
+	Interpolater itpl = new Interpolater();
 	public IEnumerator PositionRoutine(){		
 		while(true){
 			transform.position = itpl.Interpolate();
@@ -36,7 +35,7 @@ public class NetworkCharacter : MonoBehaviour {
 			itpl = new Interpolater(transform.position, targetPos, NetworkConst.chPosSyncTime);
 			break;
 
-		case MsgSegment.AttrDeleteObj:
+		case MsgAttr.destroy:
 			Destroy(gameObject);
 			break;
 		}

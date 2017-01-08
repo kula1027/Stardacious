@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClientMonster : MonoBehaviour, IObjectPoolable {
+public class ClientMonster : MonoBehaviour, IRecvPoolable {
 	private int monsterIdx;
 
 	Interpolater itpl = new Interpolater();
@@ -32,6 +32,10 @@ public class ClientMonster : MonoBehaviour, IObjectPoolable {
 		if(bodies[0].Attribute.Equals(MsgAttr.position)){
 			itpl = new Interpolater(transform.position, bodies[0].ConvertToV3(), 0.05f);
 		}
+	}
+
+	public void SetPooler (ObjectPooler objectPooler){
+		//
 	}
 
 	public void OnRequested (){

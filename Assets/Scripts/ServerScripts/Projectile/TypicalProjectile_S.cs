@@ -2,18 +2,7 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class TypicalProjectile_S : ServerProjectile {
+	public class TypicalProjectile_S : ServerNetworkProjectile {
 
-		void Start () {
-			StartCoroutine(FlyingRoutine());
-		}
-
-		private IEnumerator FlyingRoutine(){
-			while(true){
-				transform.position += transform.right * flyingSpeed * Time.deltaTime;
-
-				yield return null;
-			}
-		}
 	}
 }

@@ -55,6 +55,10 @@ namespace ServerSide{
 			ClientManager.BroadCast(nm_);
 		}
 
+		public static void BroadCast(NetworkMessage nm_, int exclude_){
+			ClientManager.BroadCast(nm_, exclude_);
+		}
+
 		public static void UniCast(int targetId_, NetworkMessage nm_){
 			ClientManager.UniCast(targetId_, nm_);
 		}

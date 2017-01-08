@@ -26,8 +26,8 @@ namespace ServerSide{
 
 				// check every character's position first
 				for (int i = 0 ; i < NetworkConst.maxPlayer; i++) {
-					if(chManager.GetCharacter (i) != null)
-						currentCharacterPos[i] = chManager.GetCharacter(i).transform.position;
+					if(ServerCharacterManager.instance.GetCharacter (i) != null)
+						currentCharacterPos[i] = ServerCharacterManager.instance.GetCharacter(i).transform.position;
 				}
 
 				closestCharacterPos = SetClosestCharacterPos (currentCharacterPos);

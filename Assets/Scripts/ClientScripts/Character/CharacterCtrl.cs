@@ -25,7 +25,7 @@ public class CharacterCtrl : MonoBehaviour {
 
 
 	public void Initialize(ChIdx chIdex){
-		nm = new NetworkMessage(new MsgSegment(MsgSegment.AttrCharacter, ""), new MsgSegment(new Vector3()));
+		nm = new NetworkMessage(new MsgSegment(MsgAttr.character, ""), new MsgSegment(new Vector3()));
 		characterGraphicCtrl = GetComponent<CharacterGraphicCtrl>();
 		transform.position = new Vector3(5, 4.5f, 0);
 
@@ -34,6 +34,8 @@ public class CharacterCtrl : MonoBehaviour {
 			normalAttack = gameObject.AddComponent<TestSkill>();
 			break;
 		}
+
+		StartSendPos();
 	}
 
 	public void Move(Vector3 vec3_){
@@ -75,7 +77,7 @@ public class CharacterCtrl : MonoBehaviour {
 	private IEnumerator SendPosRoutine(){
 		while(true){
 			nm.Body[0].SetContent(transform.position); 
-			KingGodClient.instance.Send(nm);
+			Network_Client.Send(nm);
 
 			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}

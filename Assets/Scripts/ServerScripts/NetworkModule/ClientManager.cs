@@ -57,6 +57,22 @@ namespace ServerSide{
 			}
 		}
 
+		public static void BroadCast(NetworkMessage nm_, int exclude_){
+			if(arrayClient == null)return;
+
+
+			for(int loop = 0; loop < maxClientCount; loop++){
+				if(loop == exclude_)continue;
+
+				if(arrayClient[loop] != null){
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].Send (nm_.ToString ());
+					}
+				}
+			}
+		}
+
 		public static void UniCast(int targetId_, NetworkMessage nm_){
 			if(arrayClient[targetId_] != null){
 				if(arrayClient[targetId_].IsConnected)

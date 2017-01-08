@@ -31,6 +31,15 @@ public class StartSceneManager : MonoBehaviour {
 		configPanel.Show();
 	}
 
+	public void OnRecv(NetworkMessage networkMessage){
+		switch(networkMessage.Body[0].Attribute){
+			case MsgAttr.Setup.reqId:
+			string givenId = networkMessage.Body[0].Content;
+			Network_Client.NetworkId = int.Parse(givenId);
+			break;
+		}
+	}
+
 	public void OnNetworkSetupDone(){
 		configPanel.Hide();	
 		readyPanel.Show();
@@ -67,7 +76,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnBtnReadyBackClick(){
-		KingGodClient.instance.NetClient.ShutDown();
+		Network_Client.ShutDown();
 		txtConfigState.text = "BLAH BLAH";
 
 		configPanel.Show();

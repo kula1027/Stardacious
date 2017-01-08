@@ -3,20 +3,13 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerMonster : MonoBehaviour, IObjectPoolable {
-		private static ServerStageManager stgManager;
-		protected static ServerCharacterManager chManager;
-
 		private int monsterIdx;
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
 		private MonsterType monsType = MonsterType.NotInitialized;
 
 		void Awake(){
-			if(stgManager == null)
-				stgManager = ServerMasterManager.instance.StgManager;
-			
-			if (chManager == null)
-				chManager = ServerMasterManager.instance.ChManager;
+
 		}
 
 		public void Ready(){
@@ -31,7 +24,7 @@ namespace ServerSide{
 		}
 
 		private void NotifyAppearence(){
-			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.Monster.appear);
+			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
 			MsgSegment b = new MsgSegment(((int)monsType).ToString(), monsterIdx.ToString());
 
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
@@ -65,16 +58,16 @@ namespace ServerSide{
 		public void OnRequested (){
 			
 		}
+
 		public void OnReturned (){
 			
 		}
 
+		public void SetPooler (ObjectPooler objectPooler){
+			throw new System.NotImplementedException ();
+		}
 	
 		#endregion
-
-		void OnDestroy(){			
-			stgManager.OnMonsterDelete(monsterIdx);
-		}
 
 		/******* Monster's behavior methods. it will used by AI *******/
 		private Vector3 monsterDefaultSpeed = new Vector3(3, 0, 0);

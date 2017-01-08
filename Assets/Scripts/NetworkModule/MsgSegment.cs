@@ -6,7 +6,7 @@ public class MsgSegment {
 
 	private string attribute = null;
 	public string Attribute{
-		get{return (attribute == null) ? AttrDefault : attribute;}
+		get{return (attribute == null) ? "NotInitailized" : attribute;}
 		set{attribute = value;}
 	}
 	private string content = null;
@@ -17,11 +17,11 @@ public class MsgSegment {
 
 	public MsgSegment(){
 		content = "";
-		attribute = AttrDefault;
+		attribute = "NotInitailized";
 	}
 
-	public MsgSegment(string content_){
-		content = content_;
+	public MsgSegment(string attribute_){
+		attribute = attribute_;
 	}
 
 	public MsgSegment(string attribute_, string content_){
@@ -34,6 +34,9 @@ public class MsgSegment {
 		content = vec2_.x + "," + vec2_.y;
 	}
 
+	/// <summary>
+	/// Vector3를 인수로 하는 세그먼트는 default attribute를 position으로 한다.
+	/// </summary>
 	public MsgSegment(Vector3 vec3_){
 		attribute = MsgAttr.position;
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
@@ -87,37 +90,51 @@ public class MsgSegment {
 	public void SetContent(Vector3 vec3_){
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
 	}
-
-	#region predef attrs
-	public const string AttrDefault = "ad";
-	public const string AttrReqId = "reqId";
-	public const string AttrCharacter = "chr";
-	public const string AttrDeleteObj = "dlobj";
-	public const string AttrExitClient = "exit";
-	#endregion
 }
 
 public class MsgAttr{
-	public const string projectile = "proj";
-	public const string monster = "mons";
 	public const string position = "pos";
-	public const string stage = "stg";
 
+	public const string create = "appr";
+	public const string destroy = "des";
+
+	public const string setup = "setup";
+	public class Setup{
+		public const string reqId = "reqId";
+	}
+
+	public const string misc = "misc";
+	public class Misc{
+		public const string exitClient = "exit";
+	}
+
+
+	public const string local = "local";
+	public class Local{
+		public const string disconnect = "disc";
+	}
+
+
+	public const string stage = "stg";
 	public class Stage{
 		public const string gatherSign = "stggsign";
 		public const string moveStg = "stgmnext";
 	}
 
+
+	public const string character = "chr";
 	public class Character{
 
 	}
+
+
+	public const string projectile = "proj";
 	public class Projectile{
-		public const string delete = "delproj";
 
 	}
 
+
+	public const string monster = "mons";
 	public class Monster{
-		public const string appear = "monsappear";
-		public const string AttrBullet = "bullet";
 	}
 }

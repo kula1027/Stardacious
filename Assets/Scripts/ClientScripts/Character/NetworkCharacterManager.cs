@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class NetworkCharacterManager : MonoBehaviour {
+	public static NetworkCharacterManager instance;
+
 	private const int maxCharacterCount = 3;
 
 	private GameObject prefabCharacter;
@@ -9,6 +11,8 @@ public class NetworkCharacterManager : MonoBehaviour {
 	private NetworkCharacter[] otherCharacter = new NetworkCharacter[maxCharacterCount];
 
 	void Awake(){
+		instance = this;
+
 		prefabCharacter = (GameObject)Resources.Load("chNetTest");
 	}
 
@@ -17,7 +21,7 @@ public class NetworkCharacterManager : MonoBehaviour {
 	}
 
 	public NetworkCharacter GetNetCharacter(int idx_){
-		if(idx_ == KingGodClient.instance.NetClient.NetworkId)return null;
+		if(idx_ == Network_Client.NetworkId)return null;
 		if(otherCharacter[idx_] == null){
 			GameObject go = (GameObject)Instantiate(prefabCharacter);
 			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
@@ -25,5 +29,14 @@ public class NetworkCharacterManager : MonoBehaviour {
 		}
 			
 		return otherCharacter[idx_];
+	}
+
+	public void OnRecv(NetworkMessage networkMessage){
+		int chId = int.Parse(networkMessage.Header.Content);
+
+		NetworkCharacter targetChar = NetworkCharacterManager.instance.GetNetCharacter(chId);
+		if(targetChar != null){
+			targetChar.OnRecvMsg(networkMessage.Body);
+		}
 	}
 }

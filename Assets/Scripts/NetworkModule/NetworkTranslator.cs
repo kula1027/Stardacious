@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class NetworkTranslator : MonoBehaviour {
-	private List<MsgHandler> listMsgHandler;
+	private MsgHandler msgHandler;
 
 	public Text txtMsgCount;
 
 	void Awake(){
-		listMsgHandler = new List<MsgHandler>();
+		
 	}
 
-	public void AddMsgHandler(MsgHandler msgHandler_){
-		listMsgHandler.Add(msgHandler_);
+	public void SetMsgHandler(MsgHandler msgHandler_){
+		msgHandler = msgHandler_;
 	}
 
 	void Start(){
@@ -28,7 +28,7 @@ public class NetworkTranslator : MonoBehaviour {
 			msgCount = ReceiveQueue.GetCount();
 			if(msgCount > 0){
 				for(int loop = 0; loop < msgCount; loop++){
-					ParseMsg(ReceiveQueue.SyncDequeMsg());
+					msgHandler.HandleMsg(ReceiveQueue.SyncDequeMsg());
 				}
 			}
 
@@ -41,15 +41,6 @@ public class NetworkTranslator : MonoBehaviour {
 			}
 
 			yield return null;
-		}
-	}
-
-	private void ParseMsg(NetworkMessage networkMsg){
-		for(int loop = 0; loop < listMsgHandler.Count; loop++){
-			if(networkMsg.Header.Attribute.Equals(listMsgHandler[loop].Attr)){
-				listMsgHandler[loop].HandleMsg(networkMsg);
-				continue;
-			}
 		}
 	}
 }

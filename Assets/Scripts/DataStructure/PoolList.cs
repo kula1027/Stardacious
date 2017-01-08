@@ -22,7 +22,7 @@ public class PoolList : MonoBehaviour{
 				GameObject iGo = Instantiate(go_);
 				iGo.transform.SetParent(transform);
 				iGo.SetActive(false);
-				iGo.GetComponent<IObjectPoolable>().SetOpIndex(loop + totalObjCount + poolId);
+				iGo.GetComponent<IRecvPoolable>().SetOpIndex(loop + totalObjCount + poolId);
 				usableIdxQue.Enqueue(loop + totalObjCount);
 			}
 
@@ -32,18 +32,33 @@ public class PoolList : MonoBehaviour{
 		int objIdx = usableIdxQue.Dequeue();
 
 		transform.GetChild(objIdx).gameObject.SetActive(true);
-		transform.GetChild(objIdx).GetComponent<IObjectPoolable>().OnRequested();
+		transform.GetChild(objIdx).GetComponent<IRecvPoolable>().OnRequested();
 
 		return transform.GetChild(objIdx).gameObject;
 	}
 
+	public GameObject RequestObjectAt(GameObject go_, int idx_){		
+		while(totalObjCount <= idx_){
+			GameObject iGo = Instantiate(go_);
+			iGo.transform.SetParent(transform);
+			iGo.SetActive(false);
+			iGo.GetComponent<IRecvPoolable>().SetOpIndex(totalObjCount + poolId);
+			totalObjCount++;
+		}
+
+		transform.GetChild(idx_).gameObject.SetActive(true);
+		transform.GetChild(idx_).GetComponent<IRecvPoolable>().OnRequested();
+
+		return transform.GetChild(idx_).gameObject;
+	}
+
 	public void ReturnObject(int idx_){
-		transform.GetChild(idx_).GetComponent<IObjectPoolable>().OnReturned();
+		transform.GetChild(idx_).GetComponent<IRecvPoolable>().OnReturned();
 		transform.GetChild(idx_).gameObject.SetActive(false);
 		usableIdxQue.Enqueue(idx_);
 	}
 
-	public IObjectPoolable GetObject(int idx_){
-		return transform.GetChild(idx_).GetComponent<IObjectPoolable>();
+	public IRecvPoolable GetObject(int idx_){
+		return transform.GetChild(idx_).GetComponent<IRecvPoolable>();
 	}
 }

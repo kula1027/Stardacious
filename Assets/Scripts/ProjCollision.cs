@@ -8,7 +8,7 @@ public class ProjCollision : MonoBehaviour {
 		collidable = GetComponentInParent<ICollidable>();
 	}
 
-	void OnTriggerEnter2D(Collider2D col){
+	void OnTriggerEnter2D(Collider2D col){		
 		collidable.OnCollision(col);
 	}
 }

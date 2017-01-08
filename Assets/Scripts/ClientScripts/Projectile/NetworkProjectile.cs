@@ -1,34 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkProjectile : StardaciousObject {
-	private int networkId;
-	public int NetworkId{
-		get{return networkId;}
-		set{networkId = value;}
-	}
+public class NetworkProjectile : PoolingObject {
 	private Vector3 targetPos;
 	public Vector3 TargetPos{
 		set{targetPos = value;}
 	}
 
-	void Start(){
+	public override void OnRequested (){
 		StartCoroutine(PositionRoutine());
 	}
 
+	public override void OnReturned (){
+		ConsoleMsgQueue.EnqueMsg("Deleted: " + GetOpIndex());
+	}
+
+	public override void OnRecv (MsgSegment[] bodies){
+		switch(bodies[0].Attribute){
+		case MsgAttr.position:			
+			targetPos = bodies[0].ConvertToV3();
+			itpl = new Interpolater(transform.position, targetPos, NetworkConst.projPosSyncTime);
+			break;
+
+		case MsgAttr.destroy:
+			ReturnObject();
+			break;
+		}
+	}
+
+	Interpolater itpl = new Interpolater();
 	public IEnumerator PositionRoutine(){
 		while(true){
-			transform.position = Vector3.Lerp(transform.position, targetPos, 0.4f);
+			transform.position = itpl.Interpolate();
 
 			yield return null;
 		}
 	}
-
-	public override void OnRecvMsg (MsgSegment[] bodies){
-		if (bodies [0].Equals (MsgAttr.position)) {
-			targetPos = bodies [0].ConvertToV3 ();
-		} else if (bodies [0].Equals (MsgAttr.Projectile.delete)) {
-			GameObject.Destroy (gameObject);
-		}
-	}
+		
 }

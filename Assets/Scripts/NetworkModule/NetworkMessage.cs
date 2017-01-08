@@ -54,17 +54,17 @@ public class NetworkMessage {
 		body[0] = new MsgSegment(attr_, content_);
 	}
 
+	public NetworkMessage(){
+		adress = new MsgSegment(senderId, ServerId);
+		header = new MsgSegment();
+		body = new MsgSegment[1];
+		body[0] = new MsgSegment();
+	}
+
 	public NetworkMessage(MsgSegment[] body_){
 		adress = new MsgSegment(senderId, ServerId);
 		header = new MsgSegment();
 		body = body_;
-	}
-
-	public NetworkMessage(MsgSegment body_){
-		adress = new MsgSegment(senderId, ServerId);
-		header = new MsgSegment();
-		body = new MsgSegment[1];
-		body[0] = body_;
 	}
 
 	public NetworkMessage(MsgSegment header_, MsgSegment body_){
@@ -74,9 +74,9 @@ public class NetworkMessage {
 		body[0] = body_;
 	}
 
-	public NetworkMessage(string dest_, MsgSegment[] body_){
+	public NetworkMessage(MsgSegment header_, MsgSegment[] body_){
 		adress = new MsgSegment(senderId, ServerId);
-		header = new MsgSegment();
+		header = header_;
 		body = body_;
 	}
 

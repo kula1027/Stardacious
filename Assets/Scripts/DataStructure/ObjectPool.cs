@@ -207,32 +207,6 @@ public class ObjectPool{
 	#endregion
 }*/
 
-public interface IObjectPoolable{
-
-	/// <summary>
-	/// 오브젝트 풀에서의 인덱스로 사용할 변수 반환.
-	/// </summary>
-	/// <returns>The op index.</returns>
-	int GetOpIndex ();
-
-	/// <summary>
-	/// 오브젝트 풀에서의 인덱스로 사용할 변수에 값 설정.
-	/// </summary>
-	/// <returns>The op index.</returns>
-	void SetOpIndex (int index);
-
-	void OnRecv(MsgSegment[] bodies);
-
-	/// <summary>
-	/// 풀에 오브젝트를 요청해서 받았을때 콜된다
-	/// </summary>
-	void OnRequested();
-
-	/// <summary>
-	/// 오브젝트 풀에 반환될 때 콜된다.
-	/// </summary>
-	void OnReturned();
-}
 
 public class ObjectPoolException: Exception{
 	public ObjectPoolException(){

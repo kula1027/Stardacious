@@ -15,7 +15,7 @@ namespace ServerSide{
 		private ChIdx chIdx = ChIdx.TEST;
 
 		public void BuildSendMsg(){			
-			MsgSegment msgHeader = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
+			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
 			MsgSegment msgBody = new MsgSegment(new Vector3());
 			msgPos = new NetworkMessage(msgHeader, msgBody);
 		}
@@ -25,16 +25,16 @@ namespace ServerSide{
 				transform.position = bodies[0].ConvertToV3();
 
 				msgPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCast(msgPos);
+				Network_Server.BroadCast(msgPos, networkId);
 			}
 		}
 
 		void OnDestroy(){			
-			MsgSegment h = new MsgSegment(MsgSegment.AttrCharacter, networkId.ToString());
-			MsgSegment b = new MsgSegment(MsgSegment.AttrDeleteObj, "");
+			MsgSegment h = new MsgSegment(MsgAttr.character, networkId.ToString());
+			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage deleteMsg = new NetworkMessage(h, b);
 
-			Network_Server.BroadCast(deleteMsg);
+			Network_Server.BroadCast(deleteMsg, networkId);
 		}
 	}
 }

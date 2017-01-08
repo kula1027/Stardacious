@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class ClientStageManager : MonoBehaviour {
+	public static ClientStageManager instance;
+
 	private int currentStage = 0;
 	public int CurrentStage{
 		get{return currentStage;}
@@ -13,6 +15,7 @@ public class ClientStageManager : MonoBehaviour {
 	private ObjectPooler monsterPooler;
 
 	void Awake(){
+		instance = this;
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
 
 		safeBar = GameObject.Find("SafeBar").transform;
@@ -66,5 +69,20 @@ public class ClientStageManager : MonoBehaviour {
 		LoadStage(currentStage);
 		float rLim = goStage[currentStage].GetComponent<Stage>().param[1].x;
 		Camera.main.GetComponent<CameraControl>().SetLimitR(rLim);
+	}
+
+	public void OnRecv(NetworkMessage networkMessage){
+		MsgSegment recHead = networkMessage.Header;
+		if(recHead.Content.Equals(MsgAttr.create)){
+			ClientStageManager.instance.CreateMonster(networkMessage.Body);
+		}else{
+			int monsIdx = int.Parse(recHead.Content);
+			ClientStageManager.instance.DelegateMsg(monsIdx, networkMessage.Body);
+		}
+
+		if(networkMessage.Body[0].Attribute.Equals(MsgAttr.Stage.moveStg)){
+			int stgIdx = int.Parse(networkMessage.Body[0].Content);
+			ClientStageManager.instance.MoveStage(stgIdx);
+		}
 	}
 }
