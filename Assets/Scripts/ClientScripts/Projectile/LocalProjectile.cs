@@ -14,16 +14,24 @@ public class LocalProjectile : PoolingObject {
 		StartCoroutine(SendPosRoutine());
 	}
 
+	public override void Ready (){
+		NotifyAppearence();
+		StartSendPos();
+	}
+
 	protected void NotifyAppearence(){
-		ConsoleMsgQueue.EnqueMsg("Local Created: " + GetOpIndex());
+		ConsoleMsgQueue.EnqueMsg("Local Created: " + GetOpIndex(), 2);
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
-		MsgSegment b = new MsgSegment(objType.ToString(), GetOpIndex().ToString());
+		MsgSegment[] b = {
+			new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
+			new MsgSegment(transform.position)
+		};
 		NetworkMessage nmAppear = new NetworkMessage(h, b);
 		Network_Client.Send(nmAppear);
 	}
 
 	public override void OnReturned (){
-		ConsoleMsgQueue.EnqueMsg("Local Delete: " + GetOpIndex());
+		ConsoleMsgQueue.EnqueMsg("Local Delete: " + GetOpIndex(), 2);
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment b = new MsgSegment(MsgAttr.destroy);
 		NetworkMessage nmAppear = new NetworkMessage(h, b);

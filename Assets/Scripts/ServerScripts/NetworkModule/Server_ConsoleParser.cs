@@ -26,7 +26,7 @@ namespace ServerSide{
 					break;
 
 				case Begin:
-					ServerMasterManager.instance.BeginGame();
+					ServerStageManager.instance.BeginStage(0);
 					break;
 				}
 			}catch(Exception e){

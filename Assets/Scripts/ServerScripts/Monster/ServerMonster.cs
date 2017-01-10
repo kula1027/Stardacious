@@ -2,72 +2,52 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class ServerMonster : MonoBehaviour, IObjectPoolable {
-		private int monsterIdx;
+	public class ServerMonster : PoolingObject {
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
-		private MonsterType monsType = MonsterType.NotInitialized;
 
-		void Awake(){
-
-		}
-
-		public void Ready(){
-			nmPos = new NetworkMessage(
-				new MsgSegment(MsgAttr.monster, monsterIdx.ToString()),
-				new MsgSegment(new Vector3())
-			);
+		public override void Ready(){
+			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
+			MsgSegment b = new MsgSegment(new Vector3());
+			nmPos = new NetworkMessage(h, b);
 
 			NotifyAppearence();
 
-			StartCoroutine(PosSyncRoutine());
+			StartCoroutine(SendPosRoutine());
+		}
+
+		public override void OnRecv (MsgSegment[] bodies){
+			switch(bodies[0].Attribute){
+			case MsgAttr.destroy:
+				MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
+				NetworkMessage nmDestroy = new NetworkMessage(h, bodies);
+				Network_Server.BroadCast(nmDestroy);
+
+				ReturnObject();
+				break;
+			}
 		}
 
 		private void NotifyAppearence(){
 			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
-			MsgSegment b = new MsgSegment(((int)monsType).ToString(), monsterIdx.ToString());
-
+			MsgSegment[] b = {
+				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
+			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 
 			Network_Server.BroadCast(nmAppear);
 		}
 
-		private IEnumerator PosSyncRoutine(){
+		private IEnumerator SendPosRoutine(){
 			while(true){
 				nmPos.Body[0] = new MsgSegment(transform.position);
-				Network_Server.BroadCast(nmPos);			
+				Network_Server.BroadCast(nmPos);		
 
 				yield return new WaitForSeconds(posSyncItv);
 			}
 		}
 
-		#region IObjectPoolable implementation
-
-		public int GetOpIndex (){
-			return monsterIdx;
-		}
-
-		public void SetOpIndex (int index){
-			monsterIdx = index;
-		}
-
-		public void OnRecv(MsgSegment[] bodies){
-
-		}
-
-		public void OnRequested (){
-			
-		}
-
-		public void OnReturned (){
-			
-		}
-
-		public void SetPooler (ObjectPooler objectPooler){
-			throw new System.NotImplementedException ();
-		}
-	
-		#endregion
 
 		/******* Monster's behavior methods. it will used by AI *******/
 		private Vector3 monsterDefaultSpeed = new Vector3(3, 0, 0);

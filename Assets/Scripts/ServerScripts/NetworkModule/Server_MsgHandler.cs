@@ -22,6 +22,10 @@ namespace ServerSide{
 			case MsgAttr.projectile:
 				ServerProjectileManager.instance.OnRecv(networkMessage);
 				break;
+
+			case MsgAttr.monster:
+				ServerStageManager.instance.OnRecv(networkMessage);
+				break;
 			}
 		}
 	}

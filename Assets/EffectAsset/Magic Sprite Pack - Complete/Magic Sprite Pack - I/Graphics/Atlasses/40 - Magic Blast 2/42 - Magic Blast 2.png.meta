@@ -1,7 +1,31 @@
 fileFormatVersion: 2
 guid: 21ea6dc53b1e39a49bc066b02b0e1a03
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 42 - Magic Blast 2_0
+    21300002: 42 - Magic Blast 2_1
+    21300004: 42 - Magic Blast 2_2
+    21300006: 42 - Magic Blast 2_3
+    21300008: 42 - Magic Blast 2_4
+    21300010: 42 - Magic Blast 2_5
+    21300012: 42 - Magic Blast 2_6
+    21300014: 42 - Magic Blast 2_7
+    21300016: 42 - Magic Blast 2_8
+    21300018: 42 - Magic Blast 2_9
+    21300020: 42 - Magic Blast 2_10
+    21300022: 42 - Magic Blast 2_11
+    21300024: 42 - Magic Blast 2_12
+    21300026: 42 - Magic Blast 2_13
+    21300028: 42 - Magic Blast 2_14
+    21300030: 42 - Magic Blast 2_15
+    21300032: 42 - Magic Blast 2_16
+    21300034: 42 - Magic Blast 2_17
+    21300036: 42 - Magic Blast 2_18
+    21300038: 42 - Magic Blast 2_19
+    21300040: 42 - Magic Blast 2_20
+    21300042: 42 - Magic Blast 2_21
+    21300044: 42 - Magic Blast 2_22
+    21300046: 42 - Magic Blast 2_23
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

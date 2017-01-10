@@ -1,7 +1,23 @@
 fileFormatVersion: 2
 guid: 499e8ec390fb95348981793faabd9979
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 84 - Magic Bless 2_0
+    21300002: 84 - Magic Bless 2_1
+    21300004: 84 - Magic Bless 2_2
+    21300006: 84 - Magic Bless 2_3
+    21300008: 84 - Magic Bless 2_4
+    21300010: 84 - Magic Bless 2_5
+    21300012: 84 - Magic Bless 2_6
+    21300014: 84 - Magic Bless 2_7
+    21300016: 84 - Magic Bless 2_8
+    21300018: 84 - Magic Bless 2_9
+    21300020: 84 - Magic Bless 2_10
+    21300022: 84 - Magic Bless 2_11
+    21300024: 84 - Magic Bless 2_12
+    21300026: 84 - Magic Bless 2_13
+    21300028: 84 - Magic Bless 2_14
+    21300030: 84 - Magic Bless 2_15
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

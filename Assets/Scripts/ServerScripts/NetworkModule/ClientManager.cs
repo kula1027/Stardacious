@@ -4,8 +4,7 @@ using System.Net.Sockets;
 using System;
 
 namespace ServerSide{
-	public static class ClientManager {
-		public const int maxClientCount = 3;
+	public static class ClientManager {		
 		public const int maxProjectileCount = 20;
 
 		private static TcpConnection[] arrayClient;
@@ -21,11 +20,11 @@ namespace ServerSide{
 
 		public static void Init(){
 			freeQueue = new Queue<int>();
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				freeQueue.Enqueue(loop);
 			}
 
-			arrayClient = new TcpConnection[maxClientCount];
+			arrayClient = new TcpConnection[NetworkConst.maxPlayer];
 		}
 
 		public static bool AddClient(Socket welcomeSocket_){
@@ -47,7 +46,7 @@ namespace ServerSide{
 			if(arrayClient == null)return;
 
 
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(arrayClient[loop] != null){
 					if (arrayClient [loop].IsConnected) {
 						nm_.Adress.Content = loop.ToString ();
@@ -61,7 +60,7 @@ namespace ServerSide{
 			if(arrayClient == null)return;
 
 
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(loop == exclude_)continue;
 
 				if(arrayClient[loop] != null){
@@ -90,7 +89,7 @@ namespace ServerSide{
 		}
 
 		public static void ShutDown(){
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(arrayClient[loop] != null){
 					arrayClient[loop].ShutDown();
 				}

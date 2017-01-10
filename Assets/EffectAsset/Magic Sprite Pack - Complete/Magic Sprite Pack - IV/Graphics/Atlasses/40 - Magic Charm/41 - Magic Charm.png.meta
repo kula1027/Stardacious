@@ -1,7 +1,22 @@
 fileFormatVersion: 2
 guid: 096766c55c1b1e147a06f7724fb4d821
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 41 - Magic Charm_0
+    21300002: 41 - Magic Charm_1
+    21300004: 41 - Magic Charm_2
+    21300006: 41 - Magic Charm_3
+    21300008: 41 - Magic Charm_4
+    21300010: 41 - Magic Charm_5
+    21300012: 41 - Magic Charm_6
+    21300014: 41 - Magic Charm_7
+    21300016: 41 - Magic Charm_8
+    21300018: 41 - Magic Charm_9
+    21300020: 41 - Magic Charm_10
+    21300022: 41 - Magic Charm_11
+    21300024: 41 - Magic Charm_12
+    21300026: 41 - Magic Charm_13
+    21300028: 41 - Magic Charm_14
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

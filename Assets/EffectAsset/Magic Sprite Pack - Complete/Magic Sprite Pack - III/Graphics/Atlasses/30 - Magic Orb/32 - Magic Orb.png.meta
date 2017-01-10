@@ -1,7 +1,32 @@
 fileFormatVersion: 2
 guid: 18e3d3ac613d3094eba0c88a70f5a7f8
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 32 - Magic Orb_0
+    21300002: 32 - Magic Orb_1
+    21300004: 32 - Magic Orb_2
+    21300006: 32 - Magic Orb_3
+    21300008: 32 - Magic Orb_4
+    21300010: 32 - Magic Orb_5
+    21300012: 32 - Magic Orb_6
+    21300014: 32 - Magic Orb_7
+    21300016: 32 - Magic Orb_8
+    21300018: 32 - Magic Orb_9
+    21300020: 32 - Magic Orb_10
+    21300022: 32 - Magic Orb_11
+    21300024: 32 - Magic Orb_12
+    21300026: 32 - Magic Orb_13
+    21300028: 32 - Magic Orb_14
+    21300030: 32 - Magic Orb_15
+    21300032: 32 - Magic Orb_16
+    21300034: 32 - Magic Orb_17
+    21300036: 32 - Magic Orb_18
+    21300038: 32 - Magic Orb_19
+    21300040: 32 - Magic Orb_20
+    21300042: 32 - Magic Orb_21
+    21300044: 32 - Magic Orb_22
+    21300046: 32 - Magic Orb_23
+    21300048: 32 - Magic Orb_24
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

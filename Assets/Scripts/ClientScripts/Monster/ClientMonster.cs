@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClientMonster : MonoBehaviour, IRecvPoolable {
-	private int monsterIdx;
-
+public class ClientMonster : PoolingObject, ICollidable {
 	Interpolater itpl = new Interpolater();
 
-	void Start(){
+	public override void OnRequested (){
 		StartCoroutine(PositionRoutine());
 	}
-
+		
 	private IEnumerator PositionRoutine(){		
 		while(true){
 			transform.position = itpl.Interpolate();
@@ -18,32 +16,32 @@ public class ClientMonster : MonoBehaviour, IRecvPoolable {
 		}
 	}
 
-	#region IObjectPoolable implementation
-
-	public int GetOpIndex (){
-		return monsterIdx;
-	}
-
-	public void SetOpIndex (int index){
-		monsterIdx = index;
-	}
-
-	public void OnRecv(MsgSegment[] bodies){
-		if(bodies[0].Attribute.Equals(MsgAttr.position)){
+	public override void OnRecv(MsgSegment[] bodies){
+		switch(bodies[0].Attribute){
+		case MsgAttr.position:
 			itpl = new Interpolater(transform.position, bodies[0].ConvertToV3(), 0.05f);
+			break;
+
+		case MsgAttr.destroy:
+			ReturnObject();
+			break;
 		}
 	}
 
-	public void SetPooler (ObjectPooler objectPooler){
-		//
+	public override void OnReturned (){
+		
 	}
 
-	public void OnRequested (){
-		//throw new System.NotImplementedException ();
+	#region ICollidable implementation
+
+	public void OnCollision (Collider2D col){
+		MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
+		MsgSegment b = new MsgSegment(MsgAttr.destroy);
+		NetworkMessage nmAppear = new NetworkMessage(h, b);
+		Network_Client.Send(nmAppear);
+
+		ReturnObject();
 	}
 
-	public void OnReturned (){
-		//throw new System.NotImplementedException ();
-	}
 	#endregion
 }

@@ -6,10 +6,9 @@ public class TypicalProjectile_C : LocalProjectile, ICollidable {
 		objType = (int)ProjType.test;
 	}
 
-	public override void OnRequested (){
-		NotifyAppearence();
+	public override void Ready (){
+		base.Ready();
 		StartCoroutine(FlyingRoutine());
-		StartSendPos();
 	}
 		
 	private IEnumerator FlyingRoutine(){

@@ -60,5 +60,12 @@ public class PoolList : MonoBehaviour{
 
 	public IRecvPoolable GetObject(int idx_){
 		return transform.GetChild(idx_).GetComponent<IRecvPoolable>();
+
+		/*
+		if(transform.GetChild(idx_).gameObject.activeSelf){
+			return transform.GetChild(idx_).GetComponent<IRecvPoolable>();
+		}else{
+			return null;
+		}*/
 	}
 }

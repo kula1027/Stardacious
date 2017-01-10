@@ -1,7 +1,27 @@
 fileFormatVersion: 2
 guid: 6f11c10a3c8d2b94bbdc6a3b593402c2
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 74 - Magic Explosion_0
+    21300002: 74 - Magic Explosion_1
+    21300004: 74 - Magic Explosion_2
+    21300006: 74 - Magic Explosion_3
+    21300008: 74 - Magic Explosion_4
+    21300010: 74 - Magic Explosion_5
+    21300012: 74 - Magic Explosion_6
+    21300014: 74 - Magic Explosion_7
+    21300016: 74 - Magic Explosion_8
+    21300018: 74 - Magic Explosion_9
+    21300020: 74 - Magic Explosion_10
+    21300022: 74 - Magic Explosion_11
+    21300024: 74 - Magic Explosion_12
+    21300026: 74 - Magic Explosion_13
+    21300028: 74 - Magic Explosion_14
+    21300030: 74 - Magic Explosion_15
+    21300032: 74 - Magic Explosion_16
+    21300034: 74 - Magic Explosion_17
+    21300036: 74 - Magic Explosion_18
+    21300038: 74 - Magic Explosion_19
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

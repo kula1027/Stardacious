@@ -6,7 +6,7 @@ namespace ServerSide{
 		public static ServerCharacterManager instance;
 
 		private GameObject prefabServerCharacter;
-		private ServerCharacter[] character = new ServerCharacter[ClientManager.maxClientCount];
+		private ServerCharacter[] character = new ServerCharacter[NetworkConst.maxPlayer];
 		public int currentPlayerCount = 0;
 
 		void Awake(){

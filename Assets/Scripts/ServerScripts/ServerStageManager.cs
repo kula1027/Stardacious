@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerStageManager : MonoBehaviour {
-		ServerStageManager instance;
+		public static ServerStageManager instance;
 
 		private ObjectPooler monsterPooler;
 
@@ -52,6 +52,15 @@ namespace ServerSide{
 				}
 			}else{
 				OnMonsterAllKill();
+			}
+		}
+
+		public void OnRecv(NetworkMessage networkMsg){
+			switch(networkMsg.Header.Attribute){
+			default:
+				int monsIdx = int.Parse(networkMsg.Header.Content);
+				monsterPooler.GetObject(monsIdx).OnRecv(networkMsg.Body);
+				break;
 			}
 		}
 

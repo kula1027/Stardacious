@@ -1,7 +1,30 @@
 fileFormatVersion: 2
 guid: 986d55ef0a25ae542927aa00785d9968
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 22 - Magic Bubbles_0
+    21300002: 22 - Magic Bubbles_1
+    21300004: 22 - Magic Bubbles_2
+    21300006: 22 - Magic Bubbles_3
+    21300008: 22 - Magic Bubbles_4
+    21300010: 22 - Magic Bubbles_5
+    21300012: 22 - Magic Bubbles_6
+    21300014: 22 - Magic Bubbles_7
+    21300016: 22 - Magic Bubbles_8
+    21300018: 22 - Magic Bubbles_9
+    21300020: 22 - Magic Bubbles_10
+    21300022: 22 - Magic Bubbles_11
+    21300024: 22 - Magic Bubbles_12
+    21300026: 22 - Magic Bubbles_13
+    21300028: 22 - Magic Bubbles_14
+    21300030: 22 - Magic Bubbles_15
+    21300032: 22 - Magic Bubbles_16
+    21300034: 22 - Magic Bubbles_17
+    21300036: 22 - Magic Bubbles_18
+    21300038: 22 - Magic Bubbles_19
+    21300040: 22 - Magic Bubbles_20
+    21300042: 22 - Magic Bubbles_21
+    21300044: 22 - Magic Bubbles_22
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -13,10 +13,6 @@ namespace ServerSide{
 			ConsoleSystem.Show();
 		}
 
-		public void BeginGame(){
-			//stgManager.BeginStage(0);
-		}
-
 		private void OnExitClient(int idx_){			
 			NetworkMessage exitMsg = new NetworkMessage(
 				new MsgSegment(),

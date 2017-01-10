@@ -12,12 +12,12 @@ public class NetworkProjectile : PoolingObject {
 	}
 
 	public override void OnReturned (){
-		ConsoleMsgQueue.EnqueMsg("Deleted: " + GetOpIndex());
+		ConsoleMsgQueue.EnqueMsg("Deleted: " + GetOpIndex(), 2);
 	}
 
 	public override void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
-		case MsgAttr.position:			
+		case MsgAttr.position:
 			targetPos = bodies[0].ConvertToV3();
 			itpl = new Interpolater(transform.position, targetPos, NetworkConst.projPosSyncTime);
 			break;

@@ -7,5 +7,6 @@ public class TestSkill : SkillBehaviour {
 		ObjectPooler projPool = ClientProjectileManager.instance.GetLocalProjPool();
 		GameObject p = projPool.RequestObject((GameObject)Resources.Load("Projectile/testProjectile"));
 		p.transform.position = tr_.position + new Vector3(0, 1, 0);
+		p.GetComponent<PoolingObject>().Ready();
 	}
 }

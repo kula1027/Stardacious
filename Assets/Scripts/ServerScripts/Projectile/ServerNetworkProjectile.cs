@@ -7,15 +7,6 @@ namespace ServerSide{
 		public int OwnerId{
 			set{
 				ownerId = value;
-
-				MsgSegment hPos = new MsgSegment(MsgAttr.projectile);
-				MsgSegment[] bPos = {
-					new MsgSegment(MsgAttr.position, new Vector3()),
-					new MsgSegment(ownerId.ToString(), GetOpIndex().ToString())
-				};
-				nmPos = new NetworkMessage(hPos, bPos);
-
-				NotifyAppearence();
 			}
 		}
 
@@ -35,22 +26,31 @@ namespace ServerSide{
 			}
 		}
 
-		public override void OnRequested (){
-			ConsoleMsgQueue.EnqueMsg(ownerId + "Created: " + GetOpIndex());
+		public override void Ready (){
+			//prepare position message
+			MsgSegment hPos = new MsgSegment(MsgAttr.projectile);
+			MsgSegment[] bPos = {
+				new MsgSegment(MsgAttr.position, new Vector3()),
+				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString())
+			};
+			nmPos = new NetworkMessage(hPos, bPos);
+
+			NotifyAppearence();
 		}
 
 		protected void NotifyAppearence(){
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString()),
-				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString())
+				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 			Network_Server.BroadCast(nmAppear, ownerId);
 		}
 
 		public override void OnReturned (){
-			ConsoleMsgQueue.EnqueMsg(ownerId + " Deleted: " + GetOpIndex());
+			ConsoleMsgQueue.EnqueMsg(ownerId + " Deleted: " + GetOpIndex(), 2);
 
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 			MsgSegment[] b = {

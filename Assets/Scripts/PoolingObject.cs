@@ -13,6 +13,10 @@ public class PoolingObject : MonoBehaviour, IRecvPoolable {
 		pooler.ReturnObject(poolingIdx);
 	}
 
+	public virtual void Ready(){
+
+	}
+
 	#region IObjectPoolable implementation
 	public int GetOpIndex (){
 		return poolingIdx;
@@ -27,11 +31,9 @@ public class PoolingObject : MonoBehaviour, IRecvPoolable {
 	}
 
 	public virtual void OnRequested (){
-		throw new System.NotImplementedException ();
 	}
 
 	public virtual void OnReturned (){
-		throw new System.NotImplementedException ();
 	}
 	#endregion
 
