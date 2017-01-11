@@ -12,7 +12,7 @@ namespace ServerSide{
 		}
 		private NetworkMessage msgPos;
 
-		private ChIdx chIdx = ChIdx.TEST;
+		private ChIdx chIdx = ChIdx.Heavy;
 
 		public void BuildSendMsg(){			
 			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());

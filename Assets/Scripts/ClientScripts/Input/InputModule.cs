@@ -21,12 +21,15 @@ public class InputModule : MonoBehaviour {
 			CharacterCtrl.instance.Jump();
 		}
 		if (Input.GetKeyDown (KeyCode.LeftControl)) {
-			CharacterCtrl.instance.NormalAttack ();
+		//	CharacterCtrl.instance.NormalAttack ();
 		}
 	}
 
-	public void OnClickAttack(){
-		CharacterCtrl.instance.NormalAttack();
+	public void OnDownAttack(){
+		CharacterCtrl.instance.OnStartAttack();
+	}
+	public void OnUpAttack(){
+		CharacterCtrl.instance.OnStopAttack();
 	}
 
 	public void OnClickJump(){
@@ -34,14 +37,14 @@ public class InputModule : MonoBehaviour {
 	}
 
 	public void OnClickSkill0(){
-		CharacterCtrl.instance.UseSkill0();
+		CharacterCtrl.instance.UseSkill(0);
 	}
 
 	public void OnClickSkill1(){
-		CharacterCtrl.instance.UseSkill1();
+		CharacterCtrl.instance.UseSkill(1);
 	}
 
 	public void OnClickSkill2(){
-		CharacterCtrl.instance.UseSkill2();
+		CharacterCtrl.instance.UseSkill(2);
 	}
 }

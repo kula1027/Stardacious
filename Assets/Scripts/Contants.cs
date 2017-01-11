@@ -8,7 +8,7 @@ public enum ProjType{
 }
 
 public enum ChIdx{
-	TEST
+	Heavy
 }
 	
 public static class NetworkConst{

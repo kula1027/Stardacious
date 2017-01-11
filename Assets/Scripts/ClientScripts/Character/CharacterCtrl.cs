@@ -10,7 +10,7 @@ public class CharacterCtrl : MonoBehaviour {
 	private SkillBehaviour normalAttack;
 	private SkillBehaviour[] skillBehaviour = new SkillBehaviour[3];
 
-	protected CharacterGraphicCtrl characterGraphicCtrl;
+	public CharacterGraphicCtrl characterGraphicCtrl;
 	public CharacterGraphicCtrl cgCtrl{
 		get{return characterGraphicCtrl;}
 	}
@@ -18,57 +18,58 @@ public class CharacterCtrl : MonoBehaviour {
 	private Vector3 moveVector;
 
 	#region chStat
-	float maxHp = 100f;
 	public float moveSpeed = 5f;
 	public float jumpPower = 520f;
 	#endregion
 
 
-	public void Initialize(ChIdx chIdex){
+	public virtual void Initialize(){
 		nm = new NetworkMessage(new MsgSegment(MsgAttr.character, ""), new MsgSegment(new Vector3()));
-		characterGraphicCtrl = GetComponent<CharacterGraphicCtrl>();
 		transform.position = new Vector3(5, 4.5f, 0);
 
-		switch(chIdex){
-		case ChIdx.TEST:
-			normalAttack = gameObject.AddComponent<TestSkill>();
-			break;
-		}
+		normalAttack = gameObject.AddComponent<TestSkill>();
 
+		StartCoroutine (UpdateRoutine ());
 		StartSendPos();
 	}
 
-	public void Move(Vector3 vec3_){
-		Vector3 one = new Vector3(1, 0, 0);
-		if(vec3_.x > 0){
-			transform.position += one * moveSpeed * Time.deltaTime;
-		}
-
-		if(vec3_.x < 0){
-			transform.position -= one * moveSpeed * Time.deltaTime;
-		}
-	} 
-
-	public void Jump(){
-		if(isGround)
-			GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpPower);
-	}
-		
-	public void NormalAttack(){
-		normalAttack.Use(transform);
+	public virtual void Move(Vector3 vec3_){
 	}
 
-	public void UseSkill(int idx){
-		switch(idx){
-		case 0:
-
-			break;
+	public virtual void Jump(){
+		if (isGround) {
+			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpPower);
 		}
 	}
 
-	public void UseSkill0(){}
-	public void UseSkill1(){}
-	public void UseSkill2(){}
+	bool hasJump = false;
+	private IEnumerator UpdateRoutine(){
+		bool prevGrounded = isGround;
+		while (true) {
+			if (isGround != prevGrounded){
+				if (isGround) {
+					characterGraphicCtrl.Grounded ();
+				} else {
+					characterGraphicCtrl.Jump();
+				}
+			}
+
+			prevGrounded = isGround;
+			yield return null;
+		}
+	}
+
+	public void OnStartAttack(){
+		characterGraphicCtrl.StartNormalAttack ();
+	}
+
+	public void OnStopAttack(){
+		characterGraphicCtrl.StopNormalAttack ();
+	}
+
+	public virtual void UseSkill(int idx_){
+
+	}
 
 	public void StartSendPos(){
 		StartCoroutine(SendPosRoutine());

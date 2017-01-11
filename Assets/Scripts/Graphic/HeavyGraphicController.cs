@@ -9,7 +9,7 @@ public enum ControlDirection {NotInitialized, LeftDown, Down, RightDown, Left, M
 //AttackDelay - 이동만 가능. (조준은 어케할지 모르겠다)
 
 public enum HeavyLowerState{Idle, Walk, Run}
-public class HeavyGraphicController : MonoBehaviour {
+public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	private Animator lowerAnimator;
 	private Animator upperAnimator;
@@ -32,7 +32,7 @@ public class HeavyGraphicController : MonoBehaviour {
 	private bool isMiniGunMode = false;
 	private bool isSwapDelay = false;
 
-	void Start () {
+	void Awake () {
 		controlFlags = new ControlFlags ();	//FIXME : Character controller에서 reference 가져올것.
 
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
@@ -45,28 +45,28 @@ public class HeavyGraphicController : MonoBehaviour {
 		lowerState = HeavyLowerState.Idle;
 	}
 
-	public void SetDirection(int direction){
+	public override void SetDirection(int direction){
 		SetDirection ((ControlDirection)direction);
 	}
-	public void SetDirection(ControlDirection direction){
+	public override void SetDirection(ControlDirection direction){
 		currentInputDirection = direction;
 
 		SetLowerAnim (currentInputDirection);
 
 	}
-	public void ForcedFly(){			//하체 모션 캔슬및 변경 금지
+	public override void ForcedFly(){			//하체 모션 캔슬및 변경 금지
 		isJumping = true;
 		lowerAnimator.Play ("LongJump");
 	}
-	public void Jump(){					//하체 모션 캔슬및 변경 금지
+	public override void Jump(){					//하체 모션 캔슬및 변경 금지
 		isJumping = true;
 		lowerAnimator.Play ("Jump");
 	}
-	public void Grounded(){				//하체 컨트롤 복구
+	public override void Grounded(){				//하체 컨트롤 복구
 		isJumping = false;
 		SetLowerAnim (currentInputDirection);
 	}
-	public void StartNormalAttack(){
+	public override void StartNormalAttack(){
 		isAttackButtonPressing = true;
 
 		if (isMiniGunMode) {
@@ -78,7 +78,7 @@ public class HeavyGraphicController : MonoBehaviour {
 			}
 		}
 	}
-	public void StopNormalAttack(){
+	public override void StopNormalAttack(){
 		isAttackButtonPressing = false;
 
 		if (isMiniGunMode) {
