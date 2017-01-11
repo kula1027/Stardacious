@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-
+/*
 public class ObjectPool{
 	private PoolType myType;
 	private IObjectPoolable[] objectPool;
@@ -75,6 +75,7 @@ public class ObjectPool{
 		}
 		int objectIndex = GetNextEmptyIndex ();
 		objectPool [objectIndex] = obj;
+		obj.SetOpIndex(objectIndex);
 
 		return objectIndex;
 	}
@@ -204,34 +205,8 @@ public class ObjectPool{
 		}
 	}
 	#endregion
-}
+}*/
 
-public interface IObjectPoolable{
-
-	/// <summary>
-	/// 오브젝트 풀에서의 인덱스로 사용할 변수 반환.
-	/// </summary>
-	/// <returns>The op index.</returns>
-	int GetOpIndex ();
-
-	/// <summary>
-	/// 오브젝트 풀에서의 인덱스로 사용할 변수에 값 설정.
-	/// </summary>
-	/// <returns>The op index.</returns>
-	void SetOpIndex (int index);
-
-	/// <summary>
-	/// 해당 스크립트의 데이터 타입 (enum형).
-	/// </summary>
-	/// <returns>The pool type.</returns>
-	PoolType GetPoolType ();
-
-	/// <summary>
-	/// 해당 스크립트와 엮여 있는 최상위 GameObject 반환.
-	/// </summary>
-	/// <returns>The game object.</returns>
-	GameObject GetGameObject();
-}
 
 public class ObjectPoolException: Exception{
 	public ObjectPoolException(){

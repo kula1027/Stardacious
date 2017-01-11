@@ -1,7 +1,27 @@
 fileFormatVersion: 2
 guid: 30c44ed3a2824be45ad87e65fc1e4256
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 85 - Magic Barrier_0
+    21300002: 85 - Magic Barrier_1
+    21300004: 85 - Magic Barrier_2
+    21300006: 85 - Magic Barrier_3
+    21300008: 85 - Magic Barrier_4
+    21300010: 85 - Magic Barrier_5
+    21300012: 85 - Magic Barrier_6
+    21300014: 85 - Magic Barrier_7
+    21300016: 85 - Magic Barrier_8
+    21300018: 85 - Magic Barrier_9
+    21300020: 85 - Magic Barrier_10
+    21300022: 85 - Magic Barrier_11
+    21300024: 85 - Magic Barrier_12
+    21300026: 85 - Magic Barrier_13
+    21300028: 85 - Magic Barrier_14
+    21300030: 85 - Magic Barrier_15
+    21300032: 85 - Magic Barrier_16
+    21300034: 85 - Magic Barrier_17
+    21300036: 85 - Magic Barrier_18
+    21300038: 85 - Magic Barrier_19
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,31 @@
 fileFormatVersion: 2
 guid: 9ae2ce6cbb78bf6459478df2976f3b8e
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 34 - Magic Rift_0
+    21300002: 34 - Magic Rift_1
+    21300004: 34 - Magic Rift_2
+    21300006: 34 - Magic Rift_3
+    21300008: 34 - Magic Rift_4
+    21300010: 34 - Magic Rift_5
+    21300012: 34 - Magic Rift_6
+    21300014: 34 - Magic Rift_7
+    21300016: 34 - Magic Rift_8
+    21300018: 34 - Magic Rift_9
+    21300020: 34 - Magic Rift_10
+    21300022: 34 - Magic Rift_11
+    21300024: 34 - Magic Rift_12
+    21300026: 34 - Magic Rift_13
+    21300028: 34 - Magic Rift_14
+    21300030: 34 - Magic Rift_15
+    21300032: 34 - Magic Rift_16
+    21300034: 34 - Magic Rift_17
+    21300036: 34 - Magic Rift_18
+    21300038: 34 - Magic Rift_19
+    21300040: 34 - Magic Rift_20
+    21300042: 34 - Magic Rift_21
+    21300044: 34 - Magic Rift_22
+    21300046: 34 - Magic Rift_23
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

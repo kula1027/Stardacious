@@ -5,30 +5,30 @@ using System.Collections;
 public class ClientMasterManager : MonoBehaviour {
 	public static ClientMasterManager instance;
 
-	public NetworkCharacterManager netChManager;
-
 	void Awake(){
 		instance = this;
-		netChManager = GetComponent<NetworkCharacterManager>();
+
+		KingGodClient.instance.OnEnterPlayScene();
 	}
 
-	void Start(){
-		ConsoleSystem.Show();
-	}
-
-	public void OnNetworkSetupDone(){
+	void Start(){		
 		InitiatePlayerCharacter();
 	}
-
+		
 	private void InitiatePlayerCharacter(){
-		PlayerData.characterData = new CharacterData(PlayerData.chosenCharacter);
 		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("chPlayableTest"));
-		pCharacter.AddComponent<TestCharacter>().Initialize();
-		CharacterController.instance = pCharacter.AddComponent<CharacterController>();
-		CharacterController.instance.Initialize();
-		CharacterController.instance.StartSendPos();
-		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterController.instance.transform);
+		pCharacter.GetComponent<TestCharacter>().Initialize();
+		CharacterCtrl.instance = pCharacter.AddComponent<CharacterCtrl>();
+		CharacterCtrl.instance.Initialize(ChIdx.TEST);
+		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
+	}				
 
-
+	public void OnRecv(NetworkMessage networkMessage){
+		switch(networkMessage.Body[0].Attribute){
+		case MsgAttr.Misc.exitClient:
+			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
+			break;
+		}
 	}
 }

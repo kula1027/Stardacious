@@ -1,7 +1,31 @@
 fileFormatVersion: 2
 guid: 5a423ee998369914ba7f00da0f6453c9
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 82 - Magic Wave_0
+    21300002: 82 - Magic Wave_1
+    21300004: 82 - Magic Wave_2
+    21300006: 82 - Magic Wave_3
+    21300008: 82 - Magic Wave_4
+    21300010: 82 - Magic Wave_5
+    21300012: 82 - Magic Wave_6
+    21300014: 82 - Magic Wave_7
+    21300016: 82 - Magic Wave_8
+    21300018: 82 - Magic Wave_9
+    21300020: 82 - Magic Wave_10
+    21300022: 82 - Magic Wave_11
+    21300024: 82 - Magic Wave_12
+    21300026: 82 - Magic Wave_13
+    21300028: 82 - Magic Wave_14
+    21300030: 82 - Magic Wave_15
+    21300032: 82 - Magic Wave_16
+    21300034: 82 - Magic Wave_17
+    21300036: 82 - Magic Wave_18
+    21300038: 82 - Magic Wave_19
+    21300040: 82 - Magic Wave_20
+    21300042: 82 - Magic Wave_21
+    21300044: 82 - Magic Wave_22
+    21300046: 82 - Magic Wave_23
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,57 @@
 fileFormatVersion: 2
 guid: 554bfae67329ec349abb284aac5ad46c
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 13 - Magic Pool_0
+    21300002: 13 - Magic Pool_1
+    21300004: 13 - Magic Pool_2
+    21300006: 13 - Magic Pool_3
+    21300008: 13 - Magic Pool_4
+    21300010: 13 - Magic Pool_5
+    21300012: 13 - Magic Pool_6
+    21300014: 13 - Magic Pool_7
+    21300016: 13 - Magic Pool_8
+    21300018: 13 - Magic Pool_9
+    21300020: 13 - Magic Pool_10
+    21300022: 13 - Magic Pool_11
+    21300024: 13 - Magic Pool_12
+    21300026: 13 - Magic Pool_13
+    21300028: 13 - Magic Pool_14
+    21300030: 13 - Magic Pool_15
+    21300032: 13 - Magic Pool_16
+    21300034: 13 - Magic Pool_17
+    21300036: 13 - Magic Pool_18
+    21300038: 13 - Magic Pool_19
+    21300040: 13 - Magic Pool_20
+    21300042: 13 - Magic Pool_21
+    21300044: 13 - Magic Pool_22
+    21300046: 13 - Magic Pool_23
+    21300048: 13 - Magic Pool_24
+    21300050: 13 - Magic Pool_25
+    21300052: 13 - Magic Pool_26
+    21300054: 13 - Magic Pool_27
+    21300056: 13 - Magic Pool_28
+    21300058: 13 - Magic Pool_29
+    21300060: 13 - Magic Pool_30
+    21300062: 13 - Magic Pool_31
+    21300064: 13 - Magic Pool_32
+    21300066: 13 - Magic Pool_33
+    21300068: 13 - Magic Pool_34
+    21300070: 13 - Magic Pool_35
+    21300072: 13 - Magic Pool_36
+    21300074: 13 - Magic Pool_37
+    21300076: 13 - Magic Pool_38
+    21300078: 13 - Magic Pool_39
+    21300080: 13 - Magic Pool_40
+    21300082: 13 - Magic Pool_41
+    21300084: 13 - Magic Pool_42
+    21300086: 13 - Magic Pool_43
+    21300088: 13 - Magic Pool_44
+    21300090: 13 - Magic Pool_45
+    21300092: 13 - Magic Pool_46
+    21300094: 13 - Magic Pool_47
+    21300096: 13 - Magic Pool_48
+    21300098: 13 - Magic Pool_49
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

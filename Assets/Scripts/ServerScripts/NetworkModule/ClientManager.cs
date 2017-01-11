@@ -4,8 +4,8 @@ using System.Net.Sockets;
 using System;
 
 namespace ServerSide{
-	public static class ClientManager {
-		public const int maxClientCount = 3;
+	public static class ClientManager {		
+		public const int maxProjectileCount = 20;
 
 		private static TcpConnection[] arrayClient;
 		public static TcpConnection getClient(int idx){
@@ -20,11 +20,11 @@ namespace ServerSide{
 
 		public static void Init(){
 			freeQueue = new Queue<int>();
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				freeQueue.Enqueue(loop);
 			}
 
-			arrayClient = new TcpConnection[maxClientCount];
+			arrayClient = new TcpConnection[NetworkConst.maxPlayer];
 		}
 
 		public static bool AddClient(Socket welcomeSocket_){
@@ -45,10 +45,29 @@ namespace ServerSide{
 		public static void BroadCast(NetworkMessage nm_){
 			if(arrayClient == null)return;
 
-			for(int loop = 0; loop < maxClientCount; loop++){
+
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(arrayClient[loop] != null){
-					if(arrayClient[loop].IsConnected)
-						arrayClient[loop].Send(nm_.ToString());
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].Send (nm_.ToString ());
+					}
+				}
+			}
+		}
+
+		public static void BroadCast(NetworkMessage nm_, int exclude_){
+			if(arrayClient == null)return;
+
+
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				if(loop == exclude_)continue;
+
+				if(arrayClient[loop] != null){
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].Send (nm_.ToString ());
+					}
 				}
 			}
 		}
@@ -66,12 +85,11 @@ namespace ServerSide{
 				freeQueue.Enqueue(idx_);
 			}
 
-			ServerMasterManager.instance.OnExitClient(idx_);
 			ConsoleMsgQueue.EnqueMsg(idx_ + ": Client Thread Closed.");
 		}
 
 		public static void ShutDown(){
-			for(int loop = 0; loop < maxClientCount; loop++){
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(arrayClient[loop] != null){
 					arrayClient[loop].ShutDown();
 				}

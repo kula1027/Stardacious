@@ -1,7 +1,32 @@
 fileFormatVersion: 2
 guid: 1e3c109d7986f87429b82854e3edadee
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 41 - Magic Charge_0
+    21300002: 41 - Magic Charge_1
+    21300004: 41 - Magic Charge_2
+    21300006: 41 - Magic Charge_3
+    21300008: 41 - Magic Charge_4
+    21300010: 41 - Magic Charge_5
+    21300012: 41 - Magic Charge_6
+    21300014: 41 - Magic Charge_7
+    21300016: 41 - Magic Charge_8
+    21300018: 41 - Magic Charge_9
+    21300020: 41 - Magic Charge_10
+    21300022: 41 - Magic Charge_11
+    21300024: 41 - Magic Charge_12
+    21300026: 41 - Magic Charge_13
+    21300028: 41 - Magic Charge_14
+    21300030: 41 - Magic Charge_15
+    21300032: 41 - Magic Charge_16
+    21300034: 41 - Magic Charge_17
+    21300036: 41 - Magic Charge_18
+    21300038: 41 - Magic Charge_19
+    21300040: 41 - Magic Charge_20
+    21300042: 41 - Magic Charge_21
+    21300044: 41 - Magic Charge_22
+    21300046: 41 - Magic Charge_23
+    21300048: 41 - Magic Charge_24
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

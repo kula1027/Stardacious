@@ -1,7 +1,30 @@
 fileFormatVersion: 2
 guid: 71b57c2ccc8a57141b666243cdea23ac
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 45 - Magic Whirl_0
+    21300002: 45 - Magic Whirl_1
+    21300004: 45 - Magic Whirl_2
+    21300006: 45 - Magic Whirl_3
+    21300008: 45 - Magic Whirl_4
+    21300010: 45 - Magic Whirl_5
+    21300012: 45 - Magic Whirl_6
+    21300014: 45 - Magic Whirl_7
+    21300016: 45 - Magic Whirl_8
+    21300018: 45 - Magic Whirl_9
+    21300020: 45 - Magic Whirl_10
+    21300022: 45 - Magic Whirl_11
+    21300024: 45 - Magic Whirl_12
+    21300026: 45 - Magic Whirl_13
+    21300028: 45 - Magic Whirl_14
+    21300030: 45 - Magic Whirl_15
+    21300032: 45 - Magic Whirl_16
+    21300034: 45 - Magic Whirl_17
+    21300036: 45 - Magic Whirl_18
+    21300038: 45 - Magic Whirl_19
+    21300040: 45 - Magic Whirl_20
+    21300042: 45 - Magic Whirl_21
+    21300044: 45 - Magic Whirl_22
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

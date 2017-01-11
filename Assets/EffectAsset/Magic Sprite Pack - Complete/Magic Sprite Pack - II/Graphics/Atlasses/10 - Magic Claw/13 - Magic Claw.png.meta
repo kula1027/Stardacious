@@ -1,7 +1,22 @@
 fileFormatVersion: 2
 guid: 79686885600cdd84b96a3ec1303878a4
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 13 - Magic Claw_0
+    21300002: 13 - Magic Claw_1
+    21300004: 13 - Magic Claw_2
+    21300006: 13 - Magic Claw_3
+    21300008: 13 - Magic Claw_4
+    21300010: 13 - Magic Claw_5
+    21300012: 13 - Magic Claw_6
+    21300014: 13 - Magic Claw_7
+    21300016: 13 - Magic Claw_8
+    21300018: 13 - Magic Claw_9
+    21300020: 13 - Magic Claw_10
+    21300022: 13 - Magic Claw_11
+    21300024: 13 - Magic Claw_12
+    21300026: 13 - Magic Claw_13
+    21300028: 13 - Magic Claw_14
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

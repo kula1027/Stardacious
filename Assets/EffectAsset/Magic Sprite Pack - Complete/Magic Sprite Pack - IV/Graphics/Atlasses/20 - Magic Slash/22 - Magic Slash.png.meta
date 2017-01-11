@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: af56c33d5bfec2046baa83f359e29b80
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 22 - Magic Slash_0
+    21300002: 22 - Magic Slash_1
+    21300004: 22 - Magic Slash_2
+    21300006: 22 - Magic Slash_3
+    21300008: 22 - Magic Slash_4
+    21300010: 22 - Magic Slash_5
+    21300012: 22 - Magic Slash_6
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,32 @@
 fileFormatVersion: 2
 guid: 34f655aec37883f46a214ce00ab31db5
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 82 - Magic Spike_0
+    21300002: 82 - Magic Spike_1
+    21300004: 82 - Magic Spike_2
+    21300006: 82 - Magic Spike_3
+    21300008: 82 - Magic Spike_4
+    21300010: 82 - Magic Spike_5
+    21300012: 82 - Magic Spike_6
+    21300014: 82 - Magic Spike_7
+    21300016: 82 - Magic Spike_8
+    21300018: 82 - Magic Spike_9
+    21300020: 82 - Magic Spike_10
+    21300022: 82 - Magic Spike_11
+    21300024: 82 - Magic Spike_12
+    21300026: 82 - Magic Spike_13
+    21300028: 82 - Magic Spike_14
+    21300030: 82 - Magic Spike_15
+    21300032: 82 - Magic Spike_16
+    21300034: 82 - Magic Spike_17
+    21300036: 82 - Magic Spike_18
+    21300038: 82 - Magic Spike_19
+    21300040: 82 - Magic Spike_20
+    21300042: 82 - Magic Spike_21
+    21300044: 82 - Magic Spike_22
+    21300046: 82 - Magic Spike_23
+    21300048: 82 - Magic Spike_24
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

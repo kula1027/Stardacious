@@ -1,7 +1,27 @@
 fileFormatVersion: 2
 guid: aceb5b6dcead2f941b9d1821859cf438
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 55 - Magic Rise_0
+    21300002: 55 - Magic Rise_1
+    21300004: 55 - Magic Rise_2
+    21300006: 55 - Magic Rise_3
+    21300008: 55 - Magic Rise_4
+    21300010: 55 - Magic Rise_5
+    21300012: 55 - Magic Rise_6
+    21300014: 55 - Magic Rise_7
+    21300016: 55 - Magic Rise_8
+    21300018: 55 - Magic Rise_9
+    21300020: 55 - Magic Rise_10
+    21300022: 55 - Magic Rise_11
+    21300024: 55 - Magic Rise_12
+    21300026: 55 - Magic Rise_13
+    21300028: 55 - Magic Rise_14
+    21300030: 55 - Magic Rise_15
+    21300032: 55 - Magic Rise_16
+    21300034: 55 - Magic Rise_17
+    21300036: 55 - Magic Rise_18
+    21300038: 55 - Magic Rise_19
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

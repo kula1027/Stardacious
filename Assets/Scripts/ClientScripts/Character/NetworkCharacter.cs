@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 네트워크로 제어되는 다른 클라이언트들의 캐릭터 객체
 /// </summary>
-public class NetworkCharacter : BaseCharacter {
+public class NetworkCharacter : MonoBehaviour {
 	private int networkId;
 	public int NetworkId{
 		get{return networkId;}
@@ -14,22 +14,32 @@ public class NetworkCharacter : BaseCharacter {
 	public Vector3 TargetPos{
 		set{targetPos = value;}
 	}
-
+		
 	void Start(){
 		StartCoroutine(PositionRoutine());
 	}
 
-	public IEnumerator PositionRoutine(){
+	Interpolater itpl = new Interpolater();
+	public IEnumerator PositionRoutine(){		
 		while(true){
-			transform.position = Vector3.Lerp(transform.position, targetPos, 0.4f);
+			transform.position = itpl.Interpolate();
 
 			yield return null;
 		}
 	}
 
-	public override void OnRecvMsg (MsgSegment[] bodies){
-		if(bodies[0].Equals(MsgSegment.AttrPos)){
+	public void OnRecvMsg (MsgSegment[] bodies){		
+		switch(bodies[0].Attribute){
+		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
+			itpl = new Interpolater(transform.position, targetPos, NetworkConst.chPosSyncTime);
+			break;
+
+		case MsgAttr.destroy:
+			Destroy(gameObject);
+			break;
 		}
+
 	}
 }
+

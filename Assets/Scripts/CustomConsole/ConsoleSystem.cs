@@ -18,7 +18,7 @@ public class ConsoleSystem : MonoBehaviour {
 
 	private static int msgCount = 0;
 	private const int maxMsgCount = 100;
-	private static bool scrollLock = true;
+	public static bool scrollLock = true;
 
 	void Awake(){
 		DontDestroyOnLoad(transform.parent.gameObject);
@@ -75,6 +75,13 @@ public class ConsoleSystem : MonoBehaviour {
 			if(Input.GetButtonDown("Submit")){
 				UserInput();
 			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.F10)){
+			Show();
+		}
+		if(Input.GetKeyDown(KeyCode.F11)){
+			Hide();
 		}
 
 		int qCount = ConsoleMsgQueue.GetCount();

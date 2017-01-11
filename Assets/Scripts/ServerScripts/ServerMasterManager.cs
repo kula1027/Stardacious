@@ -5,28 +5,31 @@ namespace ServerSide{
 	public class ServerMasterManager : MonoBehaviour {
 		public static ServerMasterManager instance;
 
-		private ServerCharacterManager chManager;
-		public ServerCharacterManager ChManager{
-			get{return chManager;}
-		}
-
 		void Awake(){
 			instance = this;
-			DontDestroyOnLoad(gameObject);
-			chManager = GetComponent<ServerCharacterManager>();
 		}
 
 		void Start(){			
 			ConsoleSystem.Show();
 		}
 
-		public void BeginGame(){
-			//server character가 먼저 세팅된 상태여야 함
+		private void OnExitClient(int idx_){			
+			NetworkMessage exitMsg = new NetworkMessage(
+				new MsgSegment(),
+				new MsgSegment(MsgAttr.Misc.exitClient, idx_.ToString())
+			);
+			Network_Server.BroadCast(exitMsg, idx_);
 
+			ServerCharacterManager.instance.RemoveCharacter(idx_);
 		}
 
-		public void OnExitClient(int idx_){
-
+		public void OnRecv(NetworkMessage networkMessage){
+			switch(networkMessage.Body[0].Attribute){
+			case MsgAttr.Local.disconnect:
+				int exitIdx = int.Parse(networkMessage.Body[0].Content);
+				OnExitClient(exitIdx);
+				break;
+			}
 		}
 	}
 }

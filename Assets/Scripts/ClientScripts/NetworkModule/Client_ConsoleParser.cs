@@ -25,7 +25,7 @@ public class Client_ConsoleParser : ConsoleParser {
 				break;
 
 			case Disconnect:
-				netClient.ShutDown();
+				Network_Client.ShutDown();
 				break;
 
 			case Connect:
@@ -34,7 +34,7 @@ public class Client_ConsoleParser : ConsoleParser {
 				}else{
 					Network_Client.serverAddress = splitCommand[1];
 				}
-				KingGodClient.instance.Begin();
+				KingGodClient.instance.BeginNetworking();
 				break;
 			}
 		}catch(Exception e){

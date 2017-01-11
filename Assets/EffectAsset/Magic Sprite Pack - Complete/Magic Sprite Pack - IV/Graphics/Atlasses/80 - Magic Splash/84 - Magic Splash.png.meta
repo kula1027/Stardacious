@@ -1,7 +1,16 @@
 fileFormatVersion: 2
 guid: 04f2f9bd517c41841a08b6853216feb3
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 84 - Magic Splash_0
+    21300002: 84 - Magic Splash_1
+    21300004: 84 - Magic Splash_2
+    21300006: 84 - Magic Splash_3
+    21300008: 84 - Magic Splash_4
+    21300010: 84 - Magic Splash_5
+    21300012: 84 - Magic Splash_6
+    21300014: 84 - Magic Splash_7
+    21300016: 84 - Magic Splash_8
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

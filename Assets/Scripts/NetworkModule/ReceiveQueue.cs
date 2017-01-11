@@ -5,16 +5,29 @@ public class ReceiveQueue {
 	private static Queue<NetworkMessage> msgQue = new Queue<NetworkMessage>();
 
 	public static int GetCount(){
-		return msgQue.Count;
+		int msgCount;
+		lock(msgQue){
+			msgCount = msgQue.Count;
+		}
+
+		return msgCount;
 	}
 
 	public static void EnqueMsg(NetworkMessage msg){
+		msgQue.Enqueue(msg);
+	}
+
+	public static void SyncEnqueMsg(NetworkMessage msg){
 		lock(msgQue){
 			msgQue.Enqueue(msg);
 		}
 	}
 
 	public static NetworkMessage DequeMsg(){
+		return msgQue.Dequeue();
+	}
+
+	public static NetworkMessage SyncDequeMsg(){
 		NetworkMessage msg;
 		lock(msgQue){
 			msg = msgQue.Dequeue();

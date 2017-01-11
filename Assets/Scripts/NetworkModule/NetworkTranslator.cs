@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class NetworkTranslator : MonoBehaviour {
-	private List<MsgHandler> listMsgHandler;
+	private MsgHandler msgHandler;
+
+	public Text txtMsgCount;
 
 	void Awake(){
-		listMsgHandler = new List<MsgHandler>();
+		
 	}
 
-	public void AddMsgHandler(MsgHandler msgHandler_){
-		listMsgHandler.Add(msgHandler_);
+	public void SetMsgHandler(MsgHandler msgHandler_){
+		msgHandler = msgHandler_;
 	}
 
 	void Start(){
@@ -18,25 +21,26 @@ public class NetworkTranslator : MonoBehaviour {
 	}
 
 	private IEnumerator DoParse(){
-		int msgCount;
+		int msgCount = 0;
+		int msgCountAcc = 0;
+		float timeAcc = 0;
 		while(true){
 			msgCount = ReceiveQueue.GetCount();
 			if(msgCount > 0){
 				for(int loop = 0; loop < msgCount; loop++){
-					ParseMsg(ReceiveQueue.DequeMsg());
+					msgHandler.HandleMsg(ReceiveQueue.SyncDequeMsg());
 				}
 			}
 
-			yield return null;
-		}
-	}
-
-	private void ParseMsg(NetworkMessage networkMsg){
-		for(int loop = 0; loop < listMsgHandler.Count; loop++){
-			if(networkMsg.Header.Attribute.Equals(listMsgHandler[loop].Attr)){
-				listMsgHandler[loop].HandleMsg(networkMsg);
-				continue;
+			timeAcc += Time.deltaTime;
+			msgCountAcc += msgCount;
+			if(timeAcc > 1){
+				txtMsgCount.text = msgCountAcc.ToString();
+				timeAcc = 0;
+				msgCountAcc = 0;
 			}
+
+			yield return null;
 		}
 	}
 }

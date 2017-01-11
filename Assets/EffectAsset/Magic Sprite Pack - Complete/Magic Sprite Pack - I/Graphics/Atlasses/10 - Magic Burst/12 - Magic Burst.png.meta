@@ -1,7 +1,26 @@
 fileFormatVersion: 2
 guid: 9934ad715af85374d9b2bf82156adc4b
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: 12 - Magic Burst_0
+    21300002: 12 - Magic Burst_1
+    21300004: 12 - Magic Burst_2
+    21300006: 12 - Magic Burst_3
+    21300008: 12 - Magic Burst_4
+    21300010: 12 - Magic Burst_5
+    21300012: 12 - Magic Burst_6
+    21300014: 12 - Magic Burst_7
+    21300016: 12 - Magic Burst_8
+    21300018: 12 - Magic Burst_9
+    21300020: 12 - Magic Burst_10
+    21300022: 12 - Magic Burst_11
+    21300024: 12 - Magic Burst_12
+    21300026: 12 - Magic Burst_13
+    21300028: 12 - Magic Burst_14
+    21300030: 12 - Magic Burst_15
+    21300032: 12 - Magic Burst_16
+    21300034: 12 - Magic Burst_17
+    21300036: 12 - Magic Burst_18
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

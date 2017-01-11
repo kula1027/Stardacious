@@ -10,33 +10,40 @@ public class Network_Client {
 	public static string serverAddress = "127.0.0.1";
 	public static int PORT = 11900;
 
-	private TcpClient tcpClient;
-	private NetworkStream networkStream;
-	private StreamReader streamReader;
-	private StreamWriter streamWriter;
+	private static TcpClient tcpClient;
+	private static NetworkStream networkStream;
+	private static StreamReader streamReader;
+	private static StreamWriter streamWriter;
 
-	private Thread thread_connect;
-	private Thread thread_receive;
+	private static Thread thread_connect;
+	private static Thread thread_receive;
 
-	private int networkId = -1;
-	public int NetworkId{
+	private static int networkId = -1;
+	public static int NetworkId{
 		get{return networkId;}
-		set{networkId = value;}
+		set{
+			networkId = value;
+			NetworkMessage.SenderId = networkId.ToString();
+		}
 	}
 
-	private bool isConnected = false;
-	public bool IsConnected{
+	private static bool isConnected = false;
+	public static bool IsConnected{
 		get{return isConnected;}
 	}
 
-	public Network_Client(){
+	public static void Begin(){
+		ShutDown();
+
 		tcpClient = new TcpClient();
+		NetworkId = -1;
 
 		thread_connect = new Thread(BeginConnection);
 		thread_connect.Start();
 	}
 
-	public void BeginConnection(){
+	private static void BeginConnection(){
+		int conCount = 0;
 		while(isConnected == false){
 			try{
 				ConsoleMsgQueue.EnqueMsg("Connecting to..." + serverAddress + ":" + PORT);
@@ -45,6 +52,12 @@ public class Network_Client {
 
 			}catch(SocketException e){
 				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString());
+				conCount++;
+				if(conCount > 5){
+					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
+					isConnected = false;
+					return;
+				}
 
 				Thread.Sleep(4000);
 			}catch(Exception e){
@@ -62,7 +75,7 @@ public class Network_Client {
 		thread_receive.Start();
 	}
 
-	public void Send(NetworkMessage nm_){
+	public static void Send(NetworkMessage nm_){
 		if(isConnected){
 			string str = nm_.ToString();
 			try{
@@ -72,13 +85,14 @@ public class Network_Client {
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg("Send: " + e.Message);
 				isConnected = false;
+				networkId = -1;
 			}
 		}else{
-			ConsoleMsgQueue.EnqueMsg("Send: Network Disconnected.");
+			ConsoleMsgQueue.EnqueMsg("Send: Network Disconnected.", 2);
 		}
 	}
 
-	private void ReceivingOperation(){
+	private static void ReceivingOperation(){
 		string recStr;
 
 		try{
@@ -87,7 +101,7 @@ public class Network_Client {
 
 				if(recStr != null){
 					ConsoleMsgQueue.EnqueMsg("Received: " + recStr, 0);
-					ReceiveQueue.EnqueMsg(new NetworkMessage(recStr));
+					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
 				}else{
 					isConnected = false;
 				}
@@ -102,7 +116,7 @@ public class Network_Client {
 		streamReader.Close();
 	}
 
-	public void ShutDown(){
+	public static void ShutDown(){
 		isConnected = false;
 		if(streamReader != null)
 			streamReader.Close();

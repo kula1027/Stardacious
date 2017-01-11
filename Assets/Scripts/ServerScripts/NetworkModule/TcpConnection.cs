@@ -56,6 +56,10 @@ namespace ServerSide{
 		private void ReceivingOperation(){
 			IdSync();
 
+			MsgSegment h = new MsgSegment(MsgAttr.local, "");
+			MsgSegment b = new MsgSegment(MsgAttr.Local.disconnect, clientId.ToString());
+			NetworkMessage dyingMsg = new NetworkMessage(h, b);
+
 			string recStr;
 			try{
 				while(isConnected){
@@ -63,13 +67,14 @@ namespace ServerSide{
 
 					if(recStr != null){
 						ConsoleMsgQueue.EnqueMsg(clientId + ": Received: " + recStr, 0);
-						ReceiveQueue.EnqueMsg(new NetworkMessage(recStr));
+						ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
 					}else{
 						isConnected = false;
 					}
 				}
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(clientId + ": ReceiveOperation: " + e.Message);
+				ReceiveQueue.SyncEnqueMsg(dyingMsg);
 			}
 
 			ConsoleMsgQueue.EnqueMsg(clientId + ": Disconnected.");
@@ -90,11 +95,9 @@ namespace ServerSide{
 						ConsoleMsgQueue.EnqueMsg(clientId + ": Received: " + recStr, 0);
 						NetworkMessage nm = new NetworkMessage(recStr);
 						if(nm.Adress.Attribute.Equals("-1")){//발신자 id가 -1이면 클라이언트에게 네트워크 id 전송해줌
-							NetworkMessage idInfo = 
-								new NetworkMessage(
-									new MsgSegment(MsgSegment.AttrReqId, clientId.ToString()
-									)
-								);
+							MsgSegment h = new MsgSegment(MsgAttr.setup);
+							MsgSegment b = new MsgSegment(MsgAttr.Setup.reqId, clientId.ToString());
+							NetworkMessage idInfo = new NetworkMessage(h, b);
 							Send(idInfo.ToString());
 						}else{
 							break;

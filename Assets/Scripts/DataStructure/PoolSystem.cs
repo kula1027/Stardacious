@@ -2,7 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum PoolType{A, B, C, D, End};
+public enum PoolType{
+	Monster, 
+	ProjServer, 
+	ProjClient0, 
+	ProjClient1, 
+	ProjClient2, 
+	End
+};
+/*
 public class PoolSystem : MonoBehaviour {
 	#region singletone
 	private static PoolSystem instance;
@@ -71,4 +79,4 @@ public class PoolSystem : MonoBehaviour {
 	public void ReturnObject(PoolType poolType, int objectIndex){
 		pools [(int)(poolType)].DeactiveObject (objectIndex);
 	}
-}
+}*/
