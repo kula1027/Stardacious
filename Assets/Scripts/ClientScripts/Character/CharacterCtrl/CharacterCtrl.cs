@@ -38,10 +38,9 @@ public class CharacterCtrl : StardaciousObject {
 	}
 
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
+	protected Vector3 currentDirV3;
 	public virtual void OnMovementInput(Vector3 vec3_){
-		Vector3 one = new Vector3(1, 0, 0);
-
-		float inputAngle = Vector3.Angle(one, vec3_);
+		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
 
 		bool movablebByInput = true;
 		ControlDirection currentDir = ControlDirection.NotInitialized;
@@ -85,18 +84,20 @@ public class CharacterCtrl : StardaciousObject {
 		}
 		if(currentDir != prevCtrlDir){
 			cgCtrl.SetDirection (currentDir);
+			currentDirV3 = vec3_;
+			Debug.Log (currentDirV3);
 		}
 		prevCtrlDir = currentDir;
 
 		if(vec3_.x > 0){
 			transform.localScale = new Vector3(-1, 1, 1);
 			if(movablebByInput && controlFlags.move)
-				transform.position += one * moveSpeed * Time.deltaTime;
+				transform.position += Vector3.right * moveSpeed * Time.deltaTime;
 		}
 		if(vec3_.x < 0){
 			transform.localScale = new Vector3(1, 1, 1);
 			if(movablebByInput && controlFlags.move)
-				transform.position -= one * moveSpeed * Time.deltaTime;
+				transform.position -= Vector3.right * moveSpeed * Time.deltaTime;
 		}
 
 	}
@@ -127,7 +128,7 @@ public class CharacterCtrl : StardaciousObject {
 		characterGraphicCtrl.StartNormalAttack ();
 	}
 
-	public void OnStopAttack(){
+	public virtual void OnStopAttack(){
 		characterGraphicCtrl.StopNormalAttack ();
 	}
 

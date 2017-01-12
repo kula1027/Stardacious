@@ -325,6 +325,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		if (!isMiniGunMode && isAttackButtonPressing) {
 			SetShotGunShoot ();
 		}
+
+		master.SetMachineGunMode (recentIsMiniGun);
 	}
 
 	public void ShootShotGun(){

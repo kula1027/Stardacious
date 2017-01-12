@@ -24,6 +24,16 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	public override void OnStartAttack (){
 		base.OnStartAttack ();
+
+		if (controlFlags.attack && isMachineGunMode) {
+			StartMachineGun ();
+		}
+	}
+
+	public override void OnStopAttack (){
+		base.OnStopAttack ();
+
+		StopMachineGun ();
 	}
 
 	#region ShotGun
@@ -66,23 +76,33 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	#endregion
 
 	#region MachineGun
+	private bool isMachineGunMode = false;
 	private Coroutine machinegunRoutine;
+	public void SetMachineGunMode (bool isMachineGunMode_){
+		isMachineGunMode = isMachineGunMode_;
+		if (controlFlags.attack && isMachineGunMode) {
+			StartMachineGun ();
+		}
+	}
 	public void StartMachineGun(){
 		machinegunRoutine = StartCoroutine(MachineGunRoutine());
 	}
 
 	public void StopMachineGun(){
-		StopCoroutine(machinegunRoutine);
+		if(machinegunRoutine != null)
+			StopCoroutine(machinegunRoutine);
 	}
 
 	private IEnumerator MachineGunRoutine(){
 		while(true){
+			yield return new WaitForSeconds(0.3f);
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject((GameObject)Resources.Load("Projectile/testProjectile"));
 			go.transform.position = trMuzzuleGun.position;
 			go.transform.right = trMuzzuleGun.right;
-			go.GetComponent<LocalProjectile>().Ready();
+			if (currentDirV3.x < 0)
+				go.transform.right = new Vector3(-trMuzzuleGun.right.x, trMuzzuleGun.right.y, trMuzzuleGun.right.z);
 
-			yield return new WaitForSeconds(0.4f);
+			go.GetComponent<LocalProjectile>().Ready();
 		}
 	}
 	#endregion
