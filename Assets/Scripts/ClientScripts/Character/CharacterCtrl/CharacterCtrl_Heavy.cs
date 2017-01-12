@@ -22,10 +22,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		base.OnMovementInput(vec3_);
 	}
 
+	private bool isAttacking = false;
 	public override void OnStartAttack (){
 		base.OnStartAttack ();
 
-		if (controlFlags.attack && isMachineGunMode) {
+		isAttacking = true;
+		if (controlFlags.attack && isMachineGunMode) {			
 			StartMachineGun ();
 		}
 	}
@@ -33,6 +35,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	public override void OnStopAttack (){
 		base.OnStopAttack ();
 
+		isAttacking = false;
 		StopMachineGun ();
 	}
 
@@ -80,7 +83,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	private Coroutine machinegunRoutine;
 	public void SetMachineGunMode (bool isMachineGunMode_){
 		isMachineGunMode = isMachineGunMode_;
-		if (controlFlags.attack && isMachineGunMode) {
+		if (isAttacking && isMachineGunMode) {
 			StartMachineGun ();
 		}
 	}
@@ -93,9 +96,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			StopCoroutine(machinegunRoutine);
 	}
 
+	private const float machineGunFireRate = 0.15f;
 	private IEnumerator MachineGunRoutine(){
 		while(true){
-			yield return new WaitForSeconds(0.3f);
+			yield return new WaitForSeconds(machineGunFireRate);
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject((GameObject)Resources.Load("Projectile/testProjectile"));
 			go.transform.position = trMuzzuleGun.position;
 			go.transform.right = trMuzzuleGun.right;

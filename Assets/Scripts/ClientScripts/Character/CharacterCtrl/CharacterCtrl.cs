@@ -38,7 +38,7 @@ public class CharacterCtrl : StardaciousObject {
 	}
 
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
-	protected Vector3 currentDirV3;
+	protected Vector3 currentDirV3 = Vector3.left;
 	public virtual void OnMovementInput(Vector3 vec3_){
 		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
 
@@ -84,8 +84,8 @@ public class CharacterCtrl : StardaciousObject {
 		}
 		if(currentDir != prevCtrlDir){
 			cgCtrl.SetDirection (currentDir);
-			currentDirV3 = vec3_;
-			Debug.Log (currentDirV3);
+			if(currentDir != ControlDirection.Middle)
+				currentDirV3 = vec3_;
 		}
 		prevCtrlDir = currentDir;
 

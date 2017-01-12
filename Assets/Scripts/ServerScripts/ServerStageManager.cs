@@ -59,7 +59,9 @@ namespace ServerSide{
 			switch(networkMsg.Header.Attribute){
 			default:
 				int monsIdx = int.Parse(networkMsg.Header.Content);
-				monsterPooler.GetObject(monsIdx).OnRecv(networkMsg.Body);
+				IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
+				if(obj != null)
+					obj.OnRecv(networkMsg.Body);
 				break;
 			}
 		}

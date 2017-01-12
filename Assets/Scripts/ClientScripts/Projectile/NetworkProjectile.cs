@@ -7,7 +7,8 @@ public class NetworkProjectile : PoolingObject {
 		set{targetPos = value;}
 	}
 
-	public override void OnRequested (){
+	public override void Ready (){
+		itpl = new Interpolater(transform.position);
 		StartCoroutine(PositionRoutine());
 	}
 
@@ -28,7 +29,7 @@ public class NetworkProjectile : PoolingObject {
 		}
 	}
 
-	Interpolater itpl = new Interpolater();
+	Interpolater itpl;
 	public IEnumerator PositionRoutine(){
 		while(true){
 			transform.position = itpl.Interpolate();

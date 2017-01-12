@@ -36,7 +36,9 @@ public class ClientProjectileManager : MonoBehaviour {
 			break;
 
 			default:
-			projPooler.GetObject(projIdx).OnRecv(networkMessage.Body);
+			IRecvPoolable obj = projPooler.GetObject(projIdx);
+			if(obj != null)
+				obj.OnRecv(networkMessage.Body);
 			break;
 		}
 	}
@@ -55,5 +57,6 @@ public class ClientProjectileManager : MonoBehaviour {
 	private void CreateProjectile(ObjectPooler pooler_, int objType_, int projIdx_, Vector3 startPos_){
 		GameObject proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/testNetworkProjectile"), projIdx_);
 		proj.transform.position = startPos_;
+		proj.GetComponent<NetworkProjectile>().Ready();
 	}
 }

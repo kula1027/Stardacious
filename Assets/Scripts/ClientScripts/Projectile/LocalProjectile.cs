@@ -3,7 +3,7 @@ using System.Collections;
 
 //Client가 제어하는 투사체
 public class LocalProjectile : PoolingObject {
-	protected float flyingSpeed = 5f;
+	protected float flyingSpeed = 15f;
 	protected HitObject hitObject;
 
 	private NetworkMessage nmPos;
@@ -16,19 +16,20 @@ public class LocalProjectile : PoolingObject {
 	}
 
 	public override void Ready (){
-		NotifyAppearence();
+		BuildAppearMsg();
 		StartSendPos();
 	}
 
-	protected void NotifyAppearence(){
+	NetworkMessage nmAppear;
+	protected void BuildAppearMsg(){
 		ConsoleMsgQueue.EnqueMsg("Local Created: " + GetOpIndex(), 2);
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
 		MsgSegment[] b = {
 			new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
 			new MsgSegment(transform.position)
 		};
-		NetworkMessage nmAppear = new NetworkMessage(h, b);
-		Network_Client.Send(nmAppear);
+		nmAppear = new NetworkMessage(h, b);
+
 	}
 
 	public override void OnReturned (){
@@ -40,11 +41,17 @@ public class LocalProjectile : PoolingObject {
 	}
 
 	private IEnumerator SendPosRoutine(){
+		yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
+
+		Network_Client.Send(nmAppear);
+		nmPos.Body[0].SetContent(transform.position);
+		Network_Client.Send(nmPos);
+
 		while(true){
+			yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
+
 			nmPos.Body[0].SetContent(transform.position);
 			Network_Client.Send(nmPos);
-
-			yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
 		}
 	}
 }

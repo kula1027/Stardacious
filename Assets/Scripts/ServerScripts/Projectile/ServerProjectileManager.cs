@@ -34,7 +34,9 @@ namespace ServerSide {
 
 				default:
 				int projIdx = int.Parse(networkMessage.Header.Content);
-				clientProjPool[sender].GetObject(projIdx).OnRecv(networkMessage.Body);
+				IRecvPoolable obj = clientProjPool[sender].GetObject(projIdx);
+				if(obj != null)
+					obj.OnRecv(networkMessage.Body);
 				break;
 			}
 		}

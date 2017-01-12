@@ -7,7 +7,10 @@ public class Interpolater{
 	Vector3 from = Vector3.zero;
 	float timeTake = 1;
 
-	public Interpolater(){}
+	public Interpolater(Vector3 v3){
+		from = v3;
+		to = v3;
+	}
 
 	/// <summary>
 	/// t초의 시간에 걸쳐 from에서 to까지 선형보간을 실행한다

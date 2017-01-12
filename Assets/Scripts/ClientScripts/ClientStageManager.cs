@@ -62,7 +62,9 @@ public class ClientStageManager : MonoBehaviour {
 
 			default:
 			int monsIdx = int.Parse(networkMessage.Header.Content);
-			monsterPooler.GetObject(monsIdx).OnRecv(networkMessage.Body);
+			IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
+			if(obj != null)
+				obj.OnRecv(networkMessage.Body);
 			break;
 		}
 	}

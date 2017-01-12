@@ -2,14 +2,17 @@
 using System.Collections;
 
 public class ClientMonster : PoolingObject, IHittable {
-	Interpolater itpl = new Interpolater();
-
+	Interpolater itpl;
 	public override void OnRequested (){
 		StartCoroutine(PositionRoutine());
 		currentHp = 100f;
 	}
+
+	public override void Ready (){
+		itpl = new Interpolater(transform.position);
+	}
 		
-	private IEnumerator PositionRoutine(){		
+	private IEnumerator PositionRoutine(){	
 		while(true){
 			transform.position = itpl.Interpolate();
 

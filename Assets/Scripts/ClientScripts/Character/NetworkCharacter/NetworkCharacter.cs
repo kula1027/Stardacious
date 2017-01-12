@@ -14,10 +14,11 @@ public class NetworkCharacter : MonoBehaviour {
 	private Vector3 targetPos;
 		
 	void Start(){
+		itpl = new Interpolater(transform.position);
 		StartCoroutine(PositionRoutine());
 	}
 
-	Interpolater itpl = new Interpolater();
+	Interpolater itpl;
 	public IEnumerator PositionRoutine(){		
 		while(true){
 			transform.position = itpl.Interpolate();
