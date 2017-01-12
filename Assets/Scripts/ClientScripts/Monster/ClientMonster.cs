@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClientMonster : PoolingObject, ICollidable {
+public class ClientMonster : PoolingObject, IHittable {
 	Interpolater itpl = new Interpolater();
 
 	public override void OnRequested (){
 		StartCoroutine(PositionRoutine());
+		currentHp = 100f;
 	}
 		
 	private IEnumerator PositionRoutine(){		
@@ -28,19 +29,20 @@ public class ClientMonster : PoolingObject, ICollidable {
 		}
 	}
 
-	public override void OnReturned (){
-		
-	}
-
-	#region ICollidable implementation
-
-	public void OnCollision (Collider2D col){
+	public override void OnDie (){
 		MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 		MsgSegment b = new MsgSegment(MsgAttr.destroy);
 		NetworkMessage nmAppear = new NetworkMessage(h, b);
 		Network_Client.Send(nmAppear);
 
 		ReturnObject();
+	}
+		
+	#region ICollidable implementation
+
+	public void OnHit (HitObject hitObject_){
+		hitObject_.Apply(this);
+		Debug.Log(currentHp + " / " + hitObject_.damage);
 	}
 
 	#endregion

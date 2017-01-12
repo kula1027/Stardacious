@@ -4,6 +4,7 @@ using System.Collections;
 //Client가 제어하는 투사체
 public class LocalProjectile : PoolingObject {
 	protected float flyingSpeed = 5f;
+	protected HitObject hitObject;
 
 	private NetworkMessage nmPos;
 

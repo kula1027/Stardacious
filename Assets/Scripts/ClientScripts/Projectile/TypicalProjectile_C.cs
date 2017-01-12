@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TypicalProjectile_C : LocalProjectile, ICollidable {
+public class TypicalProjectile_C : LocalProjectile, IHitter {
+	
 	void Awake(){
 		objType = (int)ProjType.test;
+		hitObject = new HitObject();
 	}
 
 	public override void Ready (){
@@ -20,10 +22,11 @@ public class TypicalProjectile_C : LocalProjectile, ICollidable {
 	}
 
 	#region ICollidable implementation
-
-	public void OnCollision (Collider2D col){
+	public void OnHitSomebody (Collider2D col){
+		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
+		if(hbt)
+			hbt.OnHit(hitObject);
 		ReturnObject();
 	}
-
 	#endregion
 }

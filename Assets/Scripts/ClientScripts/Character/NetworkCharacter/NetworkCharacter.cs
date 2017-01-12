@@ -10,10 +10,8 @@ public class NetworkCharacter : MonoBehaviour {
 		get{return networkId;}
 		set{networkId = value;}
 	}
+
 	private Vector3 targetPos;
-	public Vector3 TargetPos{
-		set{targetPos = value;}
-	}
 		
 	void Start(){
 		StartCoroutine(PositionRoutine());
@@ -36,6 +34,7 @@ public class NetworkCharacter : MonoBehaviour {
 			break;
 
 		case MsgAttr.destroy:
+			NetworkCharacterManager.instance.UnregisterNetCharacter(networkId);
 			Destroy(gameObject);
 			break;
 		}

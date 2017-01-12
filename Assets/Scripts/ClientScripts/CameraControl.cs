@@ -5,7 +5,6 @@ public class CameraControl : MonoBehaviour {
 	private Camera cam;
 	private Transform targetTr;
 	private const float camDepth = -20f;
-	private const float camYpos = 9f;
 
 	private float camHeight;
 	private float camWidth;
@@ -35,17 +34,17 @@ public class CameraControl : MonoBehaviour {
 										transform.position, 
 										new Vector3(
 											targetTr.position.x,
-											camYpos,
+											camHeight,
 											camDepth
 										),
 										0.05f
 									);
 
 				if(transform.position.x + camWidth > limitRight){
-					transform.position = new Vector3(limitRight - camWidth, camYpos, camDepth);
+					transform.position = new Vector3(limitRight - camWidth, camHeight, camDepth);
 				}
 				if(transform.position.x - camWidth < limitLeft){
-					transform.position = new Vector3(limitLeft + camWidth, camYpos, camDepth);
+					transform.position = new Vector3(limitLeft + camWidth, camHeight, camDepth);
 				}
 			}
 

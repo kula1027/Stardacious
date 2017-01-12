@@ -13,30 +13,38 @@ public class NetworkCharacterManager : MonoBehaviour {
 	void Awake(){
 		instance = this;
 
-		prefabCharacter = (GameObject)Resources.Load("chNetTest");
-	}
-
-	public void SetNetCharacter(int idx_){
-
+		prefabCharacter = (GameObject)Resources.Load("Character/HeavyNetwork");
 	}
 
 	public NetworkCharacter GetNetCharacter(int idx_){
-		if(idx_ == Network_Client.NetworkId)return null;
-		if(otherCharacter[idx_] == null){
-			GameObject go = (GameObject)Instantiate(prefabCharacter);
-			otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
-			otherCharacter[idx_].NetworkId = idx_;
-		}
-			
 		return otherCharacter[idx_];
 	}
 
-	public void OnRecv(NetworkMessage networkMessage){
-		int chId = int.Parse(networkMessage.Header.Content);
+	public void UnregisterNetCharacter(int idx_){
+		otherCharacter[idx_] = null;
+	}
 
-		NetworkCharacter targetChar = NetworkCharacterManager.instance.GetNetCharacter(chId);
-		if(targetChar != null){
-			targetChar.OnRecvMsg(networkMessage.Body);
+	private void CreateNetCharacter(int idx_, int chIdx_){
+		GameObject go = (GameObject)Instantiate(prefabCharacter);
+		otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
+		otherCharacter[idx_].NetworkId = idx_;
+	}
+
+	public void OnRecv(NetworkMessage networkMessage){		
+		switch(networkMessage.Header.Content){
+		case MsgAttr.create:
+			int netId = int.Parse(networkMessage.Body[0].Attribute);
+			if(otherCharacter[netId] == null){
+				int chIdx = int.Parse(networkMessage.Body[0].Content);
+				CreateNetCharacter(netId, chIdx);
+			}
+			break;
+
+			default:
+			int chId = int.Parse(networkMessage.Header.Content);
+			if(otherCharacter[chId] != null)
+				otherCharacter[chId].OnRecvMsg(networkMessage.Body);
+			break;
 		}
 	}
 }

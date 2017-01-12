@@ -18,10 +18,17 @@ namespace ServerSide{
 			return character[idx_];
 		}
 
-		public ServerCharacter CreateCharacter(int idx_){
+		public ServerCharacter CreateCharacter(int idx_, ChIdx chIdx_){
 			character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
 			character[idx_].NetworkId = idx_;
+			character[idx_].ChrIdx = chIdx_;
 			character[idx_].BuildSendMsg();
+
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				if(character[loop] != null){
+					character[loop].NotifyAppearence();
+				}
+			}
 			currentPlayerCount++;
 
 			return character[idx_];
@@ -39,11 +46,17 @@ namespace ServerSide{
 
 		public void OnRecv(NetworkMessage networkMessage){
 			int sender = int.Parse(networkMessage.Adress.Attribute);
-			if(ServerCharacterManager.instance.GetCharacter(sender) == null){
-				ServerCharacterManager.instance.CreateCharacter(sender);
-			}
 
-			ServerCharacterManager.instance.GetCharacter(sender).OnRecvMsg(networkMessage.Body);
+			switch(networkMessage.Header.Content){
+			case MsgAttr.create:
+				ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
+				ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
+				break;
+
+				default:
+				ServerCharacterManager.instance.GetCharacter(sender).OnRecvMsg(networkMessage.Body);
+				break;
+			}
 		}
 	}
 }

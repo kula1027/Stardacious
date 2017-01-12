@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PoolingObject : MonoBehaviour, IRecvPoolable {
+public class PoolingObject : StardaciousObject, IRecvPoolable {
 	protected int objType;
 	public int ObjType{
 		set{objType = value;}

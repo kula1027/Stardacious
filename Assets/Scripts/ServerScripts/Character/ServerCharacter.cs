@@ -2,9 +2,7 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class ServerCharacter : StardaciousObject {
-		private const float posSyncTime = 0.03f;
-
+	public class ServerCharacter : MonoBehaviour {
 		private int networkId = -1;
 		public int NetworkId{
 			get{return networkId;}
@@ -12,7 +10,10 @@ namespace ServerSide{
 		}
 		private NetworkMessage msgPos;
 
-		private ChIdx chIdx = ChIdx.Heavy;
+		private ChIdx chrIdx;
+		public ChIdx ChrIdx{
+			set{chrIdx = value;}
+		}
 
 		public void BuildSendMsg(){			
 			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
@@ -20,13 +21,21 @@ namespace ServerSide{
 			msgPos = new NetworkMessage(msgHeader, msgBody);
 		}
 
-		public override void OnRecvMsg (MsgSegment[] bodies){
+		public void OnRecvMsg (MsgSegment[] bodies){
 			if(bodies[0].Attribute.Equals(MsgAttr.position)){
 				transform.position = bodies[0].ConvertToV3();
 
 				msgPos.Body[0].SetContent(transform.position);
 				Network_Server.BroadCast(msgPos, networkId);
 			}
+		}
+
+		public void NotifyAppearence(){
+			MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
+			MsgSegment bAppear = new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString());
+			NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
+
+			Network_Server.BroadCast(nmAppear, networkId);
 		}
 
 		void OnDestroy(){			

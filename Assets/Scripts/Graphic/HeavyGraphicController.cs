@@ -11,6 +11,8 @@ public enum ControlDirection {NotInitialized, LeftDown, Down, RightDown, Left, M
 public enum HeavyLowerState{Idle, Walk, Run}
 public class HeavyGraphicController : CharacterGraphicCtrl {
 
+	public CharacterCtrl_Heavy master;
+
 	private Animator lowerAnimator;
 	private Animator upperAnimator;
 
@@ -33,8 +35,6 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	private bool isSwapDelay = false;
 
 	void Awake () {
-		controlFlags = new ControlFlags ();	//FIXME : Character controller에서 reference 가져올것.
-
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 		cartridge.Stop ();
@@ -45,6 +45,10 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		lowerState = HeavyLowerState.Idle;
 	}
 
+	public override void Initialize (){
+		controlFlags = master.controlFlags;
+	}
+
 	public override void SetDirection(int direction){
 		SetDirection ((ControlDirection)direction);
 	}
@@ -52,7 +56,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		currentInputDirection = direction;
 
 		SetLowerAnim (currentInputDirection);
-
+		SetUpperAnim (currentInputDirection);
 	}
 	public override void ForcedFly(){			//하체 모션 캔슬및 변경 금지
 		isJumping = true;
@@ -153,6 +157,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 
 		shotEffectAnimator.transform.position = gunMuzzle.position;
+		shotEffectAnimator.transform.rotation = gunMuzzle.rotation;
 		shotEffectAnimator.Play ("Shoot", 0, 0);
 	}
 
@@ -187,7 +192,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 						recentAimDirection = ShootDirection.FrontUp;
 						break;
 					case ControlDirection.Up:
-						upperAnimator.Play ("FrontDownIdle");
+						upperAnimator.Play ("UpIdle");
 						recentAimDirection = ShootDirection.Up;
 						break;
 					default:
@@ -324,6 +329,10 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		if (!isMiniGunMode && isAttackButtonPressing) {
 			SetShotGunShoot ();
 		}
+	}
+
+	public void ShootShotGun(){
+		master.ShootShotGun();
 	}
 	#endregion
 }

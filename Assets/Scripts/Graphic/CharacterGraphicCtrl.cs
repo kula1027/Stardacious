@@ -2,7 +2,7 @@
 using System.Collections;
 
 public abstract class CharacterGraphicCtrl : MonoBehaviour {
-
+	public abstract void Initialize();
 	public abstract void SetDirection(ControlDirection c);
 	public abstract void SetDirection(int c);
 	public abstract void ForcedFly();
