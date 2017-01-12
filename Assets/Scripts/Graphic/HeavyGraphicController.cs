@@ -13,9 +13,6 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Heavy master;
 
-	private Animator lowerAnimator;
-	private Animator upperAnimator;
-
 	public Transform gunMuzzle;
 	public Animator shotEffectAnimator;
 	public Animator miniEffectAnimator;
@@ -26,7 +23,6 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	private ShootDirection recentAimDirection;	//마지막으로 쏜 방향
 
 	//Flags
-	private ControlFlags controlFlags;
 	private bool isJumping = false;
 	private bool isAttackButtonPressing = false;		//미니건 모드일 경우 이걸로 즉시 발사 및 중지
 	private bool isAttackAnimationPlaying = false;		//샷건 모드일 경우 공격 선딜, 후딜을 이것으로 표시

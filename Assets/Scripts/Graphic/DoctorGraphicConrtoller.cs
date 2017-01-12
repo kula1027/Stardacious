@@ -2,12 +2,15 @@
 using System.Collections;
 
 public enum MoveAnimState{Idle, Walk, Run, Jump, Hover}
-public class DoctorGraphicConrtoller : MonoBehaviour {
+public class DoctorGraphicConrtoller : CharacterGraphicCtrl {
 
-	private Animator lowerAnimator;
-	private Animator upperAnimator;
+	public CharacterCtrl master;	//TODO Char Doctor
 
-	void Start () {
+	//flags
+	private bool isHovering = false;
+	private bool isEnergyChargine = false;
+
+	void Awake () {
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 	}
@@ -21,7 +24,47 @@ public class DoctorGraphicConrtoller : MonoBehaviour {
 		}
 	}
 
-	public void SetMoveState(){
+	public void Hover(){
 		
 	}
+	public void EndHover(){
+		
+	}
+		
+	public override void Initialize (){
+		controlFlags = master.controlFlags;
+	}
+
+	public override void SetDirection (ControlDirection direction){
+		throw new System.NotImplementedException ();
+	}
+
+	public override void SetDirection (int direction){
+		SetDirection ((ControlDirection)direction);
+	}
+
+	public override void ForcedFly (){
+		throw new System.NotImplementedException ();
+	}
+
+	public override void Jump (){
+		throw new System.NotImplementedException ();
+	}
+
+	public override void Grounded (){
+		throw new System.NotImplementedException ();
+	}
+
+	public override void StartNormalAttack (){
+		throw new System.NotImplementedException ();
+	}
+
+	public override void StopNormalAttack (){
+		throw new System.NotImplementedException ();
+	}
+
+
+	#region 
+
+	#endregion
 }
