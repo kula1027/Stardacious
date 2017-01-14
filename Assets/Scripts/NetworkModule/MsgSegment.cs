@@ -98,6 +98,9 @@ public class MsgAttr{
 	public const string create = "appr";
 	public const string destroy = "des";
 
+	public const string hpChange = "hpcg";
+	public const string dead = "dead";
+
 	public const string setup = "setup";
 	public class Setup{
 		public const string reqId = "reqId";

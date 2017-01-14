@@ -17,7 +17,7 @@ namespace ServerSide {
 			serverProjPool = gameObject.AddComponent<ObjectPooler>();
 		}
 
-		private ObjectPooler GetLocalProjPool(){
+		public ObjectPooler GetLocalProjPool(){
 			return serverProjPool;
 		}
 
@@ -43,7 +43,7 @@ namespace ServerSide {
 
 		private void CreateProjectile(int sender_, int objType_, int poolIdx_, Vector3 startPos_){
 			ObjectPooler pool = clientProjPool[sender_];
-			GameObject objProj = pool.RequestObjectAt((GameObject)Resources.Load("Projectile/ServerProjectile"), poolIdx_);
+			GameObject objProj = pool.RequestObjectAt((GameObject)Resources.Load("Projectile/ServerNetworkProjectile"), poolIdx_);
 			objProj.transform.position = startPos_;
 			ServerNetworkProjectile snp = objProj.GetComponent<ServerNetworkProjectile>();
 			snp.ObjType = objType_;

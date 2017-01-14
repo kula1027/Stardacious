@@ -4,12 +4,13 @@ using System.Collections;
 public class ClientMonster : PoolingObject, IHittable {
 	Interpolater itpl;
 	public override void OnRequested (){
+		itpl = new Interpolater(transform.position);
 		StartCoroutine(PositionRoutine());
-		currentHp = 100f;
+		CurrentHp = 100f;
 	}
 
 	public override void Ready (){
-		itpl = new Interpolater(transform.position);
+		
 	}
 		
 	private IEnumerator PositionRoutine(){	
@@ -45,7 +46,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	public void OnHit (HitObject hitObject_){
 		hitObject_.Apply(this);
-		Debug.Log(currentHp + " / " + hitObject_.damage);
+		Debug.Log(CurrentHp + " / " + hitObject_.damage);
 	}
 
 	#endregion

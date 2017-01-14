@@ -2,31 +2,43 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class ServerCharacter : MonoBehaviour {
+	public class ServerCharacter : StardaciousObject, IHittable {
 		private int networkId = -1;
 		public int NetworkId{
 			get{return networkId;}
 			set{networkId = value;}
 		}
-		private NetworkMessage msgPos;
-
+			
 		private ChIdx chrIdx;
 		public ChIdx ChrIdx{
 			set{chrIdx = value;}
 		}
 
-		public void BuildSendMsg(){			
-			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
-			MsgSegment msgBody = new MsgSegment(new Vector3());
-			msgPos = new NetworkMessage(msgHeader, msgBody);
+		private NetworkMessage nmPos;
+		private NetworkMessage nmHit;
+		public void Initialize(){				
+			MsgSegment msgHeader;
+			MsgSegment msgBody;
+
+			//Build Pos Msg
+			msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
+			msgBody = new MsgSegment(new Vector3());
+			nmPos = new NetworkMessage(msgHeader, msgBody);
+
+			//Build Hit Msg
+			msgBody = new MsgSegment(MsgAttr.hpChange);
+			nmHit = new NetworkMessage(msgHeader, msgBody);
+
+			maxHp = 1f;
+			CurrentHp = maxHp;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
 			if(bodies[0].Attribute.Equals(MsgAttr.position)){
 				transform.position = bodies[0].ConvertToV3();
 
-				msgPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCast(msgPos, networkId);
+				nmPos.Body[0].SetContent(transform.position);
+				Network_Server.BroadCast(nmPos, networkId);
 			}
 		}
 
@@ -44,6 +56,31 @@ namespace ServerSide{
 			NetworkMessage deleteMsg = new NetworkMessage(h, b);
 
 			Network_Server.BroadCast(deleteMsg, networkId);
+		}
+
+		#region IHittable implementation
+
+		public void OnHit (HitObject hitObject_){
+			hitObject_.Apply(this);
+		}
+
+		#endregion
+
+		public override void OnHpChanged (){
+			nmHit.Body[0].Content = CurrentHp.ToString();
+			Network_Server.BroadCast(nmHit);
+
+			ConsoleMsgQueue.EnqueMsg(networkId + " HP CHANGE");
+		}
+
+		public override void OnDie (){
+			//Build Dead Msg
+			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
+			MsgSegment msgBody = new MsgSegment(MsgAttr.dead);
+			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);
+
+			Network_Server.BroadCast(nmDead);
+			ConsoleMsgQueue.EnqueMsg(networkId + " is Dead");
 		}
 	}
 }

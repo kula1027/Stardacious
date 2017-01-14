@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkCharacterManager : MonoBehaviour {
-	public static NetworkCharacterManager instance;
+public class ClientCharacterManager : MonoBehaviour {
+	public static ClientCharacterManager instance;
 
-	private const int maxCharacterCount = 3;
 
 	private GameObject prefabCharacter;
 
-	private NetworkCharacter[] otherCharacter = new NetworkCharacter[maxCharacterCount];
+	private IReceivable[] characters = new IReceivable[NetworkConst.maxPlayer];
 
 	void Awake(){
 		instance = this;
@@ -16,25 +15,31 @@ public class NetworkCharacterManager : MonoBehaviour {
 		prefabCharacter = (GameObject)Resources.Load("Character/HeavyNetwork");
 	}
 
-	public NetworkCharacter GetNetCharacter(int idx_){
-		return otherCharacter[idx_];
+	private void OnRecvCharacter(int idx_, NetworkMessage networkMessage){
+		if(idx_ == Network_Client.NetworkId){
+			CharacterCtrl.instance.OnRecv(networkMessage.Body);
+			return;
+		}
+
+		if(characters[idx_] != null)
+			characters[idx_].OnRecv(networkMessage.Body);
 	}
 
 	public void UnregisterNetCharacter(int idx_){
-		otherCharacter[idx_] = null;
+		characters[idx_] = null;
 	}
 
 	private void CreateNetCharacter(int idx_, int chIdx_){
 		GameObject go = (GameObject)Instantiate(prefabCharacter);
-		otherCharacter[idx_] = go.AddComponent<NetworkCharacter>();
-		otherCharacter[idx_].NetworkId = idx_;
+		characters[idx_] = go.AddComponent<NetworkCharacter>();
+		go.GetComponent<NetworkCharacter>().NetworkId = idx_;
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){		
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
 			int netId = int.Parse(networkMessage.Body[0].Attribute);
-			if(otherCharacter[netId] == null){
+			if(characters[netId] == null){
 				int chIdx = int.Parse(networkMessage.Body[0].Content);
 				CreateNetCharacter(netId, chIdx);
 			}
@@ -42,8 +47,7 @@ public class NetworkCharacterManager : MonoBehaviour {
 
 			default:
 			int chId = int.Parse(networkMessage.Header.Content);
-			if(otherCharacter[chId] != null)
-				otherCharacter[chId].OnRecvMsg(networkMessage.Body);
+			OnRecvCharacter(chId, networkMessage);
 			break;
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterCtrl : StardaciousObject {
+public class CharacterCtrl : StardaciousObject, IReceivable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
 
@@ -136,6 +136,20 @@ public class CharacterCtrl : StardaciousObject {
 
 	}
 
+	#region NetworkRelated
+
+	public void OnRecv (MsgSegment[] bodies){
+		switch(bodies[0].Attribute){
+		case MsgAttr.hpChange:
+			Debug.Log(bodies[0].Content);
+			break;
+
+		case MsgAttr.dead:
+			Debug.Log("DEAD!");
+			break;
+		}
+	}
+
 	protected void StartSendPos(){
 		StartCoroutine(SendPosRoutine());
 	}
@@ -148,6 +162,8 @@ public class CharacterCtrl : StardaciousObject {
 			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}
 	}
+
+	#endregion
 }
 
 public enum InputDirection{left, leftUp, up, rightUp, right, rightDown, down, leftDown}

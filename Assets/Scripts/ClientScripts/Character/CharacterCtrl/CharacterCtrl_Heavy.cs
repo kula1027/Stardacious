@@ -70,7 +70,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	public void OnHitSomebody (Collider2D col){
 		float dis = Vector2.Distance(trMuzzuleGun.position, col.transform.position);
 		if(dis < 1)dis = 1;
-		hit_ShotGun = new HitObject(5 + 80 / dis);
+		hit_ShotGun = new HitObject(15 + 120 / dis);
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 		if(hbt)
 			hbt.OnHit(hit_ShotGun);

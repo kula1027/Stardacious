@@ -15,7 +15,7 @@ public class Client_MsgHandler : MsgHandler {//header의 attribute가 default인
 			break;
 
 		case MsgAttr.character:
-			NetworkCharacterManager.instance.OnRecv(networkMessage);
+			ClientCharacterManager.instance.OnRecv(networkMessage);
 			break;
 
 		case MsgAttr.monster:

@@ -29,15 +29,14 @@ public class LocalProjectile : PoolingObject {
 			new MsgSegment(transform.position)
 		};
 		nmAppear = new NetworkMessage(h, b);
-
 	}
 
 	public override void OnReturned (){
 		ConsoleMsgQueue.EnqueMsg("Local Delete: " + GetOpIndex(), 2);
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment b = new MsgSegment(MsgAttr.destroy);
-		NetworkMessage nmAppear = new NetworkMessage(h, b);
-		Network_Client.Send(nmAppear);
+		NetworkMessage nmDestroy = new NetworkMessage(h, b);
+		Network_Client.Send(nmDestroy);
 	}
 
 	private IEnumerator SendPosRoutine(){

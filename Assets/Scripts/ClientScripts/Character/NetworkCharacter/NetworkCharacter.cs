@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 네트워크로 제어되는 다른 클라이언트들의 캐릭터 객체
 /// </summary>
-public class NetworkCharacter : MonoBehaviour {
+public class NetworkCharacter : MonoBehaviour, IReceivable {
 	private int networkId;
 	public int NetworkId{
 		get{return networkId;}
@@ -27,7 +27,9 @@ public class NetworkCharacter : MonoBehaviour {
 		}
 	}
 
-	public void OnRecvMsg (MsgSegment[] bodies){		
+	#region IReceivable implementation
+
+	public void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
@@ -35,11 +37,13 @@ public class NetworkCharacter : MonoBehaviour {
 			break;
 
 		case MsgAttr.destroy:
-			NetworkCharacterManager.instance.UnregisterNetCharacter(networkId);
+			ClientCharacterManager.instance.UnregisterNetCharacter(networkId);
 			Destroy(gameObject);
 			break;
 		}
 
 	}
+
+	#endregion
 }
 

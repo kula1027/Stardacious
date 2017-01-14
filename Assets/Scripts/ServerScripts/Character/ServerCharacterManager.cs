@@ -22,7 +22,7 @@ namespace ServerSide{
 			character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
 			character[idx_].NetworkId = idx_;
 			character[idx_].ChrIdx = chIdx_;
-			character[idx_].BuildSendMsg();
+			character[idx_].Initialize();
 
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(character[loop] != null){
