@@ -31,7 +31,7 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.destroy:
-			ReturnObject();
+			OnDie();
 			break;
 		}
 	}

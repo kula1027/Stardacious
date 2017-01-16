@@ -57,6 +57,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 		SetLowerAnim (currentInputDirection);
 		SetUpperAnim (currentInputDirection);
+
+		cartridge.transform.localScale = transform.lossyScale;
 	}
 	public override void ForcedFly(){			//하체 모션 캔슬및 변경 금지
 		isJumping = true;

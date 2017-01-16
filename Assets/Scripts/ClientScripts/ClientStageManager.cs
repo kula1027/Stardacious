@@ -62,7 +62,7 @@ public class ClientStageManager : MonoBehaviour {
 	}
 
 	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_){
-		GameObject objMon = monsterPooler.RequestObjectAt((GameObject)Resources.Load("mon"), monsIdx_);
+		GameObject objMon = monsterPooler.RequestObjectAt((GameObject)Resources.Load("Monster/Spider_C"), monsIdx_);
 		objMon.transform.position = startPos_;
 		objMon.GetComponent<PoolingObject>().Ready();
 	}

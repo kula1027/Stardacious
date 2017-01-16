@@ -4,7 +4,7 @@ using System.Collections;
 public class SpiderGraphicController : MonsterGraphicCtrl {
 
 	void Awake(){
-		animator = transform.FindChild ("Offset").FindChild ("Pivot").FindChild ("body").GetComponent<Animator> ();
+		animator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 	}
 
 	public override void Initialize (){
