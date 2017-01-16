@@ -2,12 +2,12 @@
 using System.Collections;
 
 public class HitObject {
-	public float damage;
+	public int damage;
 
 	public HitObject(){
 	}
 
-	public HitObject(float damage_){
+	public HitObject(int damage_){
 		damage = damage_;
 	}
 

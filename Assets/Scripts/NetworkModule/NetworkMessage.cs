@@ -7,6 +7,9 @@ public class NetworkMessage {
 	public const string AliveSignal = "alive";
 	public const string ServerId = "9999";//네트워크상에서의 서버 id
 
+	public const string sTrue = "t";
+	public const string sFalse = "f";
+
 	private static string senderId = "-1";
 	public static string SenderId{
 		get{return senderId;}
@@ -33,6 +36,7 @@ public class NetworkMessage {
 	private MsgSegment[] body;
 	public MsgSegment[] Body{
 		get{return body;}
+		set{body = value;}
 	}
 
 	public int BodyLength{
@@ -65,6 +69,12 @@ public class NetworkMessage {
 		adress = new MsgSegment(senderId, ServerId);
 		header = new MsgSegment();
 		body = body_;
+	}
+
+	public NetworkMessage(MsgSegment header_){
+		adress = new MsgSegment(senderId, ServerId);
+		header = header_;
+		body = new MsgSegment[1];
 	}
 
 	public NetworkMessage(MsgSegment header_, MsgSegment body_){

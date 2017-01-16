@@ -42,7 +42,11 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void Initialize (){
-		controlFlags = master.controlFlags;
+		if(master){
+			controlFlags = master.controlFlags;
+		}else{
+			controlFlags = new ControlFlags();
+		}
 	}
 
 	public override void SetDirection(int direction){
@@ -326,11 +330,15 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 			SetShotGunShoot ();
 		}
 
-		master.SetMachineGunMode (recentIsMiniGun);
+		if(master){
+			master.SetMachineGunMode (recentIsMiniGun);
+		}
 	}
 
 	public void ShootShotGun(){
-		master.ShootShotGun();
+		if(master){
+			master.ShootShotGun();
+		}
 	}
 	#endregion
 }

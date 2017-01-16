@@ -7,6 +7,8 @@ namespace ServerSide{
 		private NetworkMessage nmPos;
 
 		public override void Ready(){
+			maxHp = 100;
+			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
 			nmPos = new NetworkMessage(h, b);
@@ -18,12 +20,9 @@ namespace ServerSide{
 
 		public override void OnRecv (MsgSegment[] bodies){
 			switch(bodies[0].Attribute){
-			case MsgAttr.destroy:
-				MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
-				NetworkMessage nmDestroy = new NetworkMessage(h, bodies);
-				Network_Server.BroadCast(nmDestroy);
-
-				ReturnObject();
+			case MsgAttr.hit:
+				int damage = int.Parse(bodies[0].Content);
+				CurrentHp -= damage;
 				break;
 			}
 		}
@@ -46,6 +45,15 @@ namespace ServerSide{
 
 				yield return new WaitForSeconds(posSyncItv);
 			}
+		}
+
+		public override void OnDie (){
+			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
+			MsgSegment b = new MsgSegment(MsgAttr.destroy);
+			NetworkMessage nmDestroy = new NetworkMessage(h, b);
+			Network_Server.BroadCast(nmDestroy);
+
+			ReturnObject();
 		}
 
 

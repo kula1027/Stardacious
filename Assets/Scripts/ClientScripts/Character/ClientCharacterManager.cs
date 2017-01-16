@@ -31,7 +31,7 @@ public class ClientCharacterManager : MonoBehaviour {
 
 	private void CreateNetCharacter(int idx_, int chIdx_){
 		GameObject go = (GameObject)Instantiate(prefabCharacter);
-		characters[idx_] = go.AddComponent<NetworkCharacter>();
+		characters[idx_] = go.GetComponent<IReceivable>();
 		go.GetComponent<NetworkCharacter>().NetworkId = idx_;
 	}
 

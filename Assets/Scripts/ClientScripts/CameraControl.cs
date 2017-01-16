@@ -40,12 +40,12 @@ public class CameraControl : MonoBehaviour {
 										0.05f
 									);
 
-				if(transform.position.x + camWidth > limitRight){
+				/*if(transform.position.x + camWidth > limitRight){
 					transform.position = new Vector3(limitRight - camWidth, camHeight, camDepth);
 				}
 				if(transform.position.x - camWidth < limitLeft){
 					transform.position = new Vector3(limitLeft + camWidth, camHeight, camDepth);
-				}
+				}*/
 			}
 
 			yield return null;

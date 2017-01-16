@@ -14,31 +14,36 @@ namespace ServerSide{
 			set{chrIdx = value;}
 		}
 
+		private MsgSegment commonHeader;
 		private NetworkMessage nmPos;
 		private NetworkMessage nmHit;
+		private NetworkMessage nmDefault;
 		public void Initialize(){				
-			MsgSegment msgHeader;
-			MsgSegment msgBody;
+			commonHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
 
-			//Build Pos Msg
-			msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
-			msgBody = new MsgSegment(new Vector3());
-			nmPos = new NetworkMessage(msgHeader, msgBody);
+			nmPos = new NetworkMessage(commonHeader, new MsgSegment(new Vector3()));
 
-			//Build Hit Msg
-			msgBody = new MsgSegment(MsgAttr.hpChange);
-			nmHit = new NetworkMessage(msgHeader, msgBody);
+			nmHit = new NetworkMessage(commonHeader, new MsgSegment(MsgAttr.hit));
 
-			maxHp = 1f;
+			nmDefault = new NetworkMessage(commonHeader);
+
+			maxHp = 1;
 			CurrentHp = maxHp;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
-			if(bodies[0].Attribute.Equals(MsgAttr.position)){
+			switch(bodies[0].Attribute){
+			case MsgAttr.position:
 				transform.position = bodies[0].ConvertToV3();
 
 				nmPos.Body[0].SetContent(transform.position);
 				Network_Server.BroadCast(nmPos, networkId);
+				break;
+
+				default:
+				nmDefault.Body = bodies;
+				Network_Server.BroadCast(nmDefault, networkId);
+				break;
 			}
 		}
 
@@ -69,8 +74,6 @@ namespace ServerSide{
 		public override void OnHpChanged (){
 			nmHit.Body[0].Content = CurrentHp.ToString();
 			Network_Server.BroadCast(nmHit);
-
-			ConsoleMsgQueue.EnqueMsg(networkId + " HP CHANGE");
 		}
 
 		public override void OnDie (){
@@ -80,7 +83,7 @@ namespace ServerSide{
 			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);
 
 			Network_Server.BroadCast(nmDead);
-			ConsoleMsgQueue.EnqueMsg(networkId + " is Dead");
+			ConsoleMsgQueue.EnqueMsg(networkId + " is Dead", 2);
 		}
 	}
 }

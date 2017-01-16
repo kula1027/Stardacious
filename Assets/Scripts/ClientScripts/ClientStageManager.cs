@@ -9,7 +9,7 @@ public class ClientStageManager : MonoBehaviour {
 		get{return currentStage;}
 	}
 
-	private GameObject[] goStage = new GameObject[3];	
+	private GameObject[] goStage = new GameObject[1];	
 	private Transform safeBar;
 
 	private ObjectPooler monsterPooler;
@@ -25,11 +25,6 @@ public class ClientStageManager : MonoBehaviour {
 		for(int loop = 0; loop < goStage.Length; loop++){
 			goStage[loop] = GameObject.Find("Stages").transform.GetChild(loop).gameObject;
 		}
-
-		Stage cStg = goStage[0].GetComponent<Stage>();
-		cStg.Initialize();
-		safeBar.position = cStg.param[1];
-		Camera.main.GetComponent<CameraControl>().SetLimit(cStg.param[0].x, cStg.param[1].x);
 	}
 		
 	private void LoadStage(int idx){
@@ -40,14 +35,11 @@ public class ClientStageManager : MonoBehaviour {
 
 		goStage[idx] = Instantiate(goStage[idx]);
 		currentStage = idx;
-		safeBar.position = goStage[idx].GetComponent<Stage>().param[1];
 	}
 
 	public void MoveStage(int stgIdx){
 		currentStage = stgIdx;
 		LoadStage(currentStage);
-		float rLim = goStage[currentStage].GetComponent<Stage>().param[1].x;
-		Camera.main.GetComponent<CameraControl>().SetLimitR(rLim);
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){

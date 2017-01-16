@@ -59,7 +59,7 @@ public class Network_Client {
 					return;
 				}
 
-				Thread.Sleep(4000);
+				Thread.Sleep(1000);
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(e.ToString());
 			}

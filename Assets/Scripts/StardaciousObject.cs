@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class StardaciousObject : MonoBehaviour {
-	protected float maxHp = 100;
-	private float currentHp;
-	public float CurrentHp{
+	protected int maxHp = 1;
+	private int currentHp;
+	public int CurrentHp{
 		get{
 			return currentHp;
 		}

@@ -16,12 +16,13 @@ public class MsgSegment {
 	}
 
 	public MsgSegment(){
-		content = "";
+		content = "NotInitailized";
 		attribute = "NotInitailized";
 	}
 
 	public MsgSegment(string attribute_){
 		attribute = attribute_;
+		content = "NotInitailized";
 	}
 
 	public MsgSegment(string attribute_, string content_){
@@ -50,12 +51,6 @@ public class MsgSegment {
 	public MsgSegment(string attribute_, Vector3 vec3_){
 		attribute = attribute_;
 		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
-	}
-
-	public MsgSegment(string attribute_, params int[] list){
-		attribute = attribute_;
-		foreach(int num in list)
-			content += num + ",";
 	}
 
 	/// <summary>
@@ -94,11 +89,12 @@ public class MsgSegment {
 
 public class MsgAttr{
 	public const string position = "pos";
+	public const string directionScale = "dscale";
 
 	public const string create = "appr";
 	public const string destroy = "des";
 
-	public const string hpChange = "hpcg";
+	public const string hit = "hit";
 	public const string dead = "dead";
 
 	public const string setup = "setup";
@@ -127,7 +123,10 @@ public class MsgAttr{
 
 	public const string character = "chr";
 	public class Character{
-
+		public const string controlDirection = "cdir";
+		public const string normalAttack = "nattk";
+		public const string grounded = "ground";
+		public const string skill = "skill";
 	}
 
 

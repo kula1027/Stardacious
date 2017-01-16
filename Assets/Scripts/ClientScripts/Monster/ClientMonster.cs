@@ -3,15 +3,18 @@ using System.Collections;
 
 public class ClientMonster : PoolingObject, IHittable {
 	Interpolater itpl;
+
+	NetworkMessage nmHit;
 	public override void OnRequested (){
 		itpl = new Interpolater(transform.position);
 		StartCoroutine(PositionRoutine());
-		CurrentHp = 100f;
 	}
 
 	public override void Ready (){
-		
-	}
+		MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
+		MsgSegment b = new MsgSegment(MsgAttr.hit);
+		nmHit = new NetworkMessage(h, b);
+	}	
 		
 	private IEnumerator PositionRoutine(){	
 		while(true){
@@ -32,21 +35,12 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 		}
 	}
-
-	public override void OnDie (){
-		MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
-		MsgSegment b = new MsgSegment(MsgAttr.destroy);
-		NetworkMessage nmAppear = new NetworkMessage(h, b);
-		Network_Client.Send(nmAppear);
-
-		ReturnObject();
-	}
 		
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
-		hitObject_.Apply(this);
-		Debug.Log(CurrentHp + " / " + hitObject_.damage);
+		nmHit.Body[0].Content = hitObject_.damage.ToString();
+		Network_Client.Send(nmHit);
 	}
 
 	#endregion

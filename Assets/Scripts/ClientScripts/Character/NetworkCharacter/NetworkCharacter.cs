@@ -11,10 +11,19 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 		set{networkId = value;}
 	}
 
+	public CharacterGraphicCtrl characterGraphicCtrl;
+	public CharacterGraphicCtrl cgCtrl{
+		get{return characterGraphicCtrl;}
+	}
+
 	private Vector3 targetPos;
-		
-	void Start(){
+
+	void Awake(){
+		characterGraphicCtrl.Initialize();
 		itpl = new Interpolater(transform.position);
+	}
+
+	void Start(){
 		StartCoroutine(PositionRoutine());
 	}
 
@@ -27,6 +36,9 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 		}
 	}
 
+	public virtual void UseSkill(int idx_){
+	}
+
 	#region IReceivable implementation
 
 	public void OnRecv (MsgSegment[] bodies){
@@ -34,6 +46,36 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
 			itpl = new Interpolater(transform.position, targetPos, NetworkConst.chPosSyncTime);
+			break;
+
+		case MsgAttr.Character.controlDirection:
+			int dir = int.Parse(bodies[0].Content);
+			int dirS = int.Parse(bodies[1].Content);
+			characterGraphicCtrl.SetDirection(dir);
+			transform.localScale = new Vector3(dirS, 1, 1);
+			break;
+
+		case MsgAttr.Character.grounded:
+			if(bodies[0].Content.Equals(NetworkMessage.sTrue)){
+				characterGraphicCtrl.Grounded();
+			}
+			if(bodies[0].Content.Equals(NetworkMessage.sFalse)){
+				characterGraphicCtrl.Jump();
+			}
+			break;
+
+		case MsgAttr.Character.normalAttack:
+			if(bodies[0].Content.Equals(NetworkMessage.sTrue)){
+				characterGraphicCtrl.StartNormalAttack();
+			}
+			if(bodies[0].Content.Equals(NetworkMessage.sFalse)){
+				characterGraphicCtrl.StopNormalAttack();
+			}
+			break;
+
+		case MsgAttr.Character.skill:
+			int sIdx = int.Parse(bodies[0].Content);
+			UseSkill(sIdx);
 			break;
 
 		case MsgAttr.destroy:

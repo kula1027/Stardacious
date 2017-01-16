@@ -16,7 +16,7 @@ namespace ServerSide{
 			get{return currentMonsterCount;}
 		}
 
-		private GameObject[] goStage = new GameObject[3];
+		private GameObject[] goStage = new GameObject[1];
 		private Transform safeBar;
 
 		void Awake(){
@@ -31,16 +31,12 @@ namespace ServerSide{
 				goStage[loop] = GameObject.Find("Stages").transform.GetChild(loop).gameObject;
 			}
 
-			Stage cStg = goStage[0].GetComponent<Stage>();
-			cStg.Initialize();
-			safeBar.position = cStg.param[1];
+
 		}
 			
 		public void BeginStage(int idx){			
 			currentStage = idx;
 			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
-
-			safeBar.position = goStage[currentStage].GetComponent<Stage>().param[1];
 
 			currentMonsterCount = goStage[currentStage].transform.FindChild("MonsterPos").childCount;
 
