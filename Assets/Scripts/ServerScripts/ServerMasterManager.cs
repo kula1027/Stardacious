@@ -18,7 +18,7 @@ namespace ServerSide{
 				new MsgSegment(),
 				new MsgSegment(MsgAttr.Misc.exitClient, idx_.ToString())
 			);
-			Network_Server.BroadCast(exitMsg, idx_);
+			Network_Server.BroadCastTcp(exitMsg, idx_);
 
 			ServerCharacterManager.instance.RemoveCharacter(idx_);
 		}

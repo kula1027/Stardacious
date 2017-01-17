@@ -4,13 +4,15 @@ using System.Collections;
 public class Spider_C : ClientMonster {
 	public SpiderGraphicController gcSpider;
 
+	//private 
+
 	public override void OnRequested (){
 		base.OnRequested();
 
-		StartCoroutine(WAKYWAKY());
+		StartCoroutine(WakeUpRoutine());
 	}
 
-	private IEnumerator WAKYWAKY(){
+	private IEnumerator WakeUpRoutine(){
 		yield return new WaitForSeconds(1);
 	
 		gcSpider.WakeUp();
@@ -20,14 +22,8 @@ public class Spider_C : ClientMonster {
 	public override void OnDie (){
 		base.OnDie ();
 
-		StartCoroutine(DIEEEEE());
-	}
-
-	private IEnumerator DIEEEEE(){
 		gcSpider.Die();
 
-		yield return new WaitForSeconds(3);
-
-		ReturnObject();
+		ReturnObject(3);
 	}
 }

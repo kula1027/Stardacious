@@ -18,21 +18,21 @@ namespace ServerSide{
 				new MsgSegment(transform.position)
 			};
 			nmAppear = new NetworkMessage(h, b);
-			Network_Server.BroadCast(nmAppear);
+			Network_Server.BroadCastTcp(nmAppear);
 		}
 
 		private IEnumerator SendPosRoutine(){
 			yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
 
-			Network_Server.BroadCast(nmAppear);
+			Network_Server.BroadCastTcp(nmAppear);
 			nmPos.Body[0].SetContent(transform.position);
-			Network_Server.BroadCast(nmPos);
+			Network_Server.BroadCastTcp(nmPos);
 
 			while(true){
 				yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
 
 				nmPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCast(nmPos);
+				Network_Server.BroadCastTcp(nmPos);
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace ServerSide{
 			};
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);
 
-			Network_Server.BroadCast(nmDestroy);
+			Network_Server.BroadCastTcp(nmDestroy);
 		}
 
 		#endregion

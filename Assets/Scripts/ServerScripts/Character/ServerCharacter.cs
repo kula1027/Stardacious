@@ -36,12 +36,12 @@ namespace ServerSide{
 			case MsgAttr.position:
 				transform.position = bodies[0].ConvertToV3();
 				nmPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCast(nmPos, networkId);
+				Network_Server.BroadCastTcp(nmPos, networkId);
 				break;
 
 				default:
 				nmDefault.Body = bodies;
-				Network_Server.BroadCast(nmDefault, networkId);
+				Network_Server.BroadCastTcp(nmDefault, networkId);
 				break;
 			}
 		}
@@ -51,7 +51,7 @@ namespace ServerSide{
 			MsgSegment bAppear = new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString());
 			NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
-			Network_Server.BroadCast(nmAppear, networkId);
+			Network_Server.BroadCastTcp(nmAppear, networkId);
 		}
 
 		void OnDestroy(){			
@@ -59,7 +59,7 @@ namespace ServerSide{
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage deleteMsg = new NetworkMessage(h, b);
 
-			Network_Server.BroadCast(deleteMsg, networkId);
+			Network_Server.BroadCastTcp(deleteMsg, networkId);
 		}
 
 		#region IHittable implementation
@@ -72,7 +72,7 @@ namespace ServerSide{
 
 		public override void OnHpChanged (){
 			nmHit.Body[0].Content = CurrentHp.ToString();
-			Network_Server.BroadCast(nmHit);
+			Network_Server.BroadCastTcp(nmHit);
 		}
 
 		public override void OnDie (){
@@ -81,7 +81,7 @@ namespace ServerSide{
 			MsgSegment msgBody = new MsgSegment(MsgAttr.dead);
 			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);
 
-			Network_Server.BroadCast(nmDead);
+			Network_Server.BroadCastTcp(nmDead);
 			ConsoleMsgQueue.EnqueMsg(networkId + " is Dead", 2);
 		}
 	}

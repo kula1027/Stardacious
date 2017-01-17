@@ -40,7 +40,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	public void OnHit (HitObject hitObject_){
 		nmHit.Body[0].Content = hitObject_.damage.ToString();
-		Network_Client.Send(nmHit);
+		Network_Client.SendTcp(nmHit);
 	}
 
 	#endregion

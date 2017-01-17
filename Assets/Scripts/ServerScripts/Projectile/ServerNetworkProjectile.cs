@@ -11,17 +11,17 @@ namespace ServerSide{
 		}
 
 		NetworkMessage nmPos;
-
-		public override void OnRecv (MsgSegment[] bodies){
+		public override void OnRecv (MsgSegment[] bodies){			
 			switch(bodies[0].Attribute){
-			case MsgAttr.position:
+			case MsgAttr.position:				
 				transform.position = bodies[0].ConvertToV3();
 				nmPos.Body[0].Content = bodies[0].Content;
-				Network_Server.BroadCast(nmPos, ownerId);
+				Network_Server.BroadCastTcp(nmPos, ownerId);
 				break;
 
 			case MsgAttr.destroy:
-				ReturnObject();
+				ReturnObject(NetworkConst.projPosSyncTime);
+				transform.position = bodies[1].ConvertToV3();
 				break;
 			}
 		}
@@ -43,10 +43,11 @@ namespace ServerSide{
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString()),
 				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString()),
-				new MsgSegment(transform.position)
+				new MsgSegment(transform.position),
+				new MsgSegment(MsgAttr.rotation, transform.right)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
-			Network_Server.BroadCast(nmAppear, ownerId);
+			Network_Server.BroadCastTcp(nmAppear, ownerId);
 		}
 
 		public override void OnReturned (){
@@ -55,11 +56,12 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 			MsgSegment[] b = {
 				new MsgSegment(MsgAttr.destroy),
-				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString())
+				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
 			};
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);
 
-			Network_Server.BroadCast(nmDestroy, ownerId);
+			Network_Server.BroadCastTcp(nmDestroy, ownerId);
 		}
 	}
 }

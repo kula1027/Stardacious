@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Text;
 
 public class MsgSegment {
 	private const string TagSpliter = ":";
+	private const string NotInitialized = "ni";
 
 	private string attribute = null;
 	public string Attribute{
-		get{return (attribute == null) ? "NotInitailized" : attribute;}
+		get{return (attribute == null) ? NotInitialized : attribute;}
 		set{attribute = value;}
 	}
 	private string content = null;
@@ -16,13 +18,13 @@ public class MsgSegment {
 	}
 
 	public MsgSegment(){
-		content = "NotInitailized";
-		attribute = "NotInitailized";
+		content = NotInitialized;
+		attribute = NotInitialized;
 	}
 
 	public MsgSegment(string attribute_){
 		attribute = attribute_;
-		content = "NotInitailized";
+		content = NotInitialized;
 	}
 
 	public MsgSegment(string attribute_, string content_){
@@ -40,7 +42,9 @@ public class MsgSegment {
 	/// </summary>
 	public MsgSegment(Vector3 vec3_){
 		attribute = MsgAttr.position;
-		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
+		StringBuilder sb = new StringBuilder();
+		sb.Append(vec3_.x).Append(",").Append(vec3_.y).Append(",").Append(vec3_.z);
+		content = sb.ToString();
 	}
 
 	public MsgSegment(string attribute_, Vector2 vec2_){
@@ -50,7 +54,9 @@ public class MsgSegment {
 
 	public MsgSegment(string attribute_, Vector3 vec3_){
 		attribute = attribute_;
-		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
+		StringBuilder sb = new StringBuilder();
+		sb.Append(vec3_.x).Append(",").Append(vec3_.y).Append(",").Append(vec3_.z);
+		content = sb.ToString();
 	}
 
 	/// <summary>
@@ -61,18 +67,14 @@ public class MsgSegment {
 		return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
 	}
 
+	public Vector3 TryConvertToV3(){
+		string[] split = content.Split(',');
+		return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
+	}
+
 	public Vector2 ConvertToV2(){
 		string[] split = content.Split(',');
 		return new Vector2(float.Parse(split[0]), float.Parse(split[1]));
-	}
-
-	public int[] ConvertToIntList(){
-		string[] split = content.Split (',');
-		int[] result = new int[split.Length - 1];
-		for (int loop = 0; loop < result.Length; loop++) {
-			result [loop] = int.Parse (split[loop]);
-		}
-		return result;
 	}
 
 	/// <summary>
@@ -83,12 +85,15 @@ public class MsgSegment {
 	}
 
 	public void SetContent(Vector3 vec3_){
-		content = vec3_.x + "," + vec3_.y + "," + vec3_.z;
+		StringBuilder sb = new StringBuilder();
+		sb.Append(vec3_.x).Append(",").Append(vec3_.y).Append(",").Append(vec3_.z);
+		content = sb.ToString();
 	}
 }
 
 public class MsgAttr{
 	public const string position = "pos";
+	public const string rotation = "rot";
 	public const string directionScale = "dscale";
 
 	public const string create = "appr";

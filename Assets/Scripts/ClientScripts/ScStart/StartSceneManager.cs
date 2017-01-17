@@ -44,6 +44,7 @@ public class StartSceneManager : MonoBehaviour {
 		configPanel.Hide();	
 		readyPanel.Show();
 	}
+		
 
 	public void OnBtnJoinClick(){
 		if(inputIp.text.Length < 6){

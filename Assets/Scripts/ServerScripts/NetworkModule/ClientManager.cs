@@ -28,6 +28,7 @@ namespace ServerSide{
 		}
 
 		public static bool AddClient(Socket welcomeSocket_){
+			
 			int freeId = GetFreeId();
 
 			if(freeId == -1){
@@ -42,7 +43,7 @@ namespace ServerSide{
 			}
 		}
 
-		public static void BroadCast(NetworkMessage nm_){
+		public static void BroadCastUdp(NetworkMessage nm_){
 			if(arrayClient == null)return;
 
 
@@ -50,13 +51,27 @@ namespace ServerSide{
 				if(arrayClient[loop] != null){
 					if (arrayClient [loop].IsConnected) {
 						nm_.Adress.Content = loop.ToString ();
-						arrayClient [loop].Send (nm_.ToString ());
+						arrayClient [loop].SendUdp (nm_.ToString ());
 					}
 				}
 			}
 		}
 
-		public static void BroadCast(NetworkMessage nm_, int exclude_){
+		public static void BroadCastTcp(NetworkMessage nm_){
+			if(arrayClient == null)return;
+
+
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				if(arrayClient[loop] != null){
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].SendTcp (nm_.ToString ());
+					}
+				}
+			}
+		}
+
+		public static void BroadCastTcp(NetworkMessage nm_, int exclude_){
 			if(arrayClient == null)return;
 
 
@@ -66,7 +81,7 @@ namespace ServerSide{
 				if(arrayClient[loop] != null){
 					if (arrayClient [loop].IsConnected) {
 						nm_.Adress.Content = loop.ToString ();
-						arrayClient [loop].Send (nm_.ToString ());
+						arrayClient [loop].SendTcp (nm_.ToString ());
 					}
 				}
 			}
@@ -75,7 +90,7 @@ namespace ServerSide{
 		public static void UniCast(int targetId_, NetworkMessage nm_){
 			if(arrayClient[targetId_] != null){
 				if(arrayClient[targetId_].IsConnected)
-					arrayClient[targetId_].Send(nm_.ToString());
+					arrayClient[targetId_].SendTcp(nm_.ToString());
 			}
 		}
 
@@ -85,7 +100,7 @@ namespace ServerSide{
 				freeQueue.Enqueue(idx_);
 			}
 
-			ConsoleMsgQueue.EnqueMsg(idx_ + ": Client Thread Closed.");
+			ConsoleMsgQueue.EnqueMsg(idx_ + ": Exit");
 		}
 
 		public static void ShutDown(){

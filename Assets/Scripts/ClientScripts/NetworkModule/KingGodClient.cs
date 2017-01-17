@@ -48,11 +48,11 @@ public class KingGodClient : MonoBehaviour {
 		NetworkMessage.SenderId = Network_Client.NetworkId.ToString();
 		while(Network_Client.NetworkId == -1){
 			ConsoleMsgQueue.EnqueMsg("Request Id to Server...");
-			Network_Client.Send(msgRequestId);
+			Network_Client.SendTcp(msgRequestId);
 			yield return new WaitForSeconds(1);
 		}
 
-		Network_Client.Send(new NetworkMessage());//id가 갱신되었음을 알리는 빈 메시지 전송
+		Network_Client.SendTcp(new NetworkMessage());//id가 갱신되었음을 알리는 빈 메시지 전송
 
 		ConsoleMsgQueue.EnqueMsg("Received Id: " + Network_Client.NetworkId);
 

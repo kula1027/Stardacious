@@ -39,7 +39,6 @@ public class NetworkTranslator : MonoBehaviour {
 				timeAcc = 0;
 				msgCountAcc = 0;
 			}
-
 			yield return null;
 		}
 	}

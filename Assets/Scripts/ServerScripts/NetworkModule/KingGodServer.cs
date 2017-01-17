@@ -20,6 +20,16 @@ namespace ServerSide{
 			if(GameObject.Find("Console")){
 				GameObject.Find("Console").GetComponent<ConsoleSystem>().SetParser(new Server_ConsoleParser());
 			}
+
+			StartCoroutine(a());
+		}
+
+		private IEnumerator a(){
+			while(true){
+				yield return new WaitForSeconds(2);
+
+				Network_Server.BroadCastUdp(new NetworkMessage());
+			}
 		}
 
 

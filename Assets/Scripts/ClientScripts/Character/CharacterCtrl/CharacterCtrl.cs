@@ -64,7 +64,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 		MsgSegment bAppear = new MsgSegment(((int)chrIdx).ToString());
 		NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
-		Network_Client.Send(nmAppear);
+		Network_Client.SendTcp(nmAppear);
 	}
 
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
@@ -129,7 +129,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 			cgCtrl.SetDirection (currentDir);
 			nmDir.Body[0].Content = ((int)currentDir).ToString();
 			nmDir.Body[1].Content = ((int)transform.localScale.x).ToString();
-			Network_Client.Send(nmDir);
+			Network_Client.SendTcp(nmDir);
 
 			if(currentDir != ControlDirection.Middle)
 				currentDirV3 = vec3_;
@@ -154,7 +154,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 					characterGraphicCtrl.Jump();
 					nmGround.Body[0].Content = NetworkMessage.sFalse;
 				}
-				Network_Client.Send(nmGround);
+				Network_Client.SendTcp(nmGround);
 			}
 
 			prevGrounded = isGround;
@@ -165,30 +165,30 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 	public virtual void OnStartAttack(){
 		characterGraphicCtrl.StartNormalAttack ();
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
-		Network_Client.Send(nmAttack);
+		Network_Client.SendTcp(nmAttack);
 	}
 
 	public virtual void OnStopAttack(){
 		characterGraphicCtrl.StopNormalAttack ();
 		nmAttack.Body[0].Content = NetworkMessage.sFalse;
-		Network_Client.Send(nmAttack);
+		Network_Client.SendTcp(nmAttack);
 	}
 
 	public virtual void UseSkill(int idx_){
 		switch (idx_) {
 		case 0:
 			nmSkill.Body[0].Content = "0";
-			Network_Client.Send(nmSkill);
+			Network_Client.SendTcp(nmSkill);
 			break;
 
 		case 1:
 			nmSkill.Body[0].Content = "1";
-			Network_Client.Send(nmSkill);
+			Network_Client.SendTcp(nmSkill);
 			break;
 
 		case 2:
 			nmSkill.Body[0].Content = "2";
-			Network_Client.Send(nmSkill);
+			Network_Client.SendTcp(nmSkill);
 			break;
 		}
 	}
@@ -214,7 +214,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 	private IEnumerator SendPosRoutine(){
 		while(true){
 			nmPos.Body[0].SetContent(transform.position); 
-			Network_Client.Send(nmPos);
+			Network_Client.SendUdp(nmPos);
 
 			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}

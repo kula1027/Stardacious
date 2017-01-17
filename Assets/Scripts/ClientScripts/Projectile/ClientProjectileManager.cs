@@ -32,7 +32,8 @@ public class ClientProjectileManager : MonoBehaviour {
 			ConsoleMsgQueue.EnqueMsg(ownerId + " Created: " + projIdx, 2);
 			int objType = int.Parse(networkMessage.Body[0].Attribute);
 			Vector3 startPos = networkMessage.Body[2].ConvertToV3();
-			CreateProjectile(projPooler, objType, projIdx, startPos);
+			Vector3 rotRight = networkMessage.Body[3].ConvertToV3();
+			CreateProjectile(projPooler, objType, projIdx, startPos, rotRight);
 			break;
 
 			default:
@@ -54,9 +55,10 @@ public class ClientProjectileManager : MonoBehaviour {
 		return projPool;
 	}
 
-	private void CreateProjectile(ObjectPooler pooler_, int objType_, int projIdx_, Vector3 startPos_){
+	private void CreateProjectile(ObjectPooler pooler_, int objType_, int projIdx_, Vector3 startPos_, Vector3 right_){
 		GameObject proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/testNetworkProjectile"), projIdx_);
 		proj.transform.position = startPos_;
+		proj.transform.right = right_;
 		proj.GetComponent<NetworkProjectile>().Ready();
 	}
 }

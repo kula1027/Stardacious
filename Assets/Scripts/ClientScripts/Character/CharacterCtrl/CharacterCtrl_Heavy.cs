@@ -96,12 +96,13 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			StopCoroutine(machinegunRoutine);
 	}
 
-	private const float machineGunFireRate = 0.15f;
+	private const float machineGunFireRate = 0.08f;
 	private IEnumerator MachineGunRoutine(){
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject((GameObject)Resources.Load("Projectile/testProjectile"));
 			go.transform.position = trMuzzuleGun.position;
+			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
 			go.transform.right = trMuzzuleGun.right;
 			if (currentDirV3.x < 0)
 				go.transform.right = new Vector3(-trMuzzuleGun.right.x, trMuzzuleGun.right.y, trMuzzuleGun.right.z);

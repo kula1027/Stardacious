@@ -76,7 +76,7 @@ namespace ServerSide{
 			MsgSegment b = new MsgSegment(MsgAttr.Stage.moveStg, currentStage.ToString());
 			NetworkMessage nm = new NetworkMessage(h, b);
 
-			Network_Server.BroadCast(nm);
+			Network_Server.BroadCastTcp(nm);
 		}
 
 		public void MoveNextStage(){

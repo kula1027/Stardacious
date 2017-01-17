@@ -13,6 +13,16 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 		pooler.ReturnObject(poolingIdx);
 	}
 
+	protected void ReturnObject(float secondsAfter){
+		StartCoroutine(ReturningRoutine(secondsAfter));
+	}
+
+	private IEnumerator ReturningRoutine(float secs_){
+		yield return new WaitForSeconds(secs_);
+
+		pooler.ReturnObject(poolingIdx);
+	}
+
 	public virtual void Ready(){
 
 	}

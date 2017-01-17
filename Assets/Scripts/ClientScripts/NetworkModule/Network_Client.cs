@@ -5,10 +5,15 @@ using System.Threading;
 using System;
 using System.Text;
 using System.IO;
+using System.Net;
 
 public class Network_Client {
 	public static string serverAddress = "127.0.0.1";
-	public static int PORT = 11900;
+	public static int portTCP = 11900;
+
+	public static int portRecvUdp = 11903;
+	public static int portServerUDP = 11904;
+
 
 	private static TcpClient tcpClient;
 	private static NetworkStream networkStream;
@@ -16,7 +21,11 @@ public class Network_Client {
 	private static StreamWriter streamWriter;
 
 	private static Thread thread_connect;
-	private static Thread thread_receive;
+	private static Thread threadReceive_TCP;
+	private static Thread threadReceive_UDP;
+
+	private static IPEndPoint epServer;
+	private static Socket socketUdp;
 
 	private static int networkId = -1;
 	public static int NetworkId{
@@ -46,8 +55,8 @@ public class Network_Client {
 		int conCount = 0;
 		while(isConnected == false){
 			try{
-				ConsoleMsgQueue.EnqueMsg("Connecting to..." + serverAddress + ":" + PORT);
-				tcpClient.Connect(serverAddress, PORT);
+				ConsoleMsgQueue.EnqueMsg("Connecting to..." + serverAddress + ":" + portTCP);
+				tcpClient.Connect(serverAddress, portTCP);
 				isConnected = true;
 
 			}catch(SocketException e){
@@ -59,23 +68,56 @@ public class Network_Client {
 					return;
 				}
 
-				Thread.Sleep(1000);
+				Thread.Sleep(1000);//TODO sleep 됐을때 프로그램 종료되면 좀비됨
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(e.ToString());
 			}
 		}
 			
-		ConsoleMsgQueue.EnqueMsg("Connected.");
+		ConsoleMsgQueue.EnqueMsg("TCP Socket Connected.");
+
+		try{
+			IPEndPoint ep = new IPEndPoint(IPAddress.Any, portRecvUdp);
+			socketUdp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			socketUdp.Bind(ep);
+		}catch(Exception e){
+			ConsoleMsgQueue.EnqueMsg(e.Message);
+		}
+		epServer = new IPEndPoint(IPAddress.Parse(serverAddress), portServerUDP);
 
 		networkStream = tcpClient.GetStream();
 		streamWriter = new StreamWriter(networkStream, Encoding.UTF8);
 		streamReader = new StreamReader(networkStream, Encoding.UTF8);
 
-		thread_receive = new Thread(ReceivingOperation);
-		thread_receive.Start();
+		threadReceive_TCP = new Thread(ReceivingTCP);
+		threadReceive_UDP = new Thread(ReceivingUDP);
+		threadReceive_TCP.Start();
+		threadReceive_UDP.Start();
 	}
 
-	public static void Send(NetworkMessage nm_){
+	public static void SendUdp(NetworkMessage nm_){
+		if(socketUdp != null){
+			string str = nm_.ToString();
+			byte[] buff = Encoding.UTF8.GetBytes(str);
+			socketUdp.SendTo(buff, epServer);
+		}
+	}
+
+	private static void ReceivingUDP(){
+		byte[] bufByte;
+		try{
+			while(isConnected){
+				bufByte = new byte[256];
+				socketUdp.Receive(bufByte);
+				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + Encoding.UTF8.GetString(bufByte));
+				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(Encoding.UTF8.GetString(bufByte)));
+			}
+		}catch(Exception e){
+			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message);
+		}
+	}
+
+	public static void SendTcp(NetworkMessage nm_){
 		if(isConnected){
 			string str = nm_.ToString();
 			try{
@@ -84,45 +126,50 @@ public class Network_Client {
 				streamWriter.Flush();
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg("Send: " + e.Message);
-				isConnected = false;
-				networkId = -1;
 			}
 		}else{
 			ConsoleMsgQueue.EnqueMsg("Send: Network Disconnected.", 2);
 		}
 	}
 
-	private static void ReceivingOperation(){
+	private static void ReceivingTCP(){
 		string recStr;
 
 		try{
 			while(isConnected){
 				recStr = streamReader.ReadLine();
 
-				if(recStr != null){
-					ConsoleMsgQueue.EnqueMsg("Received: " + recStr, 0);
+				if(recStr != null){					
 					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
-				}else{
-					isConnected = false;
 				}
 			}
 		}catch(Exception e){
-			ConsoleMsgQueue.EnqueMsg("ReceivingOperation: " + e.Message);
+			ConsoleMsgQueue.EnqueMsg("ReceivingTCP: " + e.Message);
 		}
 
-		isConnected = false;
 		ConsoleMsgQueue.EnqueMsg("Disconnected.");
 
-		streamReader.Close();
+		ShutDown();
 	}
 
 	public static void ShutDown(){
-		isConnected = false;
-		if(streamReader != null)
+		if(isConnected){
+			isConnected = false;
+
 			streamReader.Close();
-		if(streamWriter != null)
 			streamWriter.Close();
-		if(tcpClient != null)
-			tcpClient.Close();
+			
+			try{
+				tcpClient.Close();
+			}catch(Exception e){
+				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+			}
+			
+			try{
+				socketUdp.Close();
+			}catch(Exception e){
+				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+			}
+		}
 	}
 }
