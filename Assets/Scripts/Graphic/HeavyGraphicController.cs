@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ShootDirection {Up, FrontUp, Front, FrontDown}
-public enum ControlDirection {NotInitialized, LeftDown, Down, RightDown, Left, Middle, Right, LeftUp, Up, RightUp}
 //CanAnything - 모든것 가능
 //MiniGunMode - 이동,조준 불가능 공격 가능
 //SwapDelay - 모든것 불가능
@@ -13,17 +11,19 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Heavy master;
 
+	//Child
 	public Transform gunMuzzle;
 	public Animator shotEffectAnimator;
 	public Animator miniEffectAnimator;
 	public ParticleSystem cartridge;
 
+	//State
 	private HeavyLowerState lowerState;				//현재 하체상태
 	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
-	private ShootDirection recentAimDirection;	//마지막으로 쏜 방향
+	private ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
 
 	//Flags
-	private bool isJumping = false;
+	private bool isFlying = false;
 	private bool isAttackButtonPressing = false;		//미니건 모드일 경우 이걸로 즉시 발사 및 중지
 	private bool isAttackAnimationPlaying = false;		//샷건 모드일 경우 공격 선딜, 후딜을 이것으로 표시
 	private bool recentIsMiniGun = false;	//스왑전에 뭐였니
@@ -61,15 +61,15 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		cartridge.transform.localScale = transform.lossyScale;
 	}
 	public override void ForcedFly(){			//하체 모션 캔슬및 변경 금지
-		isJumping = true;
+		isFlying = true;
 		lowerAnimator.Play ("LongJump");
 	}
 	public override void Jump(){					//하체 모션 캔슬및 변경 금지
-		isJumping = true;
+		isFlying = true;
 		lowerAnimator.Play ("Jump");
 	}
 	public override void Grounded(){				//하체 컨트롤 복구
-		isJumping = false;
+		isFlying = false;
 		SetLowerAnim (currentInputDirection);
 	}
 	public override void StartNormalAttack(){
@@ -92,6 +92,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 			SetLowerAnim (currentInputDirection);
 		}
 	}
+
+	//HACK : 네트워크 캐릭터의 스왑에서 시간이 꼬이면 스왑이 씹힐 수 있을 듯.
 	public void WeaponSwap(){			//상,하체 모션 캔슬 및 변경 금지
 		if (!isSwapDelay) {			//스왑중일때는 재스왑 불가
 
@@ -163,17 +165,20 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		shotEffectAnimator.Play ("Shoot", 0, 0);
 	}
 
-	IEnumerator minigunEffectPlayer(){
+	/*IEnumerator minigunEffectPlayer(){
 		yield return null;
 		miniEffectAnimator.transform.position = gunMuzzle.position;
 		miniEffectAnimator.Play("Shoot");
-	}
+	}*/
 	private void SetUpperAnim(ControlDirection direction){
 		if (!isSwapDelay) {			//스왑중 아닐 때
 			if (isMiniGunMode) {			//미니건 모드
 				if (isAttackButtonPressing) {
 					upperAnimator.Play ("TowerShoot");		//미니건 공격
-					StartCoroutine(minigunEffectPlayer());
+					//StartCoroutine(minigunEffectPlayer());
+					miniEffectAnimator.transform.position = gunMuzzle.position;
+					miniEffectAnimator.Play("Shoot");
+					//TODO 코루틴 없이 muzzle position 테스트
 					cartridge.Play();
 				} else {
 					upperAnimator.Play ("TowerIdle");		//미니건 정지
@@ -207,7 +212,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	private void SetLowerAnim(ControlDirection direction){
-		if (!isJumping && !isSwapDelay) {//점프 및 스왑 예외 처리
+		if (!isFlying && !isSwapDelay) {//점프 및 스왑 예외 처리
 			
 			if (isMiniGunMode) {	//미니건 모드
 				
@@ -225,16 +230,12 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 					case ControlDirection.LeftUp:
 					case ControlDirection.Right:
 					case ControlDirection.RightDown:
-					case ControlDirection.RightUp:
-						if (lowerState != HeavyLowerState.Walk) {			//이동중
-							lowerState = HeavyLowerState.Walk;
-						}
+					case ControlDirection.RightUp:			//이동중
+						lowerState = HeavyLowerState.Walk;
 						lowerAnimator.Play ("Walk");
 						break;
-					default:
-						if (lowerState != HeavyLowerState.Idle) {			//정지
-							lowerState = HeavyLowerState.Idle;
-						}
+					default:			//정지
+						lowerState = HeavyLowerState.Idle;
 						lowerAnimator.Play ("Idle");
 						break;
 					}
@@ -245,16 +246,12 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 					case ControlDirection.LeftUp:
 					case ControlDirection.Right:
 					case ControlDirection.RightDown:
-					case ControlDirection.RightUp:
-						if (lowerState != HeavyLowerState.Run) {			//이동중
-							lowerState = HeavyLowerState.Run;
-						}
+					case ControlDirection.RightUp:			//이동중
+						lowerState = HeavyLowerState.Run;
 						lowerAnimator.Play ("Run");
 						break;
-					default:
-						if (lowerState != HeavyLowerState.Idle) {			//정지
-							lowerState = HeavyLowerState.Idle;
-						}
+					default:			//정지
+						lowerState = HeavyLowerState.Idle;
 						lowerAnimator.Play ("Idle");
 						break;
 					}
@@ -333,10 +330,11 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 
 		if(master){
-			master.SetMachineGunMode (recentIsMiniGun);
+			master.SetMachineGunMode (recentIsMiniGun);	//현재 미니건인지 아닌지 반환
 		}
 	}
 
+	//총알 생성 시점
 	public void ShootShotGun(){
 		if(master){
 			master.ShootShotGun();
