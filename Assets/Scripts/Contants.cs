@@ -8,7 +8,8 @@ public enum ProjType{
 }
 
 public enum ChIdx{
-	Heavy
+	Heavy,
+	Doctor
 }
 	
 public static class NetworkConst{

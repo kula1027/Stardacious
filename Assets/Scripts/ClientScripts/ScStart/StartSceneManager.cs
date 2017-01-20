@@ -62,9 +62,11 @@ public class StartSceneManager : MonoBehaviour {
 		//Quit App
 	}
 
-	public void OnBtnSelCharacterClick(){
-		selCharPanel.Hide();
-		readyPanel.Show();
+	public void OnBtnSelCharacterClick(int idx_){
+		if(idx_ == Network_Client.NetworkId){
+			selCharPanel.Show();
+			readyPanel.Hide();
+		}
 	}
 
 	public void OnBtnSelBackClick(){

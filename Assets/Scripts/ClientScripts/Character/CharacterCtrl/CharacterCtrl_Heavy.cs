@@ -42,10 +42,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	#region ShotGun
 	private HitObject hit_ShotGun;
 	private GameObject shotGunHitArea;
-	private Transform trMuzzuleGun;
+	private Transform trGunMuzzle;
 
 	private void PrepareShotGun(){
-		trMuzzuleGun = gcHeavy.gunMuzzle;
+		trGunMuzzle = gcHeavy.gunMuzzle;
 
 		shotGunHitArea = transform.FindChild("ShotGunHitter").gameObject;
 		shotGunHitArea.SetActive(false);
@@ -57,8 +57,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	private const float shotgunHitStayTime = 0.02f;
 	private IEnumerator ShotGunRoutine(){
-		shotGunHitArea.transform.right = trMuzzuleGun.right;
-		shotGunHitArea.transform.position = trMuzzuleGun.position;
+		shotGunHitArea.transform.right = trGunMuzzle.right;
+		shotGunHitArea.transform.position = trGunMuzzle.position;
 
 		shotGunHitArea.SetActive(true);
 
@@ -68,7 +68,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	}
 
 	public void OnHitSomebody (Collider2D col){
-		float dis = Vector2.Distance(trMuzzuleGun.position, col.transform.position);
+		float dis = Vector2.Distance(trGunMuzzle.position, col.transform.position);
 		if(dis < 1)dis = 1;
 		hit_ShotGun = new HitObject(15 + (int)(120 / dis));
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
@@ -102,11 +102,11 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
-			go.transform.position = trMuzzuleGun.position;
+			go.transform.position = trGunMuzzle.position;
 			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
-			go.transform.right = trMuzzuleGun.right;
+			go.transform.right = trGunMuzzle.right;
 			if (currentDirV3.x < 0)
-				go.transform.right = new Vector3(-trMuzzuleGun.right.x, trMuzzuleGun.right.y, trMuzzuleGun.right.z);
+				go.transform.right = new Vector3(-trGunMuzzle.right.x, trGunMuzzle.right.y, trGunMuzzle.right.z);
 
 			go.GetComponent<LocalProjectile>().Ready();
 		}

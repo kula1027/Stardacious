@@ -16,7 +16,7 @@ public class ClientMasterManager : MonoBehaviour {
 	}
 		
 	private void InitiatePlayerCharacter(){
-		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("Character/Heavy"));
+		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("Character/Doctor"));
 		CharacterCtrl.instance = pCharacter.GetComponent<CharacterCtrl>();
 		CharacterCtrl.instance.Initialize ();
 

@@ -11,7 +11,7 @@ public class ClientCharacterManager : MonoBehaviour {
 	void Awake(){
 		instance = this;
 
-		prefabCharacter = (GameObject)Resources.Load("Character/HeavyNetwork");
+		prefabCharacter = (GameObject)Resources.Load("Character/DoctorNetwork");
 	}
 
 	private void OnRecvCharacter(int idx_, NetworkMessage networkMessage){

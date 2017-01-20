@@ -6,11 +6,12 @@ public enum DoctorLowerState{Idle, Walk, Run, Hover}
 public enum DoctorBulletType{Normal, Bind, Device}
 public class DoctorGraphicController : CharacterGraphicCtrl {
 
-	public CharacterCtrl master;	//TODO Char Doctor
+	public CharacterCtrl_Doctor master;	//TODO Char Doctor
 
 	//Child
 	public SkeletonAnimation hair;
 	public ParticleSystem booster;
+	public Transform muzzle;
 
 	//State
 	private DoctorLowerState lowerState;			//현재 하체상태
@@ -94,9 +95,11 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	}
 	public void BindShot(){
 		nextBulletType = DoctorBulletType.Bind;
+		SetGunShoot ();
 	}
 	public void DeviceShot(){
 		nextBulletType = DoctorBulletType.Device;
+		SetGunShoot ();
 	}
 
 	public void StartEnergyCharge(){
@@ -286,11 +289,8 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		isAttackAnimationPlaying = false;
 
 		if (isAttackButtonPressing) {			//다시 공격
-
 			SetGunShoot ();
-
 		} else {								//공격 중지
-
 			SetUpperAnim (currentInputDirection);
 			SetLowerAnim (currentInputDirection);
 			ReleaseAttackDelay ();
@@ -312,11 +312,14 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	//총알 생성 시점
 	public void ShootBullet(){
 		switch (nextBulletType) {
-		case DoctorBulletType.Normal:
+		case DoctorBulletType.Normal:			
+			master.OnShootNormal();
 			break;
 		case DoctorBulletType.Bind:
+			master.OnShootBind();
 			break;
 		case DoctorBulletType.Device:
+			master.OnShootDevice();
 			break;
 		}
 
