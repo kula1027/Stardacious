@@ -96,11 +96,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			StopCoroutine(machinegunRoutine);
 	}
 
-	private const float machineGunFireRate = 0.08f;
+	private const float machineGunFireRate = 0.2f;
 	private IEnumerator MachineGunRoutine(){
+		GameObject thatThing = (GameObject)Resources.Load("Projectile/testProjectile");//TODO
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
-			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject((GameObject)Resources.Load("Projectile/testProjectile"));
+			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
 			go.transform.position = trMuzzuleGun.position;
 			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
 			go.transform.right = trMuzzuleGun.right;
@@ -112,6 +113,15 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	}
 	#endregion
 
+	private void TestAddForce(){//TODO Testing
+		NetworkMessage nmForce = new NetworkMessage(
+			new MsgSegment(MsgAttr.character, MsgAttr.Character.iTargetAll), 
+			new MsgSegment(MsgAttr.addForce, new Vector2(500, 900))
+		);
+
+		Network_Client.SendTcp(nmForce);
+	}
+
 	public override void UseSkill (int idx_){
 		base.UseSkill(idx_);
 		switch (idx_) {
@@ -120,7 +130,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			break;
 
 		case 1:
-			
+			TestAddForce();
 			break;
 
 		case 2:

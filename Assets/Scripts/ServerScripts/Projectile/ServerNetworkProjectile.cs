@@ -16,7 +16,7 @@ namespace ServerSide{
 			case MsgAttr.position:				
 				transform.position = bodies[0].ConvertToV3();
 				nmPos.Body[0].Content = bodies[0].Content;
-				Network_Server.BroadCastTcp(nmPos, ownerId);
+				Network_Server.BroadCastUdp(nmPos, ownerId);
 				break;
 
 			case MsgAttr.destroy:

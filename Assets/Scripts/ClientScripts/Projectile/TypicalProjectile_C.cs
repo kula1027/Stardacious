@@ -5,7 +5,7 @@ public class TypicalProjectile_C : LocalProjectile, IHitter {
 	
 	void Awake(){
 		objType = (int)ProjType.test;
-		hitObject = new HitObject(3);
+		hitObject = new HitObject(10);
 	}
 
 	public override void Ready (){

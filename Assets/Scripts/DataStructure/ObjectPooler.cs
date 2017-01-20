@@ -31,7 +31,11 @@ public class ObjectPooler : MonoBehaviour {
 
 	public IRecvPoolable GetObject(int idx_){
 		int pId = idx_ / poolIdRange;
-		return managingPool[pId].GetObject(idx_ % poolIdRange);
+		if(managingPool.Count > pId){
+			return managingPool[pId].GetObject(idx_ % poolIdRange);
+		}else{
+			return null;
+		}
 	}
 
 	public void ReturnObject(int idx_){

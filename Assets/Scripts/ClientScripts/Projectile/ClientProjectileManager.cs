@@ -29,7 +29,6 @@ public class ClientProjectileManager : MonoBehaviour {
 
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
-			ConsoleMsgQueue.EnqueMsg(ownerId + " Created: " + projIdx, 2);
 			int objType = int.Parse(networkMessage.Body[0].Attribute);
 			Vector3 startPos = networkMessage.Body[2].ConvertToV3();
 			Vector3 rotRight = networkMessage.Body[3].ConvertToV3();

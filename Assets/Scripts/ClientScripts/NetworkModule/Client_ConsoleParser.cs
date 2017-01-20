@@ -12,6 +12,8 @@ public class Client_ConsoleParser : ConsoleParser {
 	private const string BroadCast = "broadcast";
 	private const string Disconnect = "disconnect";
 	private const string Connect = "con";
+	private const string RecvPort = "rport";
+	private const string SendPort = "sport";
 
 	public override void Parse(string command){
 		base.Parse(command);
@@ -28,13 +30,14 @@ public class Client_ConsoleParser : ConsoleParser {
 				Network_Client.ShutDown();
 				break;
 
-			case Connect:
-				if(splitCommand[1].Length < 1){
-					Network_Client.serverAddress = "127.0.0.1";
-				}else{
-					Network_Client.serverAddress = splitCommand[1];
-				}
-				KingGodClient.instance.BeginNetworking();
+			case RecvPort:
+				Network_Client.portRecvUdp = int.Parse(splitCommand[1]);
+				ConsoleMsgQueue.EnqueMsg("Udp Recv Port Changed.");
+				break;
+
+			case SendPort:
+				Network_Client.portServerUDP = int.Parse(splitCommand[1]);
+				ConsoleMsgQueue.EnqueMsg("Udp Send Port Changed.");
 				break;
 			}
 		}catch(Exception e){

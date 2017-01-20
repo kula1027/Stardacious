@@ -32,9 +32,16 @@ public class MsgSegment {
 		content = content_;
 	}
 
+	public MsgSegment(string attribute_, int content_){
+		attribute = attribute_;
+		content = content_.ToString();
+	}
+
 	public MsgSegment(Vector2 vec2_){
 		attribute = MsgAttr.position;
-		content = vec2_.x + "," + vec2_.y;
+		StringBuilder sb = new StringBuilder();
+		sb.Append(vec2_.x).Append(",").Append(vec2_.y);
+		content = sb.ToString();
 	}
 
 	/// <summary>
@@ -49,7 +56,9 @@ public class MsgSegment {
 
 	public MsgSegment(string attribute_, Vector2 vec2_){
 		attribute = attribute_;
-		content = vec2_.x + "," + vec2_.y;
+		StringBuilder sb = new StringBuilder();
+		sb.Append(vec2_.x).Append(",").Append(vec2_.y);
+		content = sb.ToString();
 	}
 
 	public MsgSegment(string attribute_, Vector3 vec3_){
@@ -63,11 +72,6 @@ public class MsgSegment {
 	/// content를 Vector3로 치환하여 리턴한다
 	/// </summary>
 	public Vector3 ConvertToV3(){
-		string[] split = content.Split(',');
-		return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
-	}
-
-	public Vector3 TryConvertToV3(){
 		string[] split = content.Split(',');
 		return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
 	}
@@ -93,6 +97,7 @@ public class MsgSegment {
 
 public class MsgAttr{
 	public const string position = "pos";
+	public const string directPosition = "dpos";
 	public const string rotation = "rot";
 	public const string directionScale = "dscale";
 
@@ -101,6 +106,7 @@ public class MsgAttr{
 
 	public const string hit = "hit";
 	public const string dead = "dead";
+	public const string addForce = "addf";
 
 	public const string setup = "setup";
 	public class Setup{
@@ -128,10 +134,12 @@ public class MsgAttr{
 
 	public const string character = "chr";
 	public class Character{
+		public const int iTargetAll = 9999;
 		public const string controlDirection = "cdir";
 		public const string normalAttack = "nattk";
 		public const string grounded = "ground";
 		public const string skill = "skill";
+		public const string summon = "summon";
 	}
 
 

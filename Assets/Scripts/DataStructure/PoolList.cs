@@ -30,6 +30,7 @@ public class PoolList : MonoBehaviour{
 		}
 
 		int objIdx = usableIdxQue.Dequeue();
+		//ConsoleMsgQueue.EnqueMsg(managingType.ToString() + " Created: " + objIdx);
 
 		transform.GetChild(objIdx).gameObject.SetActive(true);
 		transform.GetChild(objIdx).GetComponent<IRecvPoolable>().OnRequested();
@@ -59,7 +60,8 @@ public class PoolList : MonoBehaviour{
 	}
 
 	public IRecvPoolable GetObject(int idx_){
-		//return transform.GetChild(idx_).GetComponent<IRecvPoolable>();
+		if(idx_ >= totalObjCount)
+			return null;
 
 		if(transform.GetChild(idx_).gameObject.activeSelf){
 			return transform.GetChild(idx_).GetComponent<IRecvPoolable>();

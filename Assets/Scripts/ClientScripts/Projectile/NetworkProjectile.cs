@@ -26,7 +26,7 @@ public class NetworkProjectile : PoolingObject {
 		case MsgAttr.destroy:
 			ReturnObject(NetworkConst.projPosSyncTime);
 			targetPos = bodies[2].ConvertToV3();
-			itpl = new Interpolater(transform.position, targetPos, 0.05f);
+			itpl = new Interpolater(transform.position, targetPos, 0.1f);
 			break;
 		}
 	}

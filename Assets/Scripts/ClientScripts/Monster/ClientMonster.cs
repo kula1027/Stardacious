@@ -2,11 +2,18 @@
 using System.Collections;
 
 public class ClientMonster : PoolingObject, IHittable {
-	Interpolater itpl;
+	private Interpolater itpl;
+	protected HitBoxTrigger hTrigger;
 
-	NetworkMessage nmHit;
+	private NetworkMessage nmHit;
+
+	void Awake(){
+		hTrigger = GetComponentInChildren<HitBoxTrigger>();
+	}
+
 	public override void OnRequested (){
 		itpl = new Interpolater(transform.position);
+		hTrigger.gameObject.SetActive(true);
 		StartCoroutine(PositionRoutine());
 	}
 
@@ -22,6 +29,12 @@ public class ClientMonster : PoolingObject, IHittable {
 
 			yield return null;
 		}
+	}
+
+	public override void OnDie (){
+		base.OnDie ();
+
+		hTrigger.gameObject.SetActive(false);
 	}
 
 	public override void OnRecv(MsgSegment[] bodies){

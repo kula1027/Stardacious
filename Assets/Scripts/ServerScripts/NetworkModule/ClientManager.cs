@@ -32,8 +32,9 @@ namespace ServerSide{
 			int freeId = GetFreeId();
 
 			if(freeId == -1){
-				ConsoleMsgQueue.EnqueMsg("Server Full, Disconnect connection");
+				ConsoleMsgQueue.EnqueMsg("Server Full, Disconnect");
 				welcomeSocket_.Disconnect(false);
+
 				return false;
 			}else{
 				arrayClient[freeId] = new TcpConnection(welcomeSocket_, freeId);
@@ -48,6 +49,21 @@ namespace ServerSide{
 
 
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				if(arrayClient[loop] != null){
+					if (arrayClient [loop].IsConnected) {
+						nm_.Adress.Content = loop.ToString ();
+						arrayClient [loop].SendUdp (nm_.ToString ());
+					}
+				}
+			}
+		}
+
+		public static void BroadCastUdp(NetworkMessage nm_, int exclude_){
+			if(arrayClient == null)return;
+
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				if(loop == exclude_)continue;
+
 				if(arrayClient[loop] != null){
 					if (arrayClient [loop].IsConnected) {
 						nm_.Adress.Content = loop.ToString ();
@@ -87,7 +103,7 @@ namespace ServerSide{
 			}
 		}
 
-		public static void UniCast(int targetId_, NetworkMessage nm_){
+		public static void UniCast(NetworkMessage nm_, int targetId_){
 			if(arrayClient[targetId_] != null){
 				if(arrayClient[targetId_].IsConnected)
 					arrayClient[targetId_].SendTcp(nm_.ToString());

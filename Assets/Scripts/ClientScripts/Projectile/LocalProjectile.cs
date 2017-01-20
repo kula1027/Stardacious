@@ -6,7 +6,7 @@ using System;
 
 
 public class LocalProjectile : PoolingObject {
-	protected float flyingSpeed = 30f;
+	protected float flyingSpeed = 20f;
 	protected HitObject hitObject;
 
 	private NetworkMessage nmPos;
@@ -51,8 +51,7 @@ public class LocalProjectile : PoolingObject {
 
 		Network_Client.SendTcp(nmAppear);
 		nmPos.Body[0].SetContent(transform.position);		
-		Network_Client.SendUdp(nmPos);
-		ConsoleMsgQueue.EnqueMsg(nmPos.ToString());
+		Network_Client.SendTcp(nmPos);
 
 		while(true){
 			yield return new WaitForSeconds(NetworkConst.projPosSyncTime);

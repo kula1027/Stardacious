@@ -41,7 +41,7 @@ namespace ServerSide{
 		private IEnumerator SendPosRoutine(){
 			while(true){
 				nmPos.Body[0] = new MsgSegment(transform.position);
-				Network_Server.BroadCastTcp(nmPos);		
+				Network_Server.BroadCastUdp(nmPos);		
 
 				yield return new WaitForSeconds(posSyncItv);
 			}

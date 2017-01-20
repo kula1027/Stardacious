@@ -23,9 +23,7 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 		pooler.ReturnObject(poolingIdx);
 	}
 
-	public virtual void Ready(){
-
-	}
+	public virtual void Ready(){}
 
 	#region IObjectPoolable implementation
 	public int GetOpIndex (){

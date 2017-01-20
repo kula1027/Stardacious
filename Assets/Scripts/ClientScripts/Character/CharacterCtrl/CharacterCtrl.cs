@@ -25,7 +25,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 
 
 	public virtual void Initialize(){
-		MsgSegment commonHeader = new MsgSegment(MsgAttr.character);
+		MsgSegment commonHeader = new MsgSegment(MsgAttr.character, Network_Client.NetworkId);
 
 		MsgSegment[] bDir = {
 			new MsgSegment(MsgAttr.Character.controlDirection, "0"),
@@ -203,6 +203,11 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 
 		case MsgAttr.dead:
 			//Debug.Log("DEAD!");
+			break;
+
+		case MsgAttr.addForce:
+			Vector2 directionForce = bodies[0].ConvertToV2();
+			GetComponent<Rigidbody2D>().AddForce(directionForce);
 			break;
 		}
 	}

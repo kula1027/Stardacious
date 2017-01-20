@@ -11,10 +11,6 @@ public class Network_Client {
 	public static string serverAddress = "127.0.0.1";
 	public static int portTCP = 11900;
 
-	public static int portRecvUdp = 11903;
-	public static int portServerUDP = 11904;
-
-
 	private static TcpClient tcpClient;
 	private static NetworkStream networkStream;
 	private static StreamReader streamReader;
@@ -22,10 +18,6 @@ public class Network_Client {
 
 	private static Thread thread_connect;
 	private static Thread threadReceive_TCP;
-	private static Thread threadReceive_UDP;
-
-	private static IPEndPoint epServer;
-	private static Socket socketUdp;
 
 	private static int networkId = -1;
 	public static int NetworkId{
@@ -62,7 +54,7 @@ public class Network_Client {
 			}catch(SocketException e){
 				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString());
 				conCount++;
-				if(conCount > 5){
+				if(conCount > 10){
 					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
 					isConnected = false;
 					return;
@@ -76,6 +68,24 @@ public class Network_Client {
 			
 		ConsoleMsgQueue.EnqueMsg("TCP Socket Connected.");
 
+		//InitUdp();
+		InitTcp();
+	}
+
+	#region UDP
+	private static IPEndPoint epServer;
+	private static Thread threadReceive_UDP;
+	public static int portRecvUdp = 13904;
+	public static int portServerUDP = 12904;
+
+	private static Socket socketUdp;
+
+	public static void InitUdp(){
+		ConsoleMsgQueue.EnqueMsg("Initialize UDP");
+
+		portRecvUdp += networkId;
+		portServerUDP += networkId;
+
 		try{
 			IPEndPoint ep = new IPEndPoint(IPAddress.Any, portRecvUdp);
 			socketUdp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -85,18 +95,12 @@ public class Network_Client {
 		}
 		epServer = new IPEndPoint(IPAddress.Parse(serverAddress), portServerUDP);
 
-		networkStream = tcpClient.GetStream();
-		streamWriter = new StreamWriter(networkStream, Encoding.UTF8);
-		streamReader = new StreamReader(networkStream, Encoding.UTF8);
-
-		threadReceive_TCP = new Thread(ReceivingTCP);
 		threadReceive_UDP = new Thread(ReceivingUDP);
-		threadReceive_TCP.Start();
 		threadReceive_UDP.Start();
 	}
 
 	public static void SendUdp(NetworkMessage nm_){
-		if(socketUdp != null){
+		if(isConnected){			
 			string str = nm_.ToString();
 			byte[] buff = Encoding.UTF8.GetBytes(str);
 			socketUdp.SendTo(buff, epServer);
@@ -104,17 +108,33 @@ public class Network_Client {
 	}
 
 	private static void ReceivingUDP(){
+		SendUdp(new NetworkMessage());
+
 		byte[] bufByte;
 		try{
 			while(isConnected){
-				bufByte = new byte[256];
+				bufByte = new byte[512];
 				socketUdp.Receive(bufByte);
-				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + Encoding.UTF8.GetString(bufByte));
+				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + Encoding.UTF8.GetString(bufByte), 0);
 				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(Encoding.UTF8.GetString(bufByte)));
 			}
 		}catch(Exception e){
 			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message);
 		}
+	}
+
+	#endregion
+
+
+	#region TCP
+	public static void InitTcp(){
+		networkStream = tcpClient.GetStream();
+		streamWriter = new StreamWriter(networkStream, Encoding.UTF8);
+		streamReader = new StreamReader(networkStream, Encoding.UTF8);
+
+		threadReceive_TCP = new Thread(ReceivingTCP);
+
+		threadReceive_TCP.Start();
 	}
 
 	public static void SendTcp(NetworkMessage nm_){
@@ -151,6 +171,7 @@ public class Network_Client {
 
 		ShutDown();
 	}
+	#endregion
 
 	public static void ShutDown(){
 		if(isConnected){

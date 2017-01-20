@@ -4,7 +4,6 @@ using System.Collections;
 public class ClientCharacterManager : MonoBehaviour {
 	public static ClientCharacterManager instance;
 
-
 	private GameObject prefabCharacter;
 
 	private IReceivable[] characters = new IReceivable[NetworkConst.maxPlayer];
@@ -27,6 +26,10 @@ public class ClientCharacterManager : MonoBehaviour {
 
 	public void UnregisterNetCharacter(int idx_){
 		characters[idx_] = null;
+	}
+
+	public IReceivable GetCharacter(int idx_){
+		return characters[idx_];
 	}
 
 	private void CreateNetCharacter(int idx_, int chIdx_){

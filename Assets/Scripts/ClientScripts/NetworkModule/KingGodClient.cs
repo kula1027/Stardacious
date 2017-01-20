@@ -40,19 +40,13 @@ public class KingGodClient : MonoBehaviour {
 		while(Network_Client.IsConnected == false){
 			yield return null;
 		}
-			
-		MsgSegment h = new MsgSegment(MsgAttr.setup);
-		MsgSegment b = new MsgSegment(MsgAttr.Setup.reqId);
-		NetworkMessage msgRequestId = new NetworkMessage(h, b);
-
-		NetworkMessage.SenderId = Network_Client.NetworkId.ToString();
-		while(Network_Client.NetworkId == -1){
-			ConsoleMsgQueue.EnqueMsg("Request Id to Server...");
-			Network_Client.SendTcp(msgRequestId);
-			yield return new WaitForSeconds(1);
+	
+		Network_Client.NetworkId = -1;
+		while(Network_Client.NetworkId == -1){			
+			yield return null;
 		}
 
-		Network_Client.SendTcp(new NetworkMessage());//id가 갱신되었음을 알리는 빈 메시지 전송
+		Network_Client.InitUdp();
 
 		ConsoleMsgQueue.EnqueMsg("Received Id: " + Network_Client.NetworkId);
 

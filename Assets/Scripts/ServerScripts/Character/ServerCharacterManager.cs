@@ -45,16 +45,29 @@ namespace ServerSide{
 		}
 
 		public void OnRecv(NetworkMessage networkMessage){
-			int sender = int.Parse(networkMessage.Adress.Attribute);
-
 			switch(networkMessage.Header.Content){
 			case MsgAttr.create:
+				int sender = int.Parse(networkMessage.Adress.Attribute);
 				ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
 				ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
 				break;
 
 				default:
-				ServerCharacterManager.instance.GetCharacter(sender).OnRecvMsg(networkMessage.Body);
+				int targetCharacter = int.Parse(networkMessage.Header.Content);
+
+				if(targetCharacter == MsgAttr.Character.iTargetAll){
+					for(int loop = 0; loop < character.Length; loop++){
+						ServerCharacter nc =  character[loop];
+						if(nc){
+							nc.OnRecvMsg(networkMessage.Body);
+						}
+					}
+				}else{
+					ServerCharacter nc =  character[targetCharacter];
+					if(nc){
+						nc.OnRecvMsg(networkMessage.Body);
+					}
+				}
 				break;
 			}
 		}

@@ -19,7 +19,7 @@ namespace ServerSide{
 		private NetworkMessage nmHit;
 		private NetworkMessage nmDefault;
 		public void Initialize(){				
-			commonHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
+			commonHeader = new MsgSegment(MsgAttr.character, networkId);
 
 			nmPos = new NetworkMessage(commonHeader, new MsgSegment(new Vector3()));
 
@@ -36,7 +36,12 @@ namespace ServerSide{
 			case MsgAttr.position:
 				transform.position = bodies[0].ConvertToV3();
 				nmPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCastTcp(nmPos, networkId);
+				Network_Server.BroadCastUdp(nmPos, networkId);
+				break;
+
+			case MsgAttr.addForce:
+				nmDefault.Body = bodies;
+				Network_Server.UniCast(nmDefault, networkId);
 				break;
 
 				default:
@@ -55,7 +60,7 @@ namespace ServerSide{
 		}
 
 		void OnDestroy(){			
-			MsgSegment h = new MsgSegment(MsgAttr.character, networkId.ToString());
+			MsgSegment h = new MsgSegment(MsgAttr.character, networkId);
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage deleteMsg = new NetworkMessage(h, b);
 
@@ -77,7 +82,7 @@ namespace ServerSide{
 
 		public override void OnDie (){
 			//Build Dead Msg
-			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId.ToString());
+			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId);
 			MsgSegment msgBody = new MsgSegment(MsgAttr.dead);
 			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);
 

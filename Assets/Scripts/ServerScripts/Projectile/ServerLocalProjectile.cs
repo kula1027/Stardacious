@@ -15,10 +15,10 @@ namespace ServerSide{
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString()),
 				new MsgSegment(NetworkMessage.ServerId, GetOpIndex().ToString()),
-				new MsgSegment(transform.position)
+				new MsgSegment(transform.position),
+				new MsgSegment(MsgAttr.rotation, transform.right)
 			};
-			nmAppear = new NetworkMessage(h, b);
-			Network_Server.BroadCastTcp(nmAppear);
+			nmAppear = new NetworkMessage(h, b);		
 		}
 
 		private IEnumerator SendPosRoutine(){
@@ -32,7 +32,7 @@ namespace ServerSide{
 				yield return new WaitForSeconds(NetworkConst.projPosSyncTime);
 
 				nmPos.Body[0].SetContent(transform.position);
-				Network_Server.BroadCastTcp(nmPos);
+				Network_Server.BroadCastUdp(nmPos);
 			}
 		}
 
@@ -65,7 +65,8 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 			MsgSegment[] b = {
 				new MsgSegment(MsgAttr.destroy),
-				new MsgSegment(NetworkMessage.ServerId, GetOpIndex().ToString())
+				new MsgSegment(NetworkMessage.ServerId, GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
 			};
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);
 
