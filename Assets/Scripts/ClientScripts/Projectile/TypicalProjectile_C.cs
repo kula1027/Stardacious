@@ -24,8 +24,13 @@ public class TypicalProjectile_C : LocalProjectile, IHitter {
 	#region ICollidable implementation
 	public void OnHitSomebody (Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt)
+		if(hbt.tag.Equals("Player")){
+			return;
+		}
+
+		if(hbt){
 			hbt.OnHit(hitObject);
+		}
 		ReturnObject();
 	}
 	#endregion

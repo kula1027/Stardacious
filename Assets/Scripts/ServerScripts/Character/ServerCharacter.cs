@@ -27,7 +27,7 @@ namespace ServerSide{
 
 			nmDefault = new NetworkMessage(commonHeader);
 
-			maxHp = 1;
+			maxHp = 200;
 			CurrentHp = maxHp;
 		}
 
@@ -42,6 +42,13 @@ namespace ServerSide{
 			case MsgAttr.addForce:
 				nmDefault.Body = bodies;
 				Network_Server.UniCast(nmDefault, networkId);
+				break;
+
+			case MsgAttr.hit:
+				int damage = int.Parse(bodies[0].Content);
+				CurrentHp -= damage;
+				ConsoleMsgQueue.EnqueMsg(networkId + " / " + CurrentHp);
+				Network_Server.BroadCastTcp(nmHit);
 				break;
 
 				default:

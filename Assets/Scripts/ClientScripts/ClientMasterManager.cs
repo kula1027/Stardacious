@@ -16,7 +16,21 @@ public class ClientMasterManager : MonoBehaviour {
 	}
 		
 	private void InitiatePlayerCharacter(){
-		GameObject pCharacter = (GameObject)Instantiate(Resources.Load("Character/Doctor"));
+		GameObject pCharacter;
+		switch(PlayerData.chosenCharacter){
+		case ChIdx.Doctor:
+			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Doctor"));
+			break;
+
+		case ChIdx.Heavy:
+			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Heavy"));
+			break;
+
+			default:
+			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Heavy"));
+			break;
+		}
+
 		CharacterCtrl.instance = pCharacter.GetComponent<CharacterCtrl>();
 		CharacterCtrl.instance.Initialize ();
 

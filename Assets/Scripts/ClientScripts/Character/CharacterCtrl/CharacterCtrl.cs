@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterCtrl : StardaciousObject, IReceivable {
+public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
 
-	protected ChIdx chrIdx;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
 	private NetworkMessage nmAttack;
@@ -18,9 +17,12 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 	}
 	public ControlFlags controlFlags;
 		
-	#region chStat
+	#region chData
 	public float moveSpeed = 5f;
-	public float jumpPower = 700f;
+	public float jumpPower;//controled by unity editor
+
+	protected ChIdx chrIdx;
+	protected float[] skillCoolDown = new float[3];
 	#endregion
 
 
@@ -198,11 +200,10 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 	public void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.hit:
-			//Debug.Log(bodies[0].Content);
 			break;
 
 		case MsgAttr.dead:
-			//Debug.Log("DEAD!");
+			ConsoleSystem.Show();
 			break;
 
 		case MsgAttr.addForce:
@@ -223,6 +224,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable {
 
 			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}
+	}
+
+	#endregion
+
+	#region IHittable implementation
+
+	public virtual void OnHit (HitObject hitObject_){
+		
 	}
 
 	#endregion

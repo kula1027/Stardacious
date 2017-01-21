@@ -19,7 +19,6 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 	private Vector3 targetPos;
 
 	void Awake(){
-		characterGraphicCtrl.Initialize();
 		itpl = new Interpolater(transform.position);
 	}
 
@@ -30,7 +29,8 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 	Interpolater itpl;
 	public IEnumerator PositionRoutine(){		
 		while(true){
-			transform.position = itpl.Interpolate();
+			if(itpl != null)
+				transform.position = itpl.Interpolate();
 
 			yield return null;
 		}

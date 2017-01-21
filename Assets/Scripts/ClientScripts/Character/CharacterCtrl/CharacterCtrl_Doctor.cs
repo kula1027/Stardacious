@@ -2,13 +2,16 @@
 using System.Collections;
 
 public class CharacterCtrl_Doctor : CharacterCtrl {
-
 	private DoctorGraphicController gcDoctor;
 
 	public override void Initialize (){
 		base.Initialize ();
 
 		chrIdx = ChIdx.Doctor;
+
+		skillCoolDown[0] = 10f;
+		skillCoolDown[1] = 5f;
+		skillCoolDown[2] = 1f;
 
 		gcDoctor = GetComponentInChildren<DoctorGraphicController> ();
 		gcDoctor.Initialize();
@@ -64,10 +67,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		switch (idx_) {
 		case 0:			
 			gcDoctor.BindShot();
+			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 			break;
 
 		case 1:
 			gcDoctor.DeviceShot();
+			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
 			break;
 
 		case 2:
@@ -77,6 +82,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			}else{
 				gcDoctor.EndAndShootEnergyCharge();
 				isChargingEnergy = false;
+				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			}
 			break;
 		}

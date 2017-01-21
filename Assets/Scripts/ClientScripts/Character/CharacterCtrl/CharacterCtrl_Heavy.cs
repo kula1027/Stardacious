@@ -9,6 +9,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 		chrIdx = ChIdx.Heavy;
 
+		skillCoolDown[0] = 1f;
+		skillCoolDown[1] = 4f;
+		skillCoolDown[2] = 5f;
+
 		gcHeavy = GetComponentInChildren<HeavyGraphicController> ();
 		gcHeavy.Initialize();
 
@@ -122,19 +126,46 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		Network_Client.SendTcp(nmForce);
 	}
 
+	#region Mine
+	private bool mineDropped = false;
+	private HeavyMine dropMine;
+	private void DropMine(){
+		mineDropped = true;
+		GameObject thatThing = (GameObject)Resources.Load("HeavyMine");//TODO
+		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
+		dropMine = go.GetComponent<HeavyMine>();
+
+		go.transform.position = transform.position + new Vector3(0, 2, 0);
+		if(currentDirV3.x < 0){
+			go.GetComponent<Rigidbody2D>().AddForce(new Vector3(-150, 250, 0));
+		}else{
+			go.GetComponent<Rigidbody2D>().AddForce(new Vector3(150, 250, 0));
+		}
+	}
+
+	#endregion
+
 	public override void UseSkill (int idx_){
 		base.UseSkill(idx_);
 		switch (idx_) {
 		case 0:
 			gcHeavy.WeaponSwap ();
+			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 			break;
 
 		case 1:
-			TestAddForce();
+			if(mineDropped){				
+				dropMine.Detonate();
+				mineDropped = false;
+				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+			}else{
+				DropMine();
+				InputModule.instance.BeginCoolDown(1, 0.5f);
+			}
 			break;
 
 		case 2:
-			
+			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			break;
 		}
 	}

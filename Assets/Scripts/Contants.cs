@@ -8,6 +8,7 @@ public enum ProjType{
 }
 
 public enum ChIdx{
+	NotInitialized,
 	Heavy,
 	Doctor
 }

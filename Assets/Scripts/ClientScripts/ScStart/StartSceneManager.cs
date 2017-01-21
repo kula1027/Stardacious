@@ -15,6 +15,8 @@ public class StartSceneManager : MonoBehaviour {
 	private HidableUI configPanel;
 	private HidableUI selCharPanel;
 
+	public Text[] tempState;
+
 	void Awake(){		
 		instance = this;
 
@@ -42,9 +44,13 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnNetworkSetupDone(){
 		configPanel.Hide();	
+
+		if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
+			tempState[Network_Client.NetworkId].text = "Touch!\nYeah!";
+		}
+
 		readyPanel.Show();
 	}
-		
 
 	public void OnBtnJoinClick(){
 		if(inputIp.text.Length < 6){

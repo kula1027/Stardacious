@@ -15,29 +15,13 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 	void Update(){
 		if(CharacterCtrl.instance == null)return;
 
-		if(Input.GetKeyDown(KeyCode.LeftArrow)){
-			dir = Vector3.left;
-			moveRoutine =  StartCoroutine(InputMoveRoutine());
-		}
-		if(Input.GetKeyDown(KeyCode.RightArrow)){
-			dir = Vector3.right;
-			moveRoutine =  StartCoroutine(InputMoveRoutine());
-		}
-		if(Input.GetKeyUp(KeyCode.LeftArrow)){
-			dir = Vector3.zero;
-			StopCoroutine(moveRoutine);
-		}
-		if(Input.GetKeyUp(KeyCode.RightArrow)){
-			dir = Vector3.zero;
-			StopCoroutine(moveRoutine);
-		}
+
 	}
 
 	private IEnumerator InputMoveRoutine(){
 		while(true){
 			if(CharacterCtrl.instance)
 				CharacterCtrl.instance.OnMovementInput(dir);
-
 			yield return null;
 		}
 	}
