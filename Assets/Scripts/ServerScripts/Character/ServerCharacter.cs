@@ -35,7 +35,7 @@ namespace ServerSide{
 			switch(bodies[0].Attribute){
 			case MsgAttr.position:
 				transform.position = bodies[0].ConvertToV3();
-				nmPos.Body[0].SetContent(transform.position);
+				nmPos.Body = bodies;
 				Network_Server.BroadCastUdp(nmPos, networkId);
 				break;
 

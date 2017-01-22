@@ -6,9 +6,13 @@ public class NetworkProjectile : PoolingObject {
 	public Vector3 TargetPos{
 		set{targetPos = value;}
 	}
+		
+	public void Initiate(Vector3 startPos_, Vector3 rotRight_){
+		transform.position = startPos_;
+		transform.right = rotRight_;
+		itpl = new Interpolater(startPos_);
 
-	public override void Ready (){
-		itpl = new Interpolater(transform.position);
+
 		StartCoroutine(PositionRoutine());
 	}
 

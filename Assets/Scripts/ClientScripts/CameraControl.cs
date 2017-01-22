@@ -12,11 +12,15 @@ public class CameraControl : MonoBehaviour {
 	private float limitLeft;
 	private float limitRight;
 
+	private BackgroundMovement[] bgMove;
+
 	void Awake(){
 		cam = GetComponent<Camera>();
 
 		camHeight = cam.orthographicSize;
 		camWidth = cam.orthographicSize * cam.aspect;
+
+		bgMove = GetComponentsInChildren<BackgroundMovement>();
 	}
 
 	void Start(){
@@ -28,6 +32,8 @@ public class CameraControl : MonoBehaviour {
 	}
 
 	private IEnumerator CamRoutine(){
+		Vector3 prevPos = transform.position;
+		Vector3 dif;
 		while(true){
 			if(targetTr != null){
 				transform.position = Vector3.Lerp(
@@ -39,6 +45,11 @@ public class CameraControl : MonoBehaviour {
 										),
 										0.05f
 									);
+				dif = prevPos - transform.position;
+
+				for(int loop = 0; loop < bgMove.Length; loop++){
+					bgMove[loop].Move(dif);
+				}
 
 				/*if(transform.position.x + camWidth > limitRight){
 					transform.position = new Vector3(limitRight - camWidth, camHeight, camDepth);
@@ -46,6 +57,8 @@ public class CameraControl : MonoBehaviour {
 				if(transform.position.x - camWidth < limitLeft){
 					transform.position = new Vector3(limitLeft + camWidth, camHeight, camDepth);
 				}*/
+
+				prevPos = transform.position;
 			}
 
 			yield return null;

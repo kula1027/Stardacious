@@ -31,7 +31,7 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 	#region IHittable implementation
 	private NetworkMessage nmHit;
 	public void OnHit (HitObject hitObject_){
-		nmHit.Body[0].Content = hitObject_.damage.ToString();
+		nmHit.Body[0].Content = hitObject_.Damage.ToString();
 		Network_Client.SendTcp(nmHit);
 	}
 

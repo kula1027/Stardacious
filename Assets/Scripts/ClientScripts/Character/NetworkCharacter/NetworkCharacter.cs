@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// 네트워크로 제어되는 다른 클라이언트들의 캐릭터 객체
 /// </summary>
-public class NetworkCharacter : MonoBehaviour, IReceivable {
+public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 	private int networkId;
 	public int NetworkId{
 		get{return networkId;}
@@ -38,6 +38,7 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 
 	public virtual void UseSkill(int idx_){
 	}
+		
 
 	#region IReceivable implementation
 
@@ -84,6 +85,23 @@ public class NetworkCharacter : MonoBehaviour, IReceivable {
 			break;
 		}
 
+	}
+
+	#endregion
+
+	public override void AddForce (Vector2 dirForce_){
+		NetworkMessage nmForce = new NetworkMessage(
+			new MsgSegment(MsgAttr.character, networkId), 
+			new MsgSegment(MsgAttr.addForce, dirForce_)
+		);
+
+		Network_Client.SendTcp(nmForce);
+	}
+
+	#region IHittable implementation
+
+	public void OnHit (HitObject hitObject_){
+		hitObject_.Apply(this);
 	}
 
 	#endregion

@@ -4,7 +4,8 @@
 }
 
 public enum ProjType{
-	test
+	MiniGunBullet,
+	HeavyMine
 }
 
 public enum ChIdx{

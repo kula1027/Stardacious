@@ -19,4 +19,5 @@ public class StardaciousObject : MonoBehaviour {
 
 	public virtual void OnHpChanged(){}
 	public virtual void OnDie(){}
+	public virtual void AddForce(Vector2 dirForce_){}
 }

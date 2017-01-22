@@ -2,7 +2,15 @@
 using System.Collections;
 
 public class HitObject {
-	public int damage;
+	protected int damage;
+	public int Damage{
+		get{
+			return damage;
+		}
+		set{
+			damage = value;
+		}
+	}
 
 	public HitObject(){
 	}

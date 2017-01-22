@@ -31,7 +31,6 @@ public class ClientMasterManager : MonoBehaviour {
 			break;
 		}
 
-		CharacterCtrl.instance = pCharacter.GetComponent<CharacterCtrl>();
 		CharacterCtrl.instance.Initialize ();
 
 		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);

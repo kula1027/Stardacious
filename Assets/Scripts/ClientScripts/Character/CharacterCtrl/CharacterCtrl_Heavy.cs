@@ -10,8 +10,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		chrIdx = ChIdx.Heavy;
 
 		skillCoolDown[0] = 1f;
-		skillCoolDown[1] = 4f;
-		skillCoolDown[2] = 5f;
+		skillCoolDown[1] = 2f;
+		skillCoolDown[2] = 2f;
 
 		gcHeavy = GetComponentInChildren<HeavyGraphicController> ();
 		gcHeavy.Initialize();
@@ -22,8 +22,13 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		StartSendPos();
 	}
 
+	private ControlDirection currentDirGun = ControlDirection.Left;
 	public override void OnMovementInput (Vector3 vec3_){
 		base.OnMovementInput(vec3_);
+
+		if(currentDir != ControlDirection.Middle){
+			currentDirGun = currentDir;
+		}
 	}
 
 	private bool isAttacking = false;
@@ -57,6 +62,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	public void ShootShotGun(){
 		StartCoroutine(ShotGunRoutine());
+	}
+
+	public void OnEndShootShotGun(){
+		moveSpeed = 5;
 	}
 
 	private const float shotgunHitStayTime = 0.02f;
@@ -112,34 +121,66 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			if (currentDirV3.x < 0)
 				go.transform.right = new Vector3(-trGunMuzzle.right.x, trGunMuzzle.right.y, trGunMuzzle.right.z);
 
-			go.GetComponent<LocalProjectile>().Ready();
+			go.GetComponent<PoolingObject>().Ready();
 		}
 	}
 	#endregion
-
-	private void TestAddForce(){//TODO Testing
-		NetworkMessage nmForce = new NetworkMessage(
-			new MsgSegment(MsgAttr.character, MsgAttr.Character.iTargetAll), 
-			new MsgSegment(MsgAttr.addForce, new Vector2(500, 900))
-		);
-
-		Network_Client.SendTcp(nmForce);
-	}
 
 	#region Mine
 	private bool mineDropped = false;
 	private HeavyMine dropMine;
 	private void DropMine(){
 		mineDropped = true;
-		GameObject thatThing = (GameObject)Resources.Load("HeavyMine");//TODO
+		GameObject thatThing = (GameObject)Resources.Load("Projectile/HeavyMine");//TODO
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
-		dropMine = go.GetComponent<HeavyMine>();
 
-		go.transform.position = transform.position + new Vector3(0, 2, 0);
+		dropMine = go.GetComponent<HeavyMine>();
+		dropMine.transform.position = transform.position + new Vector3(0, 2, 0);
+
 		if(currentDirV3.x < 0){
-			go.GetComponent<Rigidbody2D>().AddForce(new Vector3(-150, 250, 0));
+			dropMine.Throw(new Vector3(-150, 250, 0));
 		}else{
-			go.GetComponent<Rigidbody2D>().AddForce(new Vector3(150, 250, 0));
+			dropMine.Throw(new Vector3(150, 250, 0));
+		}
+	}
+
+	#endregion
+
+	#region OverchargedShot
+
+	private void OverchargedShot(){		
+		switch(currentDirGun){
+		case ControlDirection.Right:
+			rgd2d.AddForce(Vector2.left * 700);
+			break;
+
+		case ControlDirection.RightUp:
+			rgd2d.AddForce(new Vector2(-1, -1) * 700);
+			break;
+
+		case ControlDirection.Up:
+			rgd2d.AddForce(Vector2.down * 700);
+			break;
+
+		case ControlDirection.LeftUp:
+			rgd2d.AddForce(new Vector2(1, -1) * 700);
+			break;
+
+		case ControlDirection.Left:
+			rgd2d.AddForce(Vector2.right * 700);
+			break;
+
+		case ControlDirection.LeftDown:
+			rgd2d.AddForce(new Vector2(1, 1) * 700);
+			break;
+
+		case ControlDirection.Down:
+			rgd2d.AddForce(Vector2.up * 700);
+			break;
+
+		case ControlDirection.RightDown:
+			rgd2d.AddForce(new Vector2(-1, 1) * 700);
+			break;
 		}
 	}
 
@@ -154,7 +195,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			break;
 
 		case 1:
-			if(mineDropped){				
+			if(mineDropped){		
 				dropMine.Detonate();
 				mineDropped = false;
 				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
@@ -165,6 +206,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			break;
 
 		case 2:
+			OverchargedShot();
 			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			break;
 		}

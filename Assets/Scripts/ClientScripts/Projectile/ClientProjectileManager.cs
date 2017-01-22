@@ -29,10 +29,8 @@ public class ClientProjectileManager : MonoBehaviour {
 
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
-			int objType = int.Parse(networkMessage.Body[0].Attribute);
-			Vector3 startPos = networkMessage.Body[2].ConvertToV3();
-			Vector3 rotRight = networkMessage.Body[3].ConvertToV3();
-			CreateProjectile(projPooler, objType, projIdx, startPos, rotRight);
+			
+			CreateProjectile(projPooler, projIdx, networkMessage.Body);
 			break;
 
 			default:
@@ -54,10 +52,26 @@ public class ClientProjectileManager : MonoBehaviour {
 		return projPool;
 	}
 
-	private void CreateProjectile(ObjectPooler pooler_, int objType_, int projIdx_, Vector3 startPos_, Vector3 right_){
-		GameObject proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/testNetworkProjectile"), projIdx_);
-		proj.transform.position = startPos_;
-		proj.transform.right = right_;
-		proj.GetComponent<NetworkProjectile>().Ready();
+	private void CreateProjectile(ObjectPooler pooler_, int projIdx_, MsgSegment[] bodies){
+		int objType = int.Parse(bodies[0].Attribute);
+
+		GameObject proj = null;
+		switch((ProjType)objType){
+		case ProjType.MiniGunBullet:
+			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/testNetworkProjectile"), projIdx_);
+			proj.GetComponent<NetworkProjectile>().Initiate(
+				bodies[2].ConvertToV3(),
+				bodies[3].ConvertToV3()
+			);
+			break;
+
+		case ProjType.HeavyMine:
+			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/NetworkHeavyMine"), projIdx_);
+			proj.GetComponent<NetworkHeavyMine>().Initiate(
+				bodies[2].ConvertToV3(),
+				bodies[3].ConvertToV3()
+			);
+			break;
+		}
 	}
 }

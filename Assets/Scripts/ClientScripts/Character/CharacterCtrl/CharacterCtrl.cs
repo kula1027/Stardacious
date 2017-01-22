@@ -5,18 +5,23 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
 
+	public BoxCollider2D colGroundChecker;
+
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
 	private NetworkMessage nmAttack;
 	private NetworkMessage nmGround;
 	private NetworkMessage nmSkill;
 
+	protected Rigidbody2D rgd2d;
+
 	public CharacterGraphicCtrl characterGraphicCtrl;
 	public CharacterGraphicCtrl cgCtrl{
 		get{return characterGraphicCtrl;}
 	}
+
 	public ControlFlags controlFlags;
-		
+
 	#region chData
 	public float moveSpeed = 5f;
 	public float jumpPower;//controled by unity editor
@@ -25,8 +30,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected float[] skillCoolDown = new float[3];
 	#endregion
 
+	void Awake(){
+		rgd2d = GetComponent<Rigidbody2D>();
+		instance = this;
+	}
 
 	public virtual void Initialize(){
+		
 		MsgSegment commonHeader = new MsgSegment(MsgAttr.character, Network_Client.NetworkId);
 
 		MsgSegment[] bDir = {
@@ -71,11 +81,11 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
 	protected Vector3 currentDirV3 = Vector3.left;
+	protected ControlDirection currentDir = ControlDirection.Left;
 	public virtual void OnMovementInput(Vector3 vec3_){
 		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
 
 		bool movablebByInput = true;
-		ControlDirection currentDir = ControlDirection.NotInitialized;
 		if(vec3_.y > 0){//위 쪽 반원 영역
 			if(inputAngle < 22.5f){
 				currentDir = ControlDirection.Right;
@@ -136,23 +146,30 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			if(currentDir != ControlDirection.Middle)
 				currentDirV3 = vec3_;
 		}
+
 		prevCtrlDir = currentDir;
 	}
 
 	public void Jump(){
 		if (isGround && controlFlags.jump) {
-			GetComponent<Rigidbody2D> ().AddForce (Vector2.up * jumpPower);
+			rgd2d.AddForce (Vector2.up * jumpPower);
 		}
 	}
 		
 	private IEnumerator GroundCheckRoutine(){
 		bool prevGrounded = isGround;
 		while (true) {
+			if(rgd2d.velocity.y <= 0){
+				colGroundChecker.enabled = true;
+			}
+
 			if (isGround != prevGrounded){
 				if (isGround) {
 					characterGraphicCtrl.Grounded ();
 					nmGround.Body[0].Content = NetworkMessage.sTrue;
 				} else {
+					colGroundChecker.enabled = false;
+
 					characterGraphicCtrl.Jump();
 					nmGround.Body[0].Content = NetworkMessage.sFalse;
 				}
@@ -208,7 +225,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 		case MsgAttr.addForce:
 			Vector2 directionForce = bodies[0].ConvertToV2();
-			GetComponent<Rigidbody2D>().AddForce(directionForce);
+			AddForce(directionForce);
 			break;
 		}
 	}
@@ -231,10 +248,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	#region IHittable implementation
 
 	public virtual void OnHit (HitObject hitObject_){
-		
+		hitObject_.Apply(this);
 	}
 
 	#endregion
+
+	public override void AddForce (Vector2 dirForce_){
+		rgd2d.AddForce(dirForce_);
+	}
 }
 
 public enum InputDirection{left, leftUp, up, rightUp, right, rightDown, down, leftDown}

@@ -52,7 +52,7 @@ public class ClientMonster : PoolingObject, IHittable {
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
-		nmHit.Body[0].Content = hitObject_.damage.ToString();
+		nmHit.Body[0].Content = hitObject_.Damage.ToString();
 		Network_Client.SendTcp(nmHit);
 	}
 
