@@ -14,9 +14,9 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 		chrIdx = ChIdx.Doctor;
 
-		skillCoolDown[0] = 1f;
-		skillCoolDown[1] = 5f;
-		skillCoolDown[2] = 1f;
+		skillCoolDown[0] = 2f;
+		skillCoolDown[1] = 4f;
+		skillCoolDown[2] = 4f;
 
 		gcDoctor = GetComponentInChildren<DoctorGraphicController> ();
 		gcDoctor.Initialize();
@@ -86,7 +86,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	#region Bind Shot
 
 	public void OnShootBind(){
-		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfGuideDevice);
+		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfBindBullet);
 		go.transform.position = trGunMuzzle.position;
 		go.transform.right = trGunMuzzle.right;
 		if (currentDirV3.x < 0)
@@ -100,12 +100,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	#region EnergyBall
 
 	private bool isChargingEnergy = false;
-	private EnergyBall activeEnergyBall;
+	private DoctorEnergyBall activeEnergyBall;
 	public void ChargeEnergyBall(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfEnergyBall);
 		go.transform.position = transform.position + Vector3.up * 5;
 
-		activeEnergyBall = go.GetComponent<EnergyBall>();
+		activeEnergyBall = go.GetComponent<DoctorEnergyBall>();
 
 	}
 
@@ -164,7 +164,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			break;
 
 		case 1:
-			//gcDoctor.BindShot();
+			gcDoctor.BindShot();
 			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
 			break;
 
