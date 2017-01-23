@@ -114,7 +114,21 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	/*void Update () {
+	public void AnimationFreeze(){
+		lowerAnimator.enabled = false;
+		upperAnimator.enabled = false;
+		miniEffectAnimator.enabled = false;
+		cartridge.Stop ();
+	}
+
+	public void AnimationResume(){
+		lowerAnimator.enabled = true;
+		upperAnimator.enabled = true;
+		miniEffectAnimator.enabled = true;
+		cartridge.Play ();
+	}
+
+	void Update () {
 		if (Input.GetKeyDown (KeyCode.A)) {
 			StartNormalAttack ();
 		}
@@ -130,7 +144,14 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		if(Input.GetKeyUp (KeyCode.RightArrow)){
 			SetDirection (ControlDirection.Middle);
 		}
-	}*/
+	
+		if (Input.GetKeyDown (KeyCode.G)){
+			AnimationFreeze ();
+		}
+		if (Input.GetKeyUp (KeyCode.G)) {
+			AnimationResume ();
+		}
+	}
 
 	#region private
 	private void SetShotGunShoot(){

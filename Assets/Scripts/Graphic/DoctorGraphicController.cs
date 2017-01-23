@@ -12,6 +12,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	public SkeletonAnimation hair;
 	public ParticleSystem booster;
 	public Transform muzzle;
+	public Animator lazerEffectAnimator;
 
 	//State
 	private DoctorLowerState lowerState;			//현재 하체상태
@@ -171,7 +172,9 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			break;
 		}
 
-		//TODO Effect
+		lazerEffectAnimator.transform.position = muzzle.position;
+		lazerEffectAnimator.transform.rotation = muzzle.rotation;
+		lazerEffectAnimator.Play ("Shoot", 0, 0);
 	}
 	private void SetUpperAnim(ControlDirection direction){
 		if (!isEnergyCharging) {			//원기옥중 아닐 때
