@@ -3,6 +3,10 @@ using System.Collections;
 
 public class StardaciousObject : MonoBehaviour {
 	protected int maxHp = 1;
+	private bool isDead = false;
+	public bool IsDead{
+		get{return isDead;}
+	}
 	private int currentHp;
 	public int CurrentHp{
 		get{
@@ -11,7 +15,8 @@ public class StardaciousObject : MonoBehaviour {
 		set{
 			currentHp = value;
 			OnHpChanged();
-			if(currentHp <= 0.0f){
+			if(currentHp <= 0){
+				isDead = true;
 				OnDie();
 			}
 		}

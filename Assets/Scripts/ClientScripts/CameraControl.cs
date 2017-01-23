@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraControl : MonoBehaviour {
 	private Camera cam;
 	private Transform targetTr;
-	private const float camDepth = -20f;
+	private const float camDepth = -30f;
 
 	private float camHeight;
 	private float camWidth;

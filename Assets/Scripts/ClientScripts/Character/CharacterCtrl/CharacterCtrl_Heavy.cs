@@ -4,6 +4,9 @@ using System.Collections;
 public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	private HeavyGraphicController gcHeavy;
 
+	public GameObject pfMinigunBullet;
+	public GameObject pfHeavyMine;
+
 	public override void Initialize (){
 		base.Initialize ();
 
@@ -111,7 +114,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	private const float machineGunFireRate = 0.2f;
 	private IEnumerator MachineGunRoutine(){
-		GameObject thatThing = (GameObject)Resources.Load("Projectile/testProjectile");//TODO
+		GameObject thatThing = (GameObject)Resources.Load("Projectile/MinigunBullet");//TODO
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);

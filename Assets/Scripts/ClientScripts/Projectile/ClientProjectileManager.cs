@@ -58,8 +58,8 @@ public class ClientProjectileManager : MonoBehaviour {
 		GameObject proj = null;
 		switch((ProjType)objType){
 		case ProjType.MiniGunBullet:
-			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/testNetworkProjectile"), projIdx_);
-			proj.GetComponent<NetworkProjectile>().Initiate(
+			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/NetworkMinigunBullet"), projIdx_);
+			proj.GetComponent<NetworkFlyingProjectile>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
 			);

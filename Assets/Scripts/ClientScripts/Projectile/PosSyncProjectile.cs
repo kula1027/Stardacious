@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TypicalProjectile_C : PoolingObject, IHitter {
+public class PosSyncProjectile : PoolingObject, IHitter {
 	protected float flyingSpeed = 20f;
 
 	protected HitObject hitObject;

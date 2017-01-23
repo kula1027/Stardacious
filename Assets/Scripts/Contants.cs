@@ -5,7 +5,10 @@
 
 public enum ProjType{
 	MiniGunBullet,
-	HeavyMine
+	HeavyMine,
+	ChaserBullet,
+	GuidanceDevice,
+	BindBullet,
 }
 
 public enum ChIdx{

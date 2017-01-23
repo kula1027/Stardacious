@@ -4,15 +4,13 @@ using System.Collections;
 public class ClientCharacterManager : MonoBehaviour {
 	public static ClientCharacterManager instance;
 
-	private GameObject prefabCharacter;
+	public GameObject pfNetworkDoctor;
+	public GameObject pfNetworkHeavy;
 
 	private IReceivable[] characters = new IReceivable[NetworkConst.maxPlayer];
 
 	void Awake(){
 		instance = this;
-	
-
-		prefabCharacter = (GameObject)Resources.Load("Character/HeavyNetwork");
 	}
 
 
@@ -35,7 +33,16 @@ public class ClientCharacterManager : MonoBehaviour {
 	}
 
 	private void CreateNetCharacter(int idx_, int chIdx_){
-		GameObject go = (GameObject)Instantiate(prefabCharacter);
+		GameObject go = null;
+		switch((ChIdx)chIdx_){
+		case ChIdx.Doctor:
+			go = (GameObject)Instantiate(pfNetworkDoctor);
+			break;
+
+		case ChIdx.Heavy:
+			go = (GameObject)Instantiate(pfNetworkHeavy);
+			break;
+		}
 		characters[idx_] = go.GetComponent<IReceivable>();
 		go.GetComponent<NetworkCharacter>().NetworkId = idx_;
 	}

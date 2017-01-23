@@ -5,46 +5,24 @@ namespace ServerSide{
 	public class ServerFlyingProjectile : PoolingObject {
 		private int ownerId;
 
-		private NetworkMessage nmPos;
 		public override void OnRecv (MsgSegment[] bodies){		
 			switch(bodies[0].Attribute){
-			case MsgAttr.position:				
-				transform.position = bodies[0].ConvertToV3();
-				nmPos.Body[0].Content = bodies[0].Content;
-				Network_Server.BroadCastUdp(nmPos, ownerId);
-				break;
-
 			case MsgAttr.destroy:
-				ReturnObject(NetworkConst.projPosSyncTime);
-				transform.position = bodies[1].ConvertToV3();
+				ReturnObject();
 				break;
 			}
 		}
 
 		public void Initiate(int ownerId_, int objType_, Vector3 startPos_, Vector3 rotRight_){
 			ownerId = ownerId_;
-			transform.position = startPos_;
-			transform.right = rotRight_;
 			objType = objType_;
 
-			//prepare position message
-			MsgSegment hPos = new MsgSegment(MsgAttr.projectile);
-			MsgSegment[] bPos = {
-				new MsgSegment(MsgAttr.position, new Vector3()),
-				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString())
-			};
-			nmPos = new NetworkMessage(hPos, bPos);
-
-			NotifyAppearence();
-		}
-
-		private void NotifyAppearence(){
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString()),
 				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString()),
-				new MsgSegment(transform.position),
-				new MsgSegment(MsgAttr.rotation, transform.right)
+				new MsgSegment(startPos_),
+				new MsgSegment(MsgAttr.rotation, rotRight_)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 			Network_Server.BroadCastTcp(nmAppear, ownerId);

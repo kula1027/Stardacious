@@ -5,6 +5,9 @@ using System.Collections;
 public class ClientMasterManager : MonoBehaviour {
 	public static ClientMasterManager instance;
 
+	public GameObject pfHeavy;
+	public GameObject pfDoctor;
+
 	void Awake(){
 		instance = this;
 
@@ -19,15 +22,15 @@ public class ClientMasterManager : MonoBehaviour {
 		GameObject pCharacter;
 		switch(PlayerData.chosenCharacter){
 		case ChIdx.Doctor:
-			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Doctor"));
+			pCharacter = (GameObject)Instantiate(pfDoctor);
 			break;
 
 		case ChIdx.Heavy:
-			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Heavy"));
+			pCharacter = (GameObject)Instantiate(pfHeavy);
 			break;
 
 			default:
-			pCharacter = (GameObject)Instantiate(Resources.Load("Character/Heavy"));
+			pCharacter = (GameObject)Instantiate(pfDoctor);
 			break;
 		}
 

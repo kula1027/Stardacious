@@ -12,7 +12,6 @@ public class NetworkProjectile : PoolingObject {
 		transform.right = rotRight_;
 		itpl = new Interpolater(startPos_);
 
-
 		StartCoroutine(PositionRoutine());
 	}
 
