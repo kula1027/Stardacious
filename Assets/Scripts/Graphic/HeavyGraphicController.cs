@@ -114,18 +114,23 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
+	private bool cartridgeIsPlayed = false;
 	public void AnimationFreeze(){
 		lowerAnimator.enabled = false;
 		upperAnimator.enabled = false;
 		miniEffectAnimator.enabled = false;
-		cartridge.Stop ();
+		if (cartridgeIsPlayed = cartridge.isPlaying) {
+			cartridge.Stop ();
+		}
 	}
 
 	public void AnimationResume(){
 		lowerAnimator.enabled = true;
 		upperAnimator.enabled = true;
 		miniEffectAnimator.enabled = true;
-		cartridge.Play ();
+		if (cartridgeIsPlayed) {
+			cartridge.Play ();
+		}
 	}
 
 	void Update () {
