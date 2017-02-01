@@ -14,6 +14,10 @@ public class NetworkFlyingProjectile : PoolingObject {
 	public override void OnReturned (){
 	}
 
+	public override void OnRequested (){
+		ReturnObject(2f);
+	}
+
 	private IEnumerator FlyingRoutine(){
 		while(true){
 			transform.position += transform.right * flyingSpeed * Time.deltaTime;

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class StartSceneManager : MonoBehaviour {
 	public static StartSceneManager instance;
@@ -33,11 +34,20 @@ public class StartSceneManager : MonoBehaviour {
 		configPanel.Show();
 	}
 
+	int rttCount = 0;
+	double rttSum = 0;
 	public void OnRecv(NetworkMessage networkMessage){
 		switch(networkMessage.Body[0].Attribute){
 			case MsgAttr.Setup.reqId:
 			string givenId = networkMessage.Body[0].Content;
 			Network_Client.NetworkId = int.Parse(givenId);
+			break;
+
+		case MsgAttr.rtt:
+			int t = int.Parse(networkMessage.Body[0].Content);
+			int cTime = DateTime.Now.Millisecond + DateTime.Now.Second * 1000;
+			ConsoleMsgQueue.EnqueMsg("ltc: " + (cTime - t).ToString());
+
 			break;
 		}
 	}

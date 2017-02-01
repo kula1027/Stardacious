@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class PoolList : MonoBehaviour{
 
-	public Type managingType;
+	public Type managingType = typeof(UnityEngine.Object);	 
 
 	private int totalObjCount = 0;
-	private int incPerInstantiate = 5;
+	private int incPerInstantiate = 1;//TODO 2이상일 경우 문제 있음
 	private Queue<int> usableIdxQue = new Queue<int>();
 
 	private int poolId;
@@ -16,7 +16,7 @@ public class PoolList : MonoBehaviour{
 		set{poolId = value;}
 	}
 
-	public GameObject RequestObject(GameObject go_){
+	public GameObject RequestObject(GameObject go_){		
 		if(usableIdxQue.Count < 1){			
 			for(int loop = 0; loop < incPerInstantiate; loop++){
 				GameObject iGo = Instantiate(go_);
@@ -38,33 +38,51 @@ public class PoolList : MonoBehaviour{
 		return transform.GetChild(objIdx).gameObject;
 	}
 
-	public GameObject RequestObjectAt(GameObject go_, int idx_){		
-		while(totalObjCount <= idx_){
-			GameObject iGo = Instantiate(go_);
-			iGo.transform.SetParent(transform);
-			iGo.SetActive(false);
-			iGo.GetComponent<IRecvPoolable>().SetOpIndex(totalObjCount + poolId);
-			totalObjCount++;
+	public GameObject RequestObjectAt(GameObject go_, int idx_){	
+		int localIdx = idx_;
+		if(poolId > 0){
+			localIdx = idx_ % poolId;
 		}
 
-		transform.GetChild(idx_).gameObject.SetActive(true);
-		transform.GetChild(idx_).GetComponent<IRecvPoolable>().OnRequested();
+		while(totalObjCount <= localIdx){
+			for(int loop = 0; loop < incPerInstantiate; loop++){
+				GameObject iGo = Instantiate(go_);
+				iGo.transform.SetParent(transform);
+				iGo.SetActive(false);
+				iGo.GetComponent<IRecvPoolable>().SetOpIndex(loop + totalObjCount + poolId);
+				usableIdxQue.Enqueue(loop + totalObjCount);
+			}
+			totalObjCount += incPerInstantiate;
+		}
 
-		return transform.GetChild(idx_).gameObject;
+		transform.GetChild(localIdx).gameObject.SetActive(true);
+		transform.GetChild(localIdx).GetComponent<IRecvPoolable>().OnRequested();
+
+		return transform.GetChild(localIdx).gameObject;
 	}
 
 	public void ReturnObject(int idx_){
-		transform.GetChild(idx_).GetComponent<IRecvPoolable>().OnReturned();
-		transform.GetChild(idx_).gameObject.SetActive(false);
-		usableIdxQue.Enqueue(idx_);
+		int localIdx = idx_;
+		if(poolId > 0){
+			localIdx = idx_ % poolId;
+		}
+
+		transform.GetChild(localIdx).GetComponent<IRecvPoolable>().OnReturned();
+		transform.GetChild(localIdx).gameObject.SetActive(false);
+		usableIdxQue.Enqueue(localIdx);
 	}
 
 	public IRecvPoolable GetObject(int idx_){
-		if(idx_ >= totalObjCount)
+		int localIdx = idx_;
+		if(poolId > 0){
+			localIdx = idx_ % poolId;
+		}
+
+		if(localIdx >= totalObjCount)
 			return null;
 
-		if(transform.GetChild(idx_).gameObject.activeSelf){
-			return transform.GetChild(idx_).GetComponent<IRecvPoolable>();
+		if(transform.GetChild(localIdx).gameObject.activeSelf){
+			return transform.GetChild(localIdx).GetComponent<IRecvPoolable>();
 		}else{
 			return null;
 		}

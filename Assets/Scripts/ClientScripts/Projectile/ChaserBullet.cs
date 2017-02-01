@@ -14,6 +14,15 @@ public class ChaserBullet : PoolingObject, IHitter {
 		
 	public override void Ready (){
 		StartCoroutine(FlyingRoutine());
+
+		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
+		MsgSegment[] b = {
+			new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
+			new MsgSegment(transform.position),
+			new MsgSegment(MsgAttr.rotation, transform.right)
+		};
+		NetworkMessage nmAppear = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmAppear);
 	}
 
 	public override void OnRequested (){

@@ -26,6 +26,10 @@ public class FlyingProjectile : PoolingObject, IHitter {
 			yield return null;
 		}
 	}
+		
+	public override void OnRequested (){
+		ReturnObject(2f);
+	}
 
 	#region ICollidable implementation
 	public virtual void OnHitSomebody (Collider2D col){

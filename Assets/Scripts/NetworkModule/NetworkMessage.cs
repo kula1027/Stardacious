@@ -75,6 +75,7 @@ public class NetworkMessage {
 		adress = new MsgSegment(senderId, ServerId);
 		header = header_;
 		body = new MsgSegment[1];
+		body[0] = new MsgSegment();
 	}
 
 	public NetworkMessage(MsgSegment header_, MsgSegment body_){

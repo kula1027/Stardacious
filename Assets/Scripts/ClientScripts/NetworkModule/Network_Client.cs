@@ -54,13 +54,11 @@ public class Network_Client {
 			}catch(SocketException e){
 				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString());
 				conCount++;
-				if(conCount > 10){
+				if(conCount > 15){
 					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
 					isConnected = false;
 					return;
 				}
-
-				Thread.Sleep(1000);//TODO sleep 됐을때 프로그램 종료되면 좀비됨
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(e.ToString());
 			}
@@ -68,7 +66,6 @@ public class Network_Client {
 			
 		ConsoleMsgQueue.EnqueMsg("TCP Socket Connected.");
 
-		//InitUdp();
 		InitTcp();
 	}
 
@@ -109,11 +106,14 @@ public class Network_Client {
 
 	private static void ReceivingUDP(){
 		SendUdp(new NetworkMessage());
+		SendUdp(new NetworkMessage());
+		SendUdp(new NetworkMessage());
 
 		byte[] bufByte;
 		try{
 			while(isConnected){
 				bufByte = new byte[512];
+
 				socketUdp.Receive(bufByte);
 				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + Encoding.UTF8.GetString(bufByte), 0);
 				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(Encoding.UTF8.GetString(bufByte)));

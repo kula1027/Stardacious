@@ -109,6 +109,7 @@ public class MsgAttr{
 	public const string addForce = "addf";
 
 	public const string setup = "setup";
+	public const string rtt = "rtt";
 	public class Setup{
 		public const string reqId = "reqId";
 	}

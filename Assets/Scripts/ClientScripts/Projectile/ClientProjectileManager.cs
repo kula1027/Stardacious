@@ -8,6 +8,10 @@ public class ClientProjectileManager : MonoBehaviour {
 	private ObjectPooler[] clientProjPool = new ObjectPooler[NetworkConst.maxPlayer];
 	private ObjectPooler serverProjPool;
 
+	public GameObject netMiniGunBullet;
+	public GameObject netHeavyMine;
+	public GameObject netChaserBullet;
+
 	void Awake(){
 		instance = this;
 
@@ -29,7 +33,6 @@ public class ClientProjectileManager : MonoBehaviour {
 
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
-			
 			CreateProjectile(projPooler, projIdx, networkMessage.Body);
 			break;
 
@@ -57,8 +60,9 @@ public class ClientProjectileManager : MonoBehaviour {
 
 		GameObject proj = null;
 		switch((ProjType)objType){
+		//Heavy
 		case ProjType.MiniGunBullet:
-			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/NetworkMinigunBullet"), projIdx_);
+			proj = pooler_.RequestObjectAt(netMiniGunBullet, projIdx_);
 			proj.GetComponent<NetworkFlyingProjectile>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
@@ -66,11 +70,20 @@ public class ClientProjectileManager : MonoBehaviour {
 			break;
 
 		case ProjType.HeavyMine:
-			proj = pooler_.RequestObjectAt((GameObject)Resources.Load("Projectile/NetworkHeavyMine"), projIdx_);
+			proj = pooler_.RequestObjectAt(netHeavyMine, projIdx_);
 			proj.GetComponent<NetworkHeavyMine>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
 			);
+			break;
+
+		//Doctor
+		case ProjType.ChaserBullet:
+			proj = pooler_.RequestObjectAt(netChaserBullet, projIdx_);
+			/*proj.GetComponent<NetworkChaserBullet>().Initiate(
+				bodies[2].ConvertToV3(),
+				bodies[3].ConvertToV3()
+			);*/
 			break;
 		}
 	}

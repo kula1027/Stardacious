@@ -8,6 +8,10 @@ namespace ServerSide {
 		private ObjectPooler serverProjPool;
 		private ObjectPooler[] clientProjPool = new ObjectPooler[3];
 
+		public GameObject pfHeavyMine;
+		public GameObject pfLocalProj;
+		public GameObject pfNetworkProj;
+
 		void Awake () {
 			instance = this;
 
@@ -46,7 +50,7 @@ namespace ServerSide {
 			GameObject objProj = null;
 			switch((ProjType)objType){
 			case ProjType.HeavyMine:
-				objProj = pool.RequestObjectAt((GameObject)Resources.Load("Projectile/ServerHeavyMine"), poolIdx);
+				objProj = pool.RequestObjectAt(pfHeavyMine, poolIdx);
 				objProj.GetComponent<ServerHeavyMine>().Initiate(
 					sender_,
 					objType,
@@ -56,7 +60,7 @@ namespace ServerSide {
 				break;
 
 			case ProjType.MiniGunBullet:
-				objProj = pool.RequestObjectAt((GameObject)Resources.Load("Projectile/ServerNetworkProjectile"), poolIdx);
+				objProj = pool.RequestObjectAt(pfNetworkProj, poolIdx);
 				objProj.GetComponent<ServerFlyingProjectile>().Initiate(
 					sender_,
 					objType,

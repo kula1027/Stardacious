@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 public class ObjectPooler : MonoBehaviour {
-	private const int poolIdRange = 20000;
+	private const int poolIdRange = 100000;
 	List<PoolList> managingPool = new List<PoolList>();
 
 	public GameObject RequestObject(GameObject go_){
@@ -21,7 +21,7 @@ public class ObjectPooler : MonoBehaviour {
 	public GameObject RequestObjectAt(GameObject go_, int idx_){
 		IRecvPoolable op = go_.GetComponent<IRecvPoolable>();
 
-		PoolList mPool = GetManagingPool(op.GetType());
+		PoolList mPool = GetManagingPoolAt(idx_, op.GetType());
 
 		GameObject rObj = mPool.RequestObjectAt(go_, idx_);
 		rObj.GetComponent<IRecvPoolable>().SetPooler(this);
@@ -43,6 +43,7 @@ public class ObjectPooler : MonoBehaviour {
 		managingPool[pId].ReturnObject(idx_ % poolIdRange);
 	}
 
+	//self pool get 전용
 	private PoolList GetManagingPool(Type t){
 		for(int loop = 0; loop < managingPool.Count; loop++){
 			if(managingPool[loop].managingType.Equals(t))
@@ -56,10 +57,33 @@ public class ObjectPooler : MonoBehaviour {
 		pList = objPoolList.AddComponent<PoolList>();
 		pList.managingType = t;
 		pList.PoolId = managingPool.Count * poolIdRange;
-
 		managingPool.Add(pList);
 
 		return pList;
+	}
+
+	//other pool get 전용
+	private PoolList GetManagingPoolAt(int idx, Type t){
+		int poolIdx = idx / poolIdRange;
+
+		if(managingPool.Count <= poolIdx){
+			int addCount = poolIdx - managingPool.Count + 1;
+			for(int loop = 0; loop < addCount; loop++){
+				PoolList pList;
+				GameObject objPoolList = new GameObject();
+				objPoolList.transform.SetParent(transform);
+				objPoolList.name = "EmptyPool";
+				pList = objPoolList.AddComponent<PoolList>();
+
+				pList.PoolId = managingPool.Count * poolIdRange;
+				managingPool.Add(pList);
+			}
+		}
+
+		managingPool[poolIdx].managingType = t;
+		managingPool[poolIdx].gameObject.name = "Pool_" + t;
+
+		return managingPool[poolIdx];
 	}
 }
 
@@ -69,17 +93,14 @@ public interface IReceivable{
 
 
 public interface IObjectPoolable{
-
 	/// <summary>
 	/// 오브젝트 풀에서의 인덱스로 사용할 변수 반환.
 	/// </summary>
-	/// <returns>The op index.</returns>
 	int GetOpIndex ();
 
 	/// <summary>
 	/// 오브젝트 풀에서의 인덱스로 사용할 변수에 값 설정.
 	/// </summary>
-	/// <returns>The op index.</returns>
 	void SetOpIndex (int index);
 
 	void SetPooler(ObjectPooler objectPooler);

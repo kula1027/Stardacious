@@ -34,7 +34,7 @@ public class NetworkProjectile : PoolingObject {
 		}
 	}
 
-	Interpolater itpl;
+	Interpolater itpl = new Interpolater(Vector3.zero);
 	public IEnumerator PositionRoutine(){
 		while(true){
 			transform.position = itpl.Interpolate();

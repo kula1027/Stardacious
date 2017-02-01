@@ -25,7 +25,9 @@ namespace ServerSide{
 		}
 
 		private void FireProjectile(){
-			GameObject go = ServerProjectileManager.instance.GetLocalProjPool().RequestObject((GameObject)Resources.Load("Projectile/ServerLocalProjectile"));
+			GameObject go = ServerProjectileManager.instance.GetLocalProjPool().RequestObject(
+				ServerProjectileManager.instance.pfLocalProj
+			);
 			go.transform.position = transform.position + Vector3.up * 2f;
 			go.GetComponent<ServerLocalProjectile>().Ready();
 		}

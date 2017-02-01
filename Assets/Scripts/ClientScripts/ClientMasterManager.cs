@@ -14,7 +14,7 @@ public class ClientMasterManager : MonoBehaviour {
 		KingGodClient.instance.OnEnterPlayScene();
 	}
 
-	void Start(){		
+	void Start(){
 		InitiatePlayerCharacter();
 	}
 		
@@ -30,14 +30,14 @@ public class ClientMasterManager : MonoBehaviour {
 			break;
 
 			default:
-			pCharacter = (GameObject)Instantiate(pfHeavy);
+			pCharacter = (GameObject)Instantiate(pfDoctor);
 			break;
 		}
 
 		CharacterCtrl.instance.Initialize ();
 
 		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
-	}				
+	}
 
 	public void OnRecv(NetworkMessage networkMessage){
 		switch(networkMessage.Body[0].Attribute){

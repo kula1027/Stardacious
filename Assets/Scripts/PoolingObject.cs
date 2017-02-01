@@ -19,8 +19,7 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 
 	private IEnumerator ReturningRoutine(float secs_){
 		yield return new WaitForSeconds(secs_);
-
-		pooler.ReturnObject(poolingIdx);
+		ReturnObject();
 	}
 
 	public virtual void Ready(){}

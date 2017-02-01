@@ -9,6 +9,7 @@ public enum ProjType{
 	ChaserBullet,
 	GuidanceDevice,
 	BindBullet,
+	TEST
 }
 
 public enum ChIdx{

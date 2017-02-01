@@ -114,10 +114,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	private const float machineGunFireRate = 0.2f;
 	private IEnumerator MachineGunRoutine(){
-		GameObject thatThing = (GameObject)Resources.Load("Projectile/MinigunBullet");//TODO
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
-			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
+			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfMinigunBullet);
 			go.transform.position = trGunMuzzle.position;
 			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
 			go.transform.right = trGunMuzzle.right;
@@ -134,8 +133,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	private HeavyMine dropMine;
 	private void DropMine(){
 		mineDropped = true;
-		GameObject thatThing = (GameObject)Resources.Load("Projectile/HeavyMine");//TODO
-		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(thatThing);
+		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHeavyMine);
 
 		dropMine = go.GetComponent<HeavyMine>();
 		dropMine.transform.position = transform.position + new Vector3(0, 2, 0);
