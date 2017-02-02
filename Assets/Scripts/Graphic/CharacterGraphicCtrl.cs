@@ -18,4 +18,18 @@ public abstract class CharacterGraphicCtrl : MonoBehaviour {
 	public abstract void Grounded();
 	public abstract void StartNormalAttack();
 	public abstract void StopNormalAttack();
+
+	protected SpriteRenderer[] unitParts;
+	public void Twinkle(){
+		StartCoroutine (TwinkleColorAnimation ());
+	}
+	IEnumerator TwinkleColorAnimation(){
+		float colorR = 0;;
+		while (true) {
+			for (int i = 0; i < unitParts.Length; i++) {
+				unitParts [i].color = new Color (colorR, 0, 0, 1);
+			}
+			yield return null;
+		}
+	}
 }
