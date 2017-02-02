@@ -314,16 +314,18 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 	//총알 생성 시점
 	public void ShootBullet(){
-		switch (nextBulletType) {
-		case DoctorBulletType.Normal:			
-			master.OnShootNormal();
-			break;
-		case DoctorBulletType.Bind:
-			master.OnShootBind();
-			break;
-		case DoctorBulletType.Device:
-			master.OnShootDevice();
-			break;
+		if(master){
+			switch (nextBulletType) {
+			case DoctorBulletType.Normal:		
+				master.OnShootNormal();
+				break;
+			case DoctorBulletType.Bind:
+				master.OnShootBind();
+				break;
+			case DoctorBulletType.Device:
+				master.OnShootDevice();
+				break;
+			}
 		}
 
 		nextBulletType = DoctorBulletType.Normal;

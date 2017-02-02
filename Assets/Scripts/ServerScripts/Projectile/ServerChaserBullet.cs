@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace ServerSide{
-	public class ServerFlyingProjectile : PoolingObject {
+namespace ServerSide {
+	public class ServerChaserBullet : PoolingObject {
 		private int ownerId;
 
 		public override void OnRecv (MsgSegment[] bodies){		
@@ -13,7 +13,7 @@ namespace ServerSide{
 			}
 		}
 
-		public void Initiate(int ownerId_, int objType_, Vector3 startPos_, Vector3 rotRight_){
+		public void Initiate(int ownerId_, int objType_, Vector3 startPos_, Vector3 rotRight_, MsgSegment targetInfo){
 			ownerId = ownerId_;
 			objType = objType_;
 
@@ -22,11 +22,14 @@ namespace ServerSide{
 				new MsgSegment(objType.ToString()),
 				new MsgSegment(ownerId.ToString(), GetOpIndex().ToString()),
 				new MsgSegment(startPos_),
-				new MsgSegment(MsgAttr.rotation, rotRight_)
+				new MsgSegment(MsgAttr.rotation, rotRight_),
+				targetInfo
 			};
+
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 			Network_Server.BroadCastTcp(nmAppear, ownerId);
 		}
+
 
 		public override void OnReturned (){
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());

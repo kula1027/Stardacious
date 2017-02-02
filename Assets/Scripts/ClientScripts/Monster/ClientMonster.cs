@@ -32,8 +32,6 @@ public class ClientMonster : PoolingObject, IHittable {
 	}
 
 	public override void OnDie (){
-		base.OnDie ();
-
 		hTrigger.gameObject.SetActive(false);
 	}
 

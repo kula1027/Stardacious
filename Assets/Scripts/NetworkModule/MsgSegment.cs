@@ -4,7 +4,7 @@ using System.Text;
 
 public class MsgSegment {
 	private const string TagSpliter = ":";
-	private const string NotInitialized = "ni";
+	public const string NotInitialized = "ni";
 
 	private string attribute = null;
 	public string Attribute{
@@ -146,7 +146,7 @@ public class MsgAttr{
 
 	public const string projectile = "proj";
 	public class Projectile{
-
+		public const string attach = "atch";
 	}
 
 

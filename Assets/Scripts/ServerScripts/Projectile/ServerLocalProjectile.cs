@@ -65,7 +65,7 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 			MsgSegment[] b = {
 				new MsgSegment(MsgAttr.destroy),
-				new MsgSegment(NetworkMessage.ServerId, GetOpIndex().ToString()),
+				new MsgSegment(NetworkMessage.ServerId),
 				new MsgSegment(transform.position)
 			};
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);

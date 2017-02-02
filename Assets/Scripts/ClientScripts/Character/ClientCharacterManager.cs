@@ -7,7 +7,7 @@ public class ClientCharacterManager : MonoBehaviour {
 	public GameObject pfNetworkDoctor;
 	public GameObject pfNetworkHeavy;
 
-	private IReceivable[] characters = new IReceivable[NetworkConst.maxPlayer];
+	private NetworkCharacter[] characters = new NetworkCharacter[NetworkConst.maxPlayer];
 
 	void Awake(){
 		instance = this;
@@ -28,8 +28,12 @@ public class ClientCharacterManager : MonoBehaviour {
 		characters[idx_] = null;
 	}
 
-	public IReceivable GetCharacter(int idx_){
-		return characters[idx_];
+	public GameObject GetCharacter(int idx_){
+		if(idx_ == Network_Client.NetworkId){
+			return CharacterCtrl.instance.gameObject;
+		}else{
+			return characters[idx_].gameObject;
+		}
 	}
 
 	private void CreateNetCharacter(int idx_, int chIdx_){
@@ -43,8 +47,8 @@ public class ClientCharacterManager : MonoBehaviour {
 			go = (GameObject)Instantiate(pfNetworkHeavy);
 			break;
 		}
-		characters[idx_] = go.GetComponent<IReceivable>();
-		go.GetComponent<NetworkCharacter>().NetworkId = idx_;
+		characters[idx_] = go.GetComponent<NetworkCharacter>();
+		characters[idx_].NetworkId = idx_;
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){		

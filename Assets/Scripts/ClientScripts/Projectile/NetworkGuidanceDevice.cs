@@ -1,6 +1,59 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkGuidanceDevice : MonoBehaviour {
+public class NetworkGuidanceDevice : NetworkFlyingProjectile {	
+	private Vector3 localPos;
+	private GameObject targetObj;
 
+	void Awake(){
+		flyingSpeed = 15f;
+	}
+		
+	public override void OnReturned (){
+	}
+
+	public override void OnRequested (){
+		ReturnObject(3f);
+	}
+
+	public override void OnRecv (MsgSegment[] bodies){
+		base.OnRecv (bodies);
+
+		switch(bodies[0].Attribute){
+		case MsgAttr.Projectile.attach:
+			StopReturning();
+			ReturnObject(11f);
+
+			if(flyingRoutine != null){
+				StopCoroutine(flyingRoutine);
+			}
+			targetObj = FindTarget(bodies[2]);
+			localPos = bodies[3].ConvertToV3();
+			StartCoroutine(AttachRoutine());
+			break;
+		}
+	}
+
+	private IEnumerator AttachRoutine(){
+		while(true){
+			transform.position = targetObj.transform.position + localPos;
+
+			yield return null;
+		}
+	}
+
+	private GameObject FindTarget(MsgSegment targetInfo){
+		Debug.Log(targetInfo.Content);
+		int targetId = int.Parse(targetInfo.Content);
+
+		if(targetInfo.Attribute.Equals(MsgAttr.character)){
+			return ClientCharacterManager.instance.GetCharacter(targetId);
+		}
+		if(targetInfo.Attribute.Equals(MsgAttr.monster)){
+			Debug.Log("Monster Attach");
+			//ClientStageManager.instance.get
+		}
+
+		return null;
+	}
 }

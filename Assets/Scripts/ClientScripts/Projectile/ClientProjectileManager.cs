@@ -8,9 +8,10 @@ public class ClientProjectileManager : MonoBehaviour {
 	private ObjectPooler[] clientProjPool = new ObjectPooler[NetworkConst.maxPlayer];
 	private ObjectPooler serverProjPool;
 
-	public GameObject netMiniGunBullet;
-	public GameObject netHeavyMine;
-	public GameObject netChaserBullet;
+	public GameObject pfMiniGunBullet;
+	public GameObject pfHeavyMine;
+	public GameObject pfChaserBullet;
+	public GameObject pfGuidanceDevice;
 
 	void Awake(){
 		instance = this;
@@ -27,16 +28,18 @@ public class ClientProjectileManager : MonoBehaviour {
 
 	public void OnRecv(NetworkMessage networkMessage){
 		string ownerId = networkMessage.Body[1].Attribute;
-		int projIdx = int.Parse(networkMessage.Body[1].Content);
+		int projIdx;
 
 		ObjectPooler projPooler = GetProjPool(ownerId);
 
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
+			projIdx = int.Parse(networkMessage.Body[1].Content);
 			CreateProjectile(projPooler, projIdx, networkMessage.Body);
 			break;
 
 			default:
+			projIdx = int.Parse(networkMessage.Header.Content);
 			IRecvPoolable obj = projPooler.GetObject(projIdx);
 			if(obj != null)
 				obj.OnRecv(networkMessage.Body);
@@ -62,7 +65,7 @@ public class ClientProjectileManager : MonoBehaviour {
 		switch((ProjType)objType){
 		//Heavy
 		case ProjType.MiniGunBullet:
-			proj = pooler_.RequestObjectAt(netMiniGunBullet, projIdx_);
+			proj = pooler_.RequestObjectAt(pfMiniGunBullet, projIdx_);
 			proj.GetComponent<NetworkFlyingProjectile>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
@@ -70,7 +73,7 @@ public class ClientProjectileManager : MonoBehaviour {
 			break;
 
 		case ProjType.HeavyMine:
-			proj = pooler_.RequestObjectAt(netHeavyMine, projIdx_);
+			proj = pooler_.RequestObjectAt(pfHeavyMine, projIdx_);
 			proj.GetComponent<NetworkHeavyMine>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
@@ -79,11 +82,20 @@ public class ClientProjectileManager : MonoBehaviour {
 
 		//Doctor
 		case ProjType.ChaserBullet:
-			proj = pooler_.RequestObjectAt(netChaserBullet, projIdx_);
-			/*proj.GetComponent<NetworkChaserBullet>().Initiate(
+			proj = pooler_.RequestObjectAt(pfChaserBullet, projIdx_);
+			proj.GetComponent<NetworkChaserBullet>().Initiate(
+				bodies[2].ConvertToV3(),//start pos
+				bodies[3].ConvertToV3(),//rot
+				bodies[4]//targetinfo
+			);
+			break;
+
+		case ProjType.GuidanceDevice:
+			proj = pooler_.RequestObjectAt(pfGuidanceDevice, projIdx_);
+			proj.GetComponent<NetworkGuidanceDevice>().Initiate(
 				bodies[2].ConvertToV3(),
 				bodies[3].ConvertToV3()
-			);*/
+			);
 			break;
 		}
 	}

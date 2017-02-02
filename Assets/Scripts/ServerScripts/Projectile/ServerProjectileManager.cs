@@ -10,7 +10,9 @@ namespace ServerSide {
 
 		public GameObject pfHeavyMine;
 		public GameObject pfLocalProj;
-		public GameObject pfNetworkProj;
+		public GameObject pfFlyingProj;
+		public GameObject pfChaserBullet;
+		public GameObject pfGuidanceDevice;
 
 		void Awake () {
 			instance = this;
@@ -60,12 +62,33 @@ namespace ServerSide {
 				break;
 
 			case ProjType.MiniGunBullet:
-				objProj = pool.RequestObjectAt(pfNetworkProj, poolIdx);
+				objProj = pool.RequestObjectAt(pfFlyingProj, poolIdx);
 				objProj.GetComponent<ServerFlyingProjectile>().Initiate(
 					sender_,
 					objType,
 					bodies[1].ConvertToV3(), 
 					bodies[2].ConvertToV3()
+				);
+				break;
+
+			case ProjType.ChaserBullet:
+				objProj = pool.RequestObjectAt(pfChaserBullet, poolIdx);
+				objProj.GetComponent<ServerChaserBullet>().Initiate(
+					sender_,
+					objType,
+					bodies[1].ConvertToV3(),//start pos
+					bodies[2].ConvertToV3(),//rotation
+					bodies[3]//targetInfo
+				);
+				break;
+
+			case ProjType.GuidanceDevice:
+				objProj = pool.RequestObjectAt(pfGuidanceDevice, poolIdx);
+				objProj.GetComponent<ServerGuidanceDevice>().Initiate(
+					sender_,
+					objType,
+					bodies[1].ConvertToV3(),//start pos
+					bodies[2].ConvertToV3()//rotation
 				);
 				break;
 			}

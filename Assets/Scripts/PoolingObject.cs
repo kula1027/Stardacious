@@ -9,12 +9,20 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 	private int poolingIdx;
 	private ObjectPooler pooler;
 
+	private Coroutine returingRoutine;
+
 	protected void ReturnObject(){
 		pooler.ReturnObject(poolingIdx);
 	}
 
 	protected void ReturnObject(float secondsAfter){
-		StartCoroutine(ReturningRoutine(secondsAfter));
+		returingRoutine = StartCoroutine(ReturningRoutine(secondsAfter));
+	}
+
+	protected void StopReturning(){
+		if(returingRoutine != null){
+			StopCoroutine(returingRoutine);
+		}
 	}
 
 	private IEnumerator ReturningRoutine(float secs_){
@@ -38,6 +46,7 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 	}
 
 	public virtual void OnRequested (){
+		StopReturning();
 	}
 
 	public virtual void OnReturned (){
