@@ -39,6 +39,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		recentAimDirection = ShootDirection.Front;
 
 		lowerState = HeavyLowerState.Idle;
+
+		unitParts = GetComponentsInChildren<SpriteRenderer> ();
 	}
 
 	public override void Initialize (){
@@ -135,26 +137,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.A)) {
-			StartNormalAttack ();
-		}
-		if (Input.GetKeyUp (KeyCode.A)) {
-			StopNormalAttack ();
-		}
-		if (Input.GetKeyDown (KeyCode.S)) {
-			WeaponSwap ();
-		}
-		if(Input.GetKeyDown (KeyCode.RightArrow)){
-			SetDirection (ControlDirection.Right);
-		}
-		if(Input.GetKeyUp (KeyCode.RightArrow)){
-			SetDirection (ControlDirection.Middle);
-		}
-	
-		if (Input.GetKeyDown (KeyCode.G)){
-			AnimationFreeze ();
-		}
-		if (Input.GetKeyUp (KeyCode.G)) {
-			AnimationResume ();
+			Debug.Log ("a");
+			Twinkle ();
 		}
 	}
 

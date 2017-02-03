@@ -6,7 +6,7 @@ public enum DoctorLowerState{Idle, Walk, Run, Hover}
 public enum DoctorBulletType{Normal, Bind, Device}
 public class DoctorGraphicController : CharacterGraphicCtrl {
 
-	public CharacterCtrl_Doctor master;	//TODO Char Doctor
+	public CharacterCtrl_Doctor master;
 
 	//Child
 	public SkeletonAnimation hair;
@@ -36,8 +36,10 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		nextBulletType = DoctorBulletType.Normal;
 
 		lowerState = DoctorLowerState.Idle;
-		//HACK : Delete this
-		controlFlags = new ControlFlags();
+
+		unitParts = GetComponentsInChildren<SpriteRenderer> ();
+		hairRenderer = GetComponentInChildren<SkeletonRenderer> ();
+		//hairRenderer.skeleton.SetColor (new Color (0, 0, 0, 1));
 	}
 		
 	public override void Initialize (){
@@ -118,26 +120,8 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	}
 
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			SetDirection (ControlDirection.Left);
-		}
-		if (Input.GetKeyUp (KeyCode.LeftArrow)) {
-			SetDirection (ControlDirection.Middle);
-		}
 		if (Input.GetKeyDown (KeyCode.A)) {
-			StartNormalAttack ();
-		}
-		if (Input.GetKeyUp (KeyCode.A)) {
-			StopNormalAttack ();
-		}
-		if (Input.GetKeyDown (KeyCode.S)) {
-			StartEnergyCharge ();
-		}
-		if (Input.GetKeyUp (KeyCode.S)) {
-			EndAndShootEnergyCharge ();
-		}
-		if (Input.GetKeyDown (KeyCode.D)) {
-			Jump ();
+			Twinkle ();
 		}
 	}
 
@@ -334,6 +318,38 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	//에너지볼 이동 시작
 	public void ShootEnergy(){
 		
+	}
+	#endregion
+
+	#region Twinkle
+	private SkeletonRenderer hairRenderer;
+	public override void Twinkle(){
+		if (isTwinkling) {
+			StopCoroutine (DoctorTwinkleColorAnimation ());	
+		}
+		StartCoroutine (DoctorTwinkleColorAnimation ());
+	}
+	IEnumerator DoctorTwinkleColorAnimation(){
+		isTwinkling = true;
+
+		float colorR = 0.5f;
+		while (true) {
+			colorR -= Time.deltaTime * 5;
+			if (colorR < 0) {
+				colorR = 0;
+			}
+			for (int i = 0; i < unitParts.Length; i++) {
+				unitParts [i].color = new Color (colorR, 0, 0, 1);
+				//hairRenderer.skeleton.SetColor (new Color (1, 1 - colorR, 1 - colorR, 1));
+				hairRenderer.skeleton.SetColor (new Color (colorR, 0, 0, 1));
+			}
+			if (colorR <=  0) {
+				break;
+			}
+			yield return null;
+		}
+
+		isTwinkling = false;
 	}
 	#endregion
 }
