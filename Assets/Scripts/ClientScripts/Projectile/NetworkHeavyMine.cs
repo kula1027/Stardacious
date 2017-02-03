@@ -3,9 +3,9 @@ using System.Collections;
 
 public class NetworkHeavyMine : PoolingObject {
 
-	public void Initiate(Vector3 startPos_, Vector3 throwDir_){
-		transform.position = startPos_;
-		GetComponent<Rigidbody2D>().AddForce(throwDir_);
+	public void Initiate(MsgSegment[] bodies_){
+		transform.position = bodies_[1].ConvertToV3();
+		GetComponent<Rigidbody2D>().AddForce(bodies_[2].ConvertToV3());
 	}
 
 	public override void OnRecv (MsgSegment[] bodies){

@@ -21,14 +21,13 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 
 		switch(bodies[0].Attribute){
 		case MsgAttr.Projectile.attach:
-			StopReturning();
 			ReturnObject(11f);
 
 			if(flyingRoutine != null){
 				StopCoroutine(flyingRoutine);
 			}
-			targetObj = FindTarget(bodies[2]);
-			localPos = bodies[3].ConvertToV3();
+			targetObj = FindTarget(bodies[1]);
+			localPos = bodies[2].ConvertToV3();
 			StartCoroutine(AttachRoutine());
 			break;
 		}
@@ -43,7 +42,6 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	}
 
 	private GameObject FindTarget(MsgSegment targetInfo){
-		Debug.Log(targetInfo.Content);
 		int targetId = int.Parse(targetInfo.Content);
 
 		if(targetInfo.Attribute.Equals(MsgAttr.character)){

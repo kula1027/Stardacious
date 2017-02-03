@@ -29,11 +29,13 @@ namespace ServerSide {
 
 		public void OnRecv(NetworkMessage networkMessage){
 			int sender = int.Parse(networkMessage.Adress.Attribute);
+			Network_Server.BroadCastTcp(networkMessage, sender);
 
+			/*
 			switch(networkMessage.Header.Content){
 			case MsgAttr.create:
 				CreateProjectile(sender, networkMessage.Body);
-				break;	
+				break;
 
 				default:
 				int projIdx = int.Parse(networkMessage.Header.Content);
@@ -41,7 +43,7 @@ namespace ServerSide {
 				if(obj != null)
 					obj.OnRecv(networkMessage.Body);
 				break;
-			}
+			}*/
 		}
 
 		private void CreateProjectile(int sender_, MsgSegment[] bodies){

@@ -147,6 +147,7 @@ public class MsgAttr{
 	public const string projectile = "proj";
 	public class Projectile{
 		public const string attach = "atch";
+		public const string fire = "fire";
 	}
 
 

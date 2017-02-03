@@ -101,12 +101,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 	private bool isChargingEnergy = false;
 	private DoctorEnergyBall activeEnergyBall;
-	public void ChargeEnergyBall(){
+	private void ChargeEnergyBall(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfEnergyBall);
 		go.transform.position = transform.position + Vector3.up * 5;
 
 		activeEnergyBall = go.GetComponent<DoctorEnergyBall>();
-
+		activeEnergyBall.Ready();
 	}
 
 	public void ThrowEnegyBall(){

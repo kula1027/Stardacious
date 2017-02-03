@@ -5,9 +5,9 @@ public class NetworkFlyingProjectile : PoolingObject {
 	protected float flyingSpeed = 20f;
 	protected Coroutine flyingRoutine;
 
-	public void Initiate(Vector3 startPos_, Vector3 rotRight_){
-		transform.position = startPos_;
-		transform.right = rotRight_;
+	public void Initiate(MsgSegment[] _bodies){
+		transform.position = _bodies[1].ConvertToV3();
+		transform.right = _bodies[2].ConvertToV3();
 
 		flyingRoutine = StartCoroutine(FlyingRoutine());
 	}

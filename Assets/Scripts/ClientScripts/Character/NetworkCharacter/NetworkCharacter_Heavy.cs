@@ -19,7 +19,7 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 			break;
 
 		case 1:
-
+			//Mine Throw, no anim
 			break;
 
 		case 2:

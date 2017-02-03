@@ -10,7 +10,6 @@ public class ClientStageManager : MonoBehaviour {
 	}
 
 	private GameObject[] goStage = new GameObject[1];	
-	private Transform safeBar;
 
 	private ObjectPooler monsterPooler;
 
@@ -18,7 +17,6 @@ public class ClientStageManager : MonoBehaviour {
 		instance = this;
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
 
-		safeBar = GameObject.Find("SafeBar").transform;
 	}
 
 	void Start(){
@@ -29,7 +27,7 @@ public class ClientStageManager : MonoBehaviour {
 		
 	private void LoadStage(int idx){
 		if(idx < 1){
-			Debug.Log("Stage Idx has to be bigger than 0");
+			Debug.Log("Stage Idx less than 0");
 			return;
 		}
 

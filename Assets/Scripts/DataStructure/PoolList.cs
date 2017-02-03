@@ -55,10 +55,14 @@ public class PoolList : MonoBehaviour{
 			totalObjCount += incPerInstantiate;
 		}
 
-		transform.GetChild(localIdx).gameObject.SetActive(true);
-		transform.GetChild(localIdx).GetComponent<IRecvPoolable>().OnRequested();
+		GameObject rObj = transform.GetChild(localIdx).gameObject;
+		if(rObj.activeSelf){
+			rObj.GetComponent<IRecvPoolable>().OnReturned();
+		}
+		rObj.SetActive(true);
+		rObj.GetComponent<IRecvPoolable>().OnRequested();
 
-		return transform.GetChild(localIdx).gameObject;
+		return rObj;
 	}
 
 	public void ReturnObject(int idx_){

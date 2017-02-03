@@ -6,15 +6,26 @@ public class NetworkChaserBullet : PoolingObject {
 
 	public StardaciousObject targetObject;
 
-	public void Initiate(Vector3 startPos_, Vector3 rot_, MsgSegment targetInfo){
-		transform.position = startPos_;
-		transform.right = rot_;
+	public void Initiate(MsgSegment[] bodies_){
+		transform.position = bodies_[1].ConvertToV3();
+		transform.right = bodies_[2].ConvertToV3();
 
-		if(targetInfo.Attribute.Equals(MsgSegment.NotInitialized)){
+		MsgSegment targetInfo = bodies_[3];
+		string strTarget = targetInfo.Attribute;
+		if(strTarget.Equals(MsgSegment.NotInitialized)){
 			ReturnObject(3f);
 			StartCoroutine(FlyingRoutine());
-		}else{
-			
+		}else{	
+			int targetId = int.Parse(targetInfo.Content);
+			if(strTarget.Equals(MsgAttr.character)){				
+				targetObject = ClientCharacterManager.instance.GetCharacter(targetId).GetComponent<StardaciousObject>();
+			}else if(strTarget.Equals(MsgAttr.monster)){
+
+			}else{
+				Debug.LogError("NetChaserBullet no target recv");
+			}
+			ReturnObject(11);
+			StartCoroutine(ChasingRoutine());
 		}
 	}
 
@@ -32,17 +43,19 @@ public class NetworkChaserBullet : PoolingObject {
 
 	private IEnumerator ChasingRoutine(){
 		Vector3 targetDir;
+		Vector3 targetPos;
 
 		while(true){
-			if(targetObject.IsDead){
+			if(targetObject == null || targetObject.IsDead == true){
 				ReturnObject();
 				yield break;
-			}else{
-				targetDir = (targetObject.transform.position - transform.position).normalized;
-				transform.right = Vector3.MoveTowards(transform.right, targetDir, 0.1f);
-				transform.position += transform.right * flyingSpeed * Time.deltaTime;
 			}
-				
+
+			targetPos = targetObject.transform.position + new Vector3(0, 2, 0);
+			targetDir = (targetPos - transform.position).normalized;
+			transform.right = Vector2.Lerp(transform.right, targetDir, Time.deltaTime * 10);
+			transform.position += transform.right * flyingSpeed * Time.deltaTime;
+
 			yield return null;
 		}
 	}

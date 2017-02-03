@@ -16,6 +16,7 @@ public class PoolingObject : StardaciousObject, IRecvPoolable {
 	}
 
 	protected void ReturnObject(float secondsAfter){
+		StopReturning();
 		returingRoutine = StartCoroutine(ReturningRoutine(secondsAfter));
 	}
 
