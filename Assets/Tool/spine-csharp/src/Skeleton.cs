@@ -43,7 +43,7 @@ namespace Spine {
 		internal ExposedList<IUpdatable> updateCache = new ExposedList<IUpdatable>();
 		internal ExposedList<Bone> updateCacheReset = new ExposedList<Bone>();
 		internal Skin skin;
-		internal float r = 1, g = 1, b = 1, a = 1;
+		internal float r = 0, g = 0, b = 0, a = 1;
 		internal float time;
 		internal bool flipX, flipY;
 		internal float x, y;
