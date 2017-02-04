@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkFlyingProjectile : PoolingObject {
-	protected float flyingSpeed = 20f;
+public class NetworkServerProjectile : PoolingObject, IHitter {
+	protected float flyingSpeed = 10f;
 	protected Coroutine flyingRoutine;
 
 	public void Initiate(MsgSegment[] bodies_){
@@ -12,11 +12,8 @@ public class NetworkFlyingProjectile : PoolingObject {
 		flyingRoutine = StartCoroutine(FlyingRoutine());
 	}
 
-	public override void OnReturned (){
-	}
-
 	public override void OnRequested (){
-		ReturnObject(3f);
+		ReturnObject(10f);
 	}
 
 	private IEnumerator FlyingRoutine(){
@@ -27,11 +24,10 @@ public class NetworkFlyingProjectile : PoolingObject {
 		}
 	}
 
-	public override void OnRecv (MsgSegment[] bodies){
-		switch(bodies[0].Attribute){
-		case MsgAttr.destroy:			
-			ReturnObject();
-			break;
-		}
+	#region IHitter implementation
+	public void OnHitSomebody (Collider2D col){
+		ReturnObject();
 	}
+	#endregion
+	
 }

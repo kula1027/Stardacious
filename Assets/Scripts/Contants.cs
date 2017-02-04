@@ -10,7 +10,7 @@ public enum ProjType{
 	GuidanceDevice,
 	BindBullet,
 	EnergyBall,
-	TEST
+	SpiderBullet
 }
 
 public enum ChIdx{

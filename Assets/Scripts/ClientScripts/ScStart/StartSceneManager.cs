@@ -32,10 +32,9 @@ public class StartSceneManager : MonoBehaviour {
 
 	void Start(){
 		configPanel.Show();
+		KingGodClient.instance.OnEnterStartScene();
 	}
 
-	int rttCount = 0;
-	double rttSum = 0;
 	public void OnRecv(NetworkMessage networkMessage){
 		switch(networkMessage.Body[0].Attribute){
 			case MsgAttr.Setup.reqId:

@@ -8,24 +8,28 @@ public class KingGodClient : MonoBehaviour {
 	public static KingGodClient instance;
 
 	void Awake(){
-		DontDestroyOnLoad(gameObject);
-		instance = this;
-		networkTranslator = GetComponent<NetworkTranslator>();
+		if(instance == null){
+			DontDestroyOnLoad(gameObject);
+			instance = this;
+			networkTranslator = GetComponent<NetworkTranslator>();
 
-		SetConsoleParser();
+			SetConsoleParser();
+		}else{
+			Destroy(gameObject);
+		}
 	}
 
-	void Start () {
-		networkTranslator.SetMsgHandler(gameObject.AddComponent<Client_StartMsgHandler>());
-	}		
-
-	public void OnExitPlayScene(){
-		Destroy(gameObject.GetComponent<MsgHandler>());
+	public void OnEnterStartScene(){
+		if(gameObject.GetComponent<MsgHandler>()){
+			Destroy(gameObject.GetComponent<MsgHandler>());
+		}
 		networkTranslator.SetMsgHandler(gameObject.AddComponent<Client_StartMsgHandler>());
 	}
 
 	public void OnEnterPlayScene(){
-		Destroy(gameObject.GetComponent<MsgHandler>());
+		if(gameObject.GetComponent<MsgHandler>()){
+			Destroy(gameObject.GetComponent<MsgHandler>());
+		}
 		networkTranslator.SetMsgHandler(gameObject.AddComponent<Client_MsgHandler>());
 	}
 

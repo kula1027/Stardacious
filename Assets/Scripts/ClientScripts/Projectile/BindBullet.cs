@@ -2,22 +2,29 @@
 using System.Collections;
 
 public class BindBullet : FlyingProjectile {
-	void Awake(){
-		hitObject = new HitObject(0);
-		objType = (int)ProjType.BindBullet;	
-	}
+	public const float freezeTime = 5f;
 
-	public override void OnRequested (){		
-		ReturnObject(5);
+	void Awake(){
+		hitObject = new HoBind();
+		objType = (int)ProjType.BindBullet;	
 	}
 
 	public override void OnHitSomebody (Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 
+		if(hbt){
+			hbt.OnHit(hitObject);
+		}
+
 		ReturnObject();
 	}
 
 	public override void OnReturned (){
-		
+		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
+		MsgSegment[] b = {
+			new MsgSegment(MsgAttr.destroy)
+		};
+		NetworkMessage nmDestroy = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmDestroy);
 	}
 }

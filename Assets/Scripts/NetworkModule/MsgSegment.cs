@@ -107,6 +107,7 @@ public class MsgAttr{
 	public const string hit = "hit";
 	public const string dead = "dead";
 	public const string addForce = "addf";
+	public const string freeze = "frz";
 
 	public const string setup = "setup";
 	public const string rtt = "rtt";
@@ -117,14 +118,8 @@ public class MsgAttr{
 	public const string misc = "misc";
 	public class Misc{
 		public const string exitClient = "exit";
-	}
-
-
-	public const string local = "local";
-	public class Local{
 		public const string disconnect = "disc";
 	}
-
 
 	public const string stage = "stg";
 	public class Stage{

@@ -12,7 +12,12 @@ public class ClientProjectileManager : MonoBehaviour {
 	public GameObject pfHeavyMine;
 	public GameObject pfChaserBullet;
 	public GameObject pfGuidanceDevice;
+	public GameObject pfBindBullet;
 	public GameObject pfEnergyBall;
+
+	//Monster
+	public GameObject pfSpiderBullet;
+
 
 	void Awake(){
 		instance = this;
@@ -25,6 +30,11 @@ public class ClientProjectileManager : MonoBehaviour {
 
 	public ObjectPooler GetLocalProjPool(){
 		return clientProjPool[Network_Client.NetworkId];
+	}
+
+	public void ResetClientPool(int idx_){
+		clientProjPool[idx_].ClearPool();
+		clientProjPool[idx_] = gameObject.AddComponent<ObjectPooler>();
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){
@@ -88,6 +98,17 @@ public class ClientProjectileManager : MonoBehaviour {
 		case ProjType.EnergyBall:
 			proj = pooler_.RequestObjectAt(pfEnergyBall, projIdx_);
 			proj.GetComponent<NetworkEnergyBall>().Initiate(bodies);
+			break;
+
+		case ProjType.BindBullet:
+			proj = pooler_.RequestObjectAt(pfBindBullet, projIdx_);
+			proj.GetComponent<NetworkBindBullet>().Initiate(bodies);
+			break;
+
+		//MonsterSpider
+		case ProjType.SpiderBullet:
+			proj = pooler_.RequestObjectAt(pfSpiderBullet, projIdx_);
+			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
 			break;
 		}
 	}

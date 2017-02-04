@@ -26,9 +26,6 @@ namespace ServerSide{
 			nmHit = new NetworkMessage(commonHeader, new MsgSegment(MsgAttr.hit));
 
 			nmDefault = new NetworkMessage(commonHeader);
-
-			maxHp = 200;
-			CurrentHp = maxHp;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
@@ -47,8 +44,12 @@ namespace ServerSide{
 			case MsgAttr.hit:
 				int damage = int.Parse(bodies[0].Content);
 				CurrentHp -= damage;
-				ConsoleMsgQueue.EnqueMsg(networkId + " / " + CurrentHp);
 				Network_Server.BroadCastTcp(nmHit);
+				break;
+
+			case MsgAttr.freeze:
+				nmDefault.Body = bodies;
+				Network_Server.BroadCastTcp(nmDefault);
 				break;
 
 				default:

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ChaserBullet : PoolingObject, IHitter {
 	private HitObject hitObject;
-	private float flyingSpeed = 10f;
+	public const float flyingSpeed = 15f;
 
 	public GuidanceDevice targetDevice;
 
@@ -14,7 +14,8 @@ public class ChaserBullet : PoolingObject, IHitter {
 		
 	public override void Ready (){
 		MsgSegment msTarget = new MsgSegment();
-		if(targetDevice){
+
+		if(targetDevice && targetDevice.AttachedTarget){
 			if(targetDevice.AttachedTarget.GetComponent<NetworkCharacter>()){
 				int tId = targetDevice.AttachedTarget.GetComponent<NetworkCharacter>().NetworkId;
 				msTarget = new MsgSegment(MsgAttr.character, tId);
@@ -37,11 +38,16 @@ public class ChaserBullet : PoolingObject, IHitter {
 		Network_Client.SendTcp(nmAppear);
 
 		if(targetDevice == null){
-			ReturnObject(2);
-			StartCoroutine(FlyingRoutine());
+			ReturnObject(1.5f);
+			StartCoroutine(FlyingRoutine());	
 		}else{
-			ReturnObject(10);
-			StartCoroutine(ChasingRoutine());
+			if(targetDevice.AttachedTarget == null){
+				ReturnObject(1.5f);
+				StartCoroutine(FlyingRoutine());	
+			}else{
+				ReturnObject(10);
+				StartCoroutine(ChasingRoutine());
+			}
 		}
 	}
 
@@ -68,9 +74,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 	
 	private IEnumerator FlyingRoutine(){
 		while(true){
-			if(targetDevice == null){
-				transform.position += transform.right * flyingSpeed * Time.deltaTime;
-			}
+			transform.position += transform.right * flyingSpeed * Time.deltaTime;
 
 			yield return null;
 		}
@@ -102,5 +106,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 		};
 		NetworkMessage nmDestroy = new NetworkMessage(h, b);
 		Network_Client.SendTcp(nmDestroy);
+
+		StopAllCoroutines();
 	}
 }

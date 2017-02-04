@@ -20,7 +20,7 @@ namespace ServerSide{
 		}
 			
 		public TcpConnection (Socket socket_, int id_){
-			ConsoleMsgQueue.EnqueMsg("Connected: " + id_);
+			ConsoleMsgQueue.EnqueMsg(id_ + ": Connected.");
 
 			socketTCP = socket_;
 			clientId = id_;
@@ -100,7 +100,7 @@ namespace ServerSide{
 
 		public void SendTcp(string str){
 			try{
-				//ConsoleMsgQueue.EnqueMsg(clientId + ": Send: " + str, 0);
+				ConsoleMsgQueue.EnqueMsg(clientId + ": SendTcp: " + str, 1);
 				streamWriter.WriteLine(str);
 				streamWriter.Flush();
 			}catch(Exception e){
@@ -111,15 +111,15 @@ namespace ServerSide{
 		private void ReceivingTCP(){
 			IdSync();
 
-			MsgSegment h = new MsgSegment(MsgAttr.local, "");
-			MsgSegment b = new MsgSegment(MsgAttr.Local.disconnect, clientId.ToString());
+			MsgSegment h = new MsgSegment(MsgAttr.misc);
+			MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect, clientId.ToString());
 			NetworkMessage dyingMsg = new NetworkMessage(h, b);
 
 			string recStr;
 			try{
 				while(isConnected){
 					recStr = streamReader.ReadLine();
-					ConsoleMsgQueue.EnqueMsg(clientId + ": TcpReceived: " + recStr, 0);
+					ConsoleMsgQueue.EnqueMsg(clientId + ": TcpReceived: " + recStr, 1);
 					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
 				}
 			}catch(Exception e){

@@ -36,6 +36,48 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		}
 	}
 
+	private bool canBoostJump = true;
+	private bool isHovering = false;
+	private bool hasHovered = false;
+	public override void Jump (){		
+		if(controlFlags.jump && canControl){
+			if(isHovering){
+				rgd2d.gravityScale = 1;
+				isHovering = false;
+				gcDoctor.EndHover();
+			}else{
+				if(isGround){
+					rgd2d.AddForce (Vector2.up * jumpPower);
+				}else{
+					if(canBoostJump && rgd2d.velocity.y > 0){
+						rgd2d.AddForce (Vector2.up * jumpPower * 0.7f);
+						canBoostJump = false;
+						gcDoctor.Boost();
+					}else{
+						if(hasHovered == false){
+							rgd2d.velocity = Vector2.zero;
+							rgd2d.gravityScale = 0;
+							isHovering = true;
+							hasHovered = true;
+							gcDoctor.Hover();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected override void OnGrounded (){
+		if(isHovering){
+			rgd2d.gravityScale = 1;
+			isHovering = false;
+			gcDoctor.EndHover();
+		}
+		canBoostJump = true;
+		isHovering = false;
+		hasHovered = false;
+	}
+
 	#region EnergyGun
 	private Transform trGunMuzzle;
 

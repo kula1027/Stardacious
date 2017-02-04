@@ -17,18 +17,18 @@ public class InputModule : MonoBehaviour {
 			CharacterCtrl.instance.Jump();
 		}
 		if (Input.GetKeyDown (KeyCode.LeftControl)) {
-			CharacterCtrl.instance.OnStartAttack();
+			CharacterCtrl.instance.InputStartAttack();
 		}
 		if (Input.GetKeyUp (KeyCode.LeftControl)) {
-			CharacterCtrl.instance.OnStopAttack();
+			CharacterCtrl.instance.InputStopAttack();
 		}
 	}
 
 	public void OnDownAttack(){
-		CharacterCtrl.instance.OnStartAttack();
+		CharacterCtrl.instance.InputStartAttack();
 	}
 	public void OnUpAttack(){
-		CharacterCtrl.instance.OnStopAttack();
+		CharacterCtrl.instance.InputStopAttack();
 	}
 
 	public void OnClickJump(){		

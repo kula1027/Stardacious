@@ -85,6 +85,13 @@ public class ObjectPooler : MonoBehaviour {
 
 		return managingPool[poolIdx];
 	}
+
+	public void ClearPool(){
+		for(int loop = 0; loop < managingPool.Count; loop++){
+			Destroy(managingPool[loop].gameObject);
+		}
+		Destroy(this);
+	}
 }
 
 public interface IReceivable{

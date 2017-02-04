@@ -8,8 +8,6 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 		gcHeavy.Initialize();
 		MsgSegment h = new MsgSegment(MsgAttr.character, NetworkId);
 		MsgSegment b = new MsgSegment(MsgAttr.hit);
-		nmHit = new NetworkMessage(h, b);
-
 	}
 
 	public override void UseSkill (int idx_){
@@ -27,13 +25,4 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 			break;
 		}
 	}
-
-	#region IHittable implementation
-	private NetworkMessage nmHit;
-	public void OnHit (HitObject hitObject_){
-		nmHit.Body[0].Content = hitObject_.Damage.ToString();
-		Network_Client.SendTcp(nmHit);
-	}
-
-	#endregion
 }

@@ -6,14 +6,14 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	private GameObject targetObj;
 
 	void Awake(){
-		flyingSpeed = 15f;
+		flyingSpeed = GuidanceDevice.deviceSpeed;
 	}
 		
 	public override void OnReturned (){
 	}
 
 	public override void OnRequested (){
-		ReturnObject(3f);
+		ReturnObject(2.5f);
 	}
 
 	public override void OnRecv (MsgSegment[] bodies){

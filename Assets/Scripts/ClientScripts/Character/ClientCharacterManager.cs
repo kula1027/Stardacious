@@ -13,15 +13,14 @@ public class ClientCharacterManager : MonoBehaviour {
 		instance = this;
 	}
 
-
 	private void OnRecvCharacter(int idx_, NetworkMessage networkMessage){
 		if(idx_ == Network_Client.NetworkId){
 			CharacterCtrl.instance.OnRecv(networkMessage.Body);
-			return;
+		}else{
+			if(characters[idx_] != null){
+				characters[idx_].OnRecv(networkMessage.Body);
+			}
 		}
-
-		if(characters[idx_] != null)
-			characters[idx_].OnRecv(networkMessage.Body);
 	}
 
 	public void UnregisterNetCharacter(int idx_){
@@ -51,7 +50,7 @@ public class ClientCharacterManager : MonoBehaviour {
 		characters[idx_].NetworkId = idx_;
 	}
 
-	public void OnRecv(NetworkMessage networkMessage){		
+	public void OnRecv(NetworkMessage networkMessage){	
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
 			int netId = int.Parse(networkMessage.Body[0].Attribute);

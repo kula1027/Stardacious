@@ -22,6 +22,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public ControlFlags controlFlags;
 
+	protected bool canControl = true;
+
 	#region chData
 	public float moveSpeed = 5f;
 	public float jumpPower;//controled by unity editor
@@ -83,6 +85,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected Vector3 currentDirV3 = Vector3.left;
 	protected ControlDirection currentDir = ControlDirection.Left;
 	public virtual void OnMovementInput(Vector3 vec3_){
+		if(canControl == false)return;
+
 		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
 
 		bool movablebByInput = true;
@@ -142,16 +146,17 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			nmDir.Body[0].Content = ((int)currentDir).ToString();
 			nmDir.Body[1].Content = ((int)transform.localScale.x).ToString();
 			Network_Client.SendTcp(nmDir);
+		}
 
-			if(currentDir != ControlDirection.Middle)
-				currentDirV3 = vec3_;
+		if(currentDir != ControlDirection.Middle){
+			currentDirV3 = vec3_;
 		}
 
 		prevCtrlDir = currentDir;
 	}
-
-	public void Jump(){
-		if (isGround && controlFlags.jump) {
+		
+	public virtual void Jump(){		
+		if (isGround && controlFlags.jump && canControl) {
 			rgd2d.AddForce (Vector2.up * jumpPower);
 		}
 	}
@@ -166,6 +171,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			if (isGround != prevGrounded){
 				if (isGround) {
 					characterGraphicCtrl.Grounded ();
+					OnGrounded();
 					nmGround.Body[0].Content = NetworkMessage.sTrue;
 				} else {
 					colGroundChecker.enabled = false;
@@ -181,19 +187,26 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		}
 	}
 
-	public virtual void OnStartAttack(){
+	protected virtual void OnGrounded(){
+	}
+
+	public virtual void InputStartAttack(){
+		if(canControl == false)return;
+
 		characterGraphicCtrl.StartNormalAttack ();
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
 	}
 
-	public virtual void OnStopAttack(){
+	public virtual void InputStopAttack(){
 		characterGraphicCtrl.StopNormalAttack ();
 		nmAttack.Body[0].Content = NetworkMessage.sFalse;
 		Network_Client.SendTcp(nmAttack);
 	}
 
 	public virtual void UseSkill(int idx_){
+		if(canControl == false)return;
+
 		switch (idx_) {
 		case 0:
 			nmSkill.Body[0].Content = "0";
@@ -227,6 +240,10 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			Vector2 directionForce = bodies[0].ConvertToV2();
 			AddForce(directionForce);
 			break;
+
+		case MsgAttr.freeze:
+			Freeze();
+			break;
 		}
 	}
 
@@ -253,9 +270,24 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	#endregion
 
+	#region StardaciousObject implementation
+
 	public override void AddForce (Vector2 dirForce_){
 		rgd2d.AddForce(dirForce_);
 	}
+
+	public override void Freeze (){
+		canControl = false;
+		StartCoroutine(FreezeRoutine());
+		//characterGraphicCtrl
+	}
+
+	private IEnumerator FreezeRoutine(){
+		yield return new WaitForSeconds(BindBullet.freezeTime);
+		canControl = true;
+	}
+
+	#endregion
 }
 
 public enum InputDirection{left, leftUp, up, rightUp, right, rightDown, down, leftDown}

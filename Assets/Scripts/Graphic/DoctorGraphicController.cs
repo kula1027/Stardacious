@@ -39,7 +39,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 		unitParts = GetComponentsInChildren<SpriteRenderer> ();
 		hairRenderer = GetComponentInChildren<SkeletonRenderer> ();
-		//hairRenderer.skeleton.SetColor (new Color (0, 0, 0, 1));
+		booster.Stop();
 	}
 		
 	public override void Initialize (){
@@ -60,13 +60,29 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		SetUpperAnim (currentInputDirection);
 	}
 		
+	public void Boost(){
+		StartCoroutine(Boosting());
+	}
+	private int boostCount = 0;
+	IEnumerator Boosting(){
+		boostCount++;
+		lowerAnimator.Play ("Jump");
+		booster.Play();
+		yield return new WaitForSeconds(1);
+		if(!isHovering && boostCount < 2){
+			booster.Stop();
+		}
+		boostCount--;
+	}
 	public void Hover(){
 		isHovering = true;
 		lowerAnimator.Play ("Hover");
+		booster.Play();
 	}
 	public void EndHover(){
 		isHovering = false;
 		lowerAnimator.Play ("LongJump");
+		booster.Stop();
 	}
 	public override void ForcedFly (){
 		isFlying = true;

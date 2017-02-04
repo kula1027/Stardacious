@@ -5,6 +5,7 @@ namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;
+		private NetworkMessage nmHit;
 
 		public override void Ready(){
 			maxHp = 100;
@@ -12,6 +13,8 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
 			nmPos = new NetworkMessage(h, b);
+
+			nmHit = new NetworkMessage(h, new MsgSegment(MsgAttr.hit));
 
 			NotifyAppearence();
 
@@ -23,6 +26,7 @@ namespace ServerSide{
 			case MsgAttr.hit:
 				int damage = int.Parse(bodies[0].Content);
 				CurrentHp -= damage;
+				Network_Server.BroadCastTcp(nmHit);
 				break;
 			}
 		}

@@ -52,7 +52,7 @@ public class Network_Client {
 				isConnected = true;
 
 			}catch(SocketException e){
-				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString());
+				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString(), 2);
 				conCount++;
 				if(conCount > 15){
 					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
@@ -107,7 +107,7 @@ public class Network_Client {
 	private static void ReceivingUDP(){
 		SendUdp(new NetworkMessage());
 		SendUdp(new NetworkMessage());
-		SendUdp(new NetworkMessage());
+		SendUdp(new NetworkMessage());//TODO
 
 		byte[] bufByte;
 		try{
@@ -119,7 +119,7 @@ public class Network_Client {
 				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(Encoding.UTF8.GetString(bufByte)));
 			}
 		}catch(Exception e){
-			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message);
+			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message, 2);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class Network_Client {
 		if(isConnected){
 			string str = nm_.ToString();
 			try{
-				ConsoleMsgQueue.EnqueMsg("Send: " + str, 0);
+				ConsoleMsgQueue.EnqueMsg("SendTcp: " + str, 1);
 				streamWriter.WriteLine(str);
 				streamWriter.Flush();
 			}catch(Exception e){
@@ -158,16 +158,16 @@ public class Network_Client {
 		try{
 			while(isConnected){
 				recStr = streamReader.ReadLine();
-
-				if(recStr != null){					
-					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
-				}
+					
+				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(recStr));
+				ConsoleMsgQueue.EnqueMsg("ReceivingTCP: " + recStr, 1);
 			}
 		}catch(Exception e){
-			ConsoleMsgQueue.EnqueMsg("ReceivingTCP: " + e.Message);
+			ConsoleMsgQueue.EnqueMsg("ReceivingTCP: " + e.Message, 2);
+			MsgSegment h = new MsgSegment(MsgAttr.misc);
+			MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect);
+			ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
 		}
-
-		ConsoleMsgQueue.EnqueMsg("Disconnected.");
 
 		ShutDown();
 	}

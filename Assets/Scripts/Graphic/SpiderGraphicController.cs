@@ -5,6 +5,7 @@ public class SpiderGraphicController : MonsterGraphicCtrl {
 
 	void Awake(){
 		animator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
+		unitParts = GetComponentsInChildren<SpriteRenderer>();
 	}
 
 	public override void Initialize (){

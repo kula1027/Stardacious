@@ -83,12 +83,16 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			ClientCharacterManager.instance.UnregisterNetCharacter(networkId);
 			Destroy(gameObject);
 			break;
+
+		case MsgAttr.freeze:
+			//TODO freeze anim
+			break;
 		}
 
 	}
-
 	#endregion
 
+	#region StardaciousObject implementation
 	public override void AddForce (Vector2 dirForce_){
 		NetworkMessage nmForce = new NetworkMessage(
 			new MsgSegment(MsgAttr.character, networkId), 
@@ -98,12 +102,20 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		Network_Client.SendTcp(nmForce);
 	}
 
-	#region IHittable implementation
+	public override void Freeze (){
+		NetworkMessage nmFreeze = new NetworkMessage(
+			new MsgSegment(MsgAttr.character, networkId), 
+			new MsgSegment(MsgAttr.freeze)
+		);
 
+		Network_Client.SendTcp(nmFreeze);
+	}
+	#endregion
+
+	#region IHittable implementation
 	public void OnHit (HitObject hitObject_){
 		hitObject_.Apply(this);
 	}
-
 	#endregion
 }
 

@@ -6,6 +6,7 @@ public class StardaciousObject : MonoBehaviour {
 	private bool isDead = false;
 	public bool IsDead{
 		get{return isDead;}
+		set{isDead = value;}
 	}
 	private int currentHp;
 	public int CurrentHp{
@@ -25,4 +26,5 @@ public class StardaciousObject : MonoBehaviour {
 	public virtual void OnHpChanged(){}
 	public virtual void OnDie(){}
 	public virtual void AddForce(Vector2 dirForce_){}
+	public virtual void Freeze(){}
 }

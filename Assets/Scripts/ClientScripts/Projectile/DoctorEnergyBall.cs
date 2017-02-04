@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class DoctorEnergyBall : PoolingObject, IHitter {		
-	public const float flyingSpeed = 4f;
+	public const float flyingSpeed = 6f;
 	public const float lifeTime = 10;
 
-	private const float hitItv = 0.4f;
+	private const float hitItv = 0.1f;
 
 	private HitObject hitObject;
 
@@ -18,7 +18,7 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		gcBall = GetComponent<EnergyBallGraphic>();
 		col2d = GetComponentInChildren<CircleCollider2D>();
 		objType = (int)ProjType.EnergyBall;
-		hitObject = new HitObject(1);
+		hitObject = new HitObject(10);
 	}
 
 	public override void Ready (){
@@ -125,7 +125,6 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 			if(hbt.tag.Equals("Player")){
 				return;
 			}else{
-				Debug.Log("HIT");
 				hbt.OnHit(hitObject);
 			}
 		}

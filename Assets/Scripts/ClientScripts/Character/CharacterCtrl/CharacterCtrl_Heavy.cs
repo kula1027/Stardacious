@@ -35,8 +35,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	}
 
 	private bool isAttacking = false;
-	public override void OnStartAttack (){
-		base.OnStartAttack ();
+	public override void InputStartAttack (){
+		base.InputStartAttack ();
 
 		isAttacking = true;
 		if (controlFlags.attack && isMachineGunMode) {			
@@ -44,8 +44,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		}
 	}
 
-	public override void OnStopAttack (){
-		base.OnStopAttack ();
+	public override void InputStopAttack (){
+		base.InputStopAttack ();
 
 		isAttacking = false;
 		StopMachineGun ();
@@ -112,7 +112,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			StopCoroutine(machinegunRoutine);
 	}
 
-	private const float machineGunFireRate = 0.2f;
+	private const float machineGunFireRate = 0.15f;
 	private IEnumerator MachineGunRoutine(){
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);

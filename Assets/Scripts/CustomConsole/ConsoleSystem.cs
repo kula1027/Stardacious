@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class ConsoleSystem : MonoBehaviour {
+	public static ConsoleSystem instance;
+
 	private static InputField inputField;
 	private static Scrollbar scrollBar;
 	private Button okButton;
@@ -21,17 +23,22 @@ public class ConsoleSystem : MonoBehaviour {
 	public static bool scrollLock = true;
 
 	void Awake(){
-		DontDestroyOnLoad(transform.parent.gameObject);
+		if(instance == null){
+			instance = this;
+			DontDestroyOnLoad(transform.parent.gameObject);
 
-		inputField = GetComponentInChildren<InputField>();
-		okButton = GetComponentInChildren<Button>();
-		scrollRect = GetComponentInChildren<ScrollRect>();
-		scrollBar = GetComponentInChildren<Scrollbar>();
+			inputField = GetComponentInChildren<InputField>();
+			okButton = GetComponentInChildren<Button>();
+			scrollRect = GetComponentInChildren<ScrollRect>();
+			scrollBar = GetComponentInChildren<Scrollbar>();
 
-		consoleText = Resources.Load<GameObject>("ConsoleText");
-		msgCount = 0;
-		uiSelf = GetComponent<HidableUI>();
-		fpsText = transform.FindChild("FPS").GetComponent<Text>();
+			consoleText = Resources.Load<GameObject>("ConsoleText");
+			msgCount = 0;
+			uiSelf = GetComponent<HidableUI>();
+			fpsText = transform.FindChild("FPS").GetComponent<Text>();
+		}else{
+			Destroy(transform.parent.gameObject);
+		}
 	}
 
 	void Start(){
@@ -68,6 +75,10 @@ public class ConsoleSystem : MonoBehaviour {
 
 	public void OnClickOk(){
 		UserInput();
+	}
+
+	public void SetFpsText(int fps_){
+		fpsText.text = fps_.ToString();
 	}
 
 	public void Update(){

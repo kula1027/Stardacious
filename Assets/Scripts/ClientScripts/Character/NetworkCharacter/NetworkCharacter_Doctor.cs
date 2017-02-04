@@ -4,6 +4,10 @@ using System.Collections;
 public class NetworkCharacter_Doctor : NetworkCharacter {
 	public DoctorGraphicController gcDoctor;
 
+	void Awake(){
+		gcDoctor.Initialize();
+	}
+
 	private bool isChargingEnergy = false;
 	public override void UseSkill (int idx_){
 		switch(idx_){

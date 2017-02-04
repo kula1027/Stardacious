@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class NetworkTranslator : MonoBehaviour {
 	private MsgHandler msgHandler;
 
-	public Text txtMsgCount;
-
 	void Awake(){
 		
 	}
@@ -35,7 +33,7 @@ public class NetworkTranslator : MonoBehaviour {
 			timeAcc += Time.deltaTime;
 			msgCountAcc += msgCount;
 			if(timeAcc > 1){
-				txtMsgCount.text = msgCountAcc.ToString();
+				ConsoleSystem.instance.SetFpsText(msgCountAcc);
 				timeAcc = 0;
 				msgCountAcc = 0;
 			}

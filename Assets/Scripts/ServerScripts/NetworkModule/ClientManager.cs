@@ -38,7 +38,6 @@ namespace ServerSide{
 				return false;
 			}else{
 				arrayClient[freeId] = new TcpConnection(welcomeSocket_, freeId);
-				ConsoleMsgQueue.EnqueMsg("New Client Connected, ID: " + freeId);
 
 				return true;
 			}

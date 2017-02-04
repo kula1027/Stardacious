@@ -29,6 +29,8 @@ namespace ServerSide{
 				ServerProjectileManager.instance.pfLocalProj
 			);
 			go.transform.position = transform.position + Vector3.up * 2f;
+			GameObject targetCh = ServerCharacterManager.instance.GetCharacter(0).gameObject;
+			go.transform.right = targetCh.transform.position - go.transform.position;
 			go.GetComponent<ServerLocalProjectile>().Ready();
 		}
 

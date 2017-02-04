@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class NetworkChaserBullet : PoolingObject {
-	private float flyingSpeed = 10f;
-
 	public StardaciousObject targetObject;
 
 	public void Initiate(MsgSegment[] bodies_){
@@ -13,7 +11,7 @@ public class NetworkChaserBullet : PoolingObject {
 		MsgSegment targetInfo = bodies_[3];
 		string strTarget = targetInfo.Attribute;
 		if(strTarget.Equals(MsgSegment.NotInitialized)){
-			ReturnObject(3f);
+			ReturnObject(2.5f);
 			StartCoroutine(FlyingRoutine());
 		}else{	
 			int targetId = int.Parse(targetInfo.Content);
@@ -24,7 +22,7 @@ public class NetworkChaserBullet : PoolingObject {
 			}else{
 				Debug.LogError("NetChaserBullet no target recv");
 			}
-			ReturnObject(11);
+			ReturnObject(11f);
 			StartCoroutine(ChasingRoutine());
 		}
 	}
@@ -35,7 +33,7 @@ public class NetworkChaserBullet : PoolingObject {
 
 	private IEnumerator FlyingRoutine(){
 		while(true){
-			transform.position += transform.right * flyingSpeed * Time.deltaTime;
+			transform.position += transform.right * ChaserBullet.flyingSpeed * Time.deltaTime;
 
 			yield return null;
 		}
@@ -54,7 +52,7 @@ public class NetworkChaserBullet : PoolingObject {
 			targetPos = targetObject.transform.position + new Vector3(0, 2, 0);
 			targetDir = (targetPos - transform.position).normalized;
 			transform.right = Vector2.Lerp(transform.right, targetDir, Time.deltaTime * 10);
-			transform.position += transform.right * flyingSpeed * Time.deltaTime;
+			transform.position += transform.right * ChaserBullet.flyingSpeed * Time.deltaTime;
 
 			yield return null;
 		}

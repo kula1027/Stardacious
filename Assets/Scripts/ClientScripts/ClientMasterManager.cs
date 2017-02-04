@@ -2,6 +2,9 @@
 using System.Collections;
 
 //클라이언트 시작부
+using UnityEngine.SceneManagement;
+
+
 public class ClientMasterManager : MonoBehaviour {
 	public static ClientMasterManager instance;
 
@@ -43,7 +46,13 @@ public class ClientMasterManager : MonoBehaviour {
 		switch(networkMessage.Body[0].Attribute){
 		case MsgAttr.Misc.exitClient:
 			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			ClientProjectileManager.instance.ResetClientPool(exitIdx);
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
+			break;
+
+		case MsgAttr.Misc.disconnect:
+			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
+			SceneManager.LoadScene("scStart");
 			break;
 		}
 	}

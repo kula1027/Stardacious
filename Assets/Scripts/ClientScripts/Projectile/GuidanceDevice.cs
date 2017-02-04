@@ -4,6 +4,8 @@ using System.Collections;
 public class GuidanceDevice : FlyingProjectile {
 	private Vector3 localPosition;
 
+	public const float deviceSpeed = 25f;
+
 	private StardaciousObject attachedTarget;
 	public StardaciousObject AttachedTarget{
 		get{return attachedTarget;}
@@ -17,12 +19,12 @@ public class GuidanceDevice : FlyingProjectile {
 	void Awake(){
 		hitObject = new HitObject(0);
 		objType = (int)ProjType.GuidanceDevice;
-		flyingSpeed = 15f;
+		flyingSpeed = deviceSpeed;
 	}
 
 	public override void OnRequested (){
 		isAttached = false;
-		ReturnObject(2);
+		ReturnObject(1.5f);
 	}
 
 	private bool isAttached = false;
@@ -73,6 +75,9 @@ public class GuidanceDevice : FlyingProjectile {
 
 	private IEnumerator AttachRoutine(){
 		while(true){
+			if(attachedTarget.IsDead){
+				ReturnObject();
+			}
 			transform.position = attachedTarget.transform.position + localPosition;
 
 			yield return null;

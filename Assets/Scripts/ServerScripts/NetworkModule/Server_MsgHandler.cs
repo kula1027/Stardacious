@@ -7,11 +7,8 @@ namespace ServerSide{
 		public override void HandleMsg (NetworkMessage networkMessage){			
 
 			switch(networkMessage.Header.Attribute){
-			case MsgAttr.setup:
 
-				break;
-
-			case MsgAttr.local:
+			case MsgAttr.misc:
 				ServerMasterManager.instance.OnRecv(networkMessage);
 				break;
 
