@@ -8,6 +8,10 @@ public class Client_StartMsgHandler : MsgHandler {
 		case MsgAttr.setup:
 			StartSceneManager.instance.OnRecv(networkMessage);
 			break;
+
+		case MsgAttr.misc:
+			StartSceneManager.instance.OnRecv(networkMessage);
+			break;
 		}
 	}
 }

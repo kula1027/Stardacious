@@ -210,6 +210,20 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 	#endregion
 
+	public override void Freeze (){
+		if(isHovering){
+			rgd2d.gravityScale = 1;
+			isHovering = false;
+			gcDoctor.EndHover();
+			nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.endHover);
+			Network_Client.SendTcp(nmBoostState);
+		}
+		canBoostJump = true;
+		isHovering = false;
+		hasHovered = false;
+		base.Freeze ();
+	}
+
 
 	public override void UseSkill (int idx_){
 		if(canControl == false)return;

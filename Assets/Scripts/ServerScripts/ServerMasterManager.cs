@@ -36,6 +36,10 @@ namespace ServerSide{
 				int exitIdx = int.Parse(networkMessage.Body[0].Content);
 				OnExitClient(exitIdx);
 				break;
+
+			case MsgAttr.character:
+				Network_Server.BroadCastTcp(networkMessage, int.Parse(networkMessage.Adress.Attribute));
+				break;
 			}
 		}
 	}

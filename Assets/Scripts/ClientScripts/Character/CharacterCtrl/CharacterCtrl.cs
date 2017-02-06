@@ -272,7 +272,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hitObject_.Apply(this);
 	}
 		
-
 	#endregion
 
 	#region StardaciousObject implementation
@@ -283,6 +282,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	GameObject effectIce;
 	public override void Freeze (){
+		characterGraphicCtrl.StopNormalAttack ();
+
 		ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
 		effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
 

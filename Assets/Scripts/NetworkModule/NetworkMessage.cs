@@ -92,12 +92,13 @@ public class NetworkMessage {
 	}
 
 	/// Exception...? muk nun go im?
-	public NetworkMessage(string rawString){
+	public NetworkMessage(string rawString){		
 		string[] segment = rawString.Split('/');
 		string[] split;
 
 		//Adress
 		split = segment[0].Split(':');
+
 		adress =  new MsgSegment(split[0], split[1]);
 
 		//Header

@@ -13,7 +13,7 @@ public class StartSceneManager : MonoBehaviour {
 	public Text txtConfigState;
 
 	public HidableUI joinPanel;
-	public HidableUI readyPanel;
+	public ReadyPanel readyPanel;
 	public HidableUI selCharPanel;
 
 	public Text[] tempState;
@@ -39,7 +39,12 @@ public class StartSceneManager : MonoBehaviour {
 			int t = int.Parse(networkMessage.Body[0].Content);
 			int cTime = DateTime.Now.Millisecond + DateTime.Now.Second * 1000;
 			ConsoleMsgQueue.EnqueMsg("ltc: " + (cTime - t).ToString());
+			break;
 
+		case MsgAttr.character:
+			int sender = int.Parse(networkMessage.Adress.Attribute);
+			int chIdx = int.Parse(networkMessage.Body[0].Content);
+			readyPanel.SetSlotCharacter(sender, chIdx);
 			break;
 		}
 	}

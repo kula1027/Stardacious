@@ -188,6 +188,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	#endregion
 
 	public override void UseSkill (int idx_){
+		if(canControl == false)return;
+
 		base.UseSkill(idx_);
 		switch (idx_) {
 		case 0:

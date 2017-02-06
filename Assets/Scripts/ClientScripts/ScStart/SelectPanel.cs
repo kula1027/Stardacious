@@ -10,6 +10,8 @@ public class SelectPanel : HidableUI {
 	public HidableUI infoDoctor;
 	public HidableUI infoEsper;
 
+	public ReadyPanel readyPanel;
+
 	void Start(){
 		
 	}
@@ -46,6 +48,11 @@ public class SelectPanel : HidableUI {
 			break;
 		}
 
+		readyPanel.SetSlotCharacter(Network_Client.NetworkId, chIdx_);
+
 		PlayerData.chosenCharacter = (ChIdx)chIdx_;
+		NetworkMessage nmChar = new NetworkMessage(new MsgSegment(MsgAttr.misc));
+		nmChar.Body[0] = new MsgSegment(MsgAttr.character, chIdx_);
+		Network_Client.SendTcp(nmChar);
 	}
 }
