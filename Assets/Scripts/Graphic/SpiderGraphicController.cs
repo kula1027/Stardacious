@@ -12,6 +12,14 @@ public class SpiderGraphicController : MonsterGraphicCtrl {
 		throw new System.NotImplementedException ();
 	}
 
+	public void AnimationFreeze(){
+		animator.enabled = false;
+	}
+
+	public void AnimationResume(){
+		animator.enabled = true;
+	}
+
 	public override void Jump (){
 		animator.Play ("Jump");
 	}
