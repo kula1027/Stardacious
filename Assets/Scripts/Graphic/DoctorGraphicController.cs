@@ -101,6 +101,17 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		SetLowerAnim (currentInputDirection);
 	}
 
+	public void AnimationFreeze(){
+		lowerAnimator.enabled = false;
+		upperAnimator.enabled = false;
+		EndHover ();
+	}
+
+	public void AnimationResume(){
+		lowerAnimator.enabled = true;
+		upperAnimator.enabled = true;
+	}
+
 	public override void StartNormalAttack (){
 		isAttackButtonPressing = true;
 

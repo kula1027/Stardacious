@@ -1,0 +1,13 @@
+
+muffler.png
+size: 128,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+muffler
+  rotate: false
+  xy: 2, 2
+  size: 70, 462
+  orig: 70, 462
+  offset: 0, 0
+  index: -1
