@@ -6,6 +6,7 @@ public class ClientCharacterManager : MonoBehaviour {
 
 	public GameObject pfNetworkDoctor;
 	public GameObject pfNetworkHeavy;
+	public GameObject pfNetworkEsper;
 
 	private NetworkCharacter[] characters = new NetworkCharacter[NetworkConst.maxPlayer];
 

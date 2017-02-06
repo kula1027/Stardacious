@@ -158,7 +158,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		prevCtrlDir = currentDir;
 	}
 		
-	public virtual void Jump(){		
+	public virtual void Jump(){				
 		if (isGround && controlFlags.jump && canControl) {
 			rgd2d.AddForce (Vector2.up * jumpPower);
 		}

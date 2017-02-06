@@ -2,9 +2,9 @@
 using System.Collections;
 using Spine.Unity;
 
-public class EsperGraphicContoller : CharacterGraphicCtrl {
+public class EsperGraphicController : CharacterGraphicCtrl {
 
-	public CharacterCtrl master; //TODO change to EsperCtrl
+	public CharacterCtrl_Esper master;
 
 	//Child
 	public SkeletonAnimation mufflerL;
@@ -37,7 +37,8 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 		}
 	}
 	public override void SetDirection (ControlDirection direction){
-		throw new System.NotImplementedException ();
+		currentInputDirection = direction;
+		SetSingleAnim(direction);
 	}
 	public override void SetDirection (int direction){
 		SetDirection ((ControlDirection)direction);
@@ -47,8 +48,11 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 		singleAnimator.Play ("LongJump");
 	}
 	public override void Jump (){
+		isAttackAnimationPlaying = false;
+		ReleaseAttackDelay();
 		isFlying = true;
 		if (isAttackButtonPressing) {
+			master.OnJumpAttack();
 			singleAnimator.Play ("JumpAttack");
 			canJumpAttack = false;
 		} else {
@@ -69,13 +73,17 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 
 		if (isFlying) {
 			if (canJumpAttack) {
+				master.OnJumpAttack();
 				singleAnimator.Play ("JumpAttack");
 				canJumpAttack = false;
 			}
+		}else{
+			SetAttackAnim(currentInputDirection);
 		}
 	}
 	public override void StopNormalAttack (){
 		isAttackButtonPressing = false;
+		nextAttackMotion = 0;
 	}
 
 	public override void FreezeAnimation (){
@@ -100,46 +108,67 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 
 	#region private
 	private void SetAttackAnim(ControlDirection direction){
+		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
+			isAttackAnimationPlaying = true;
 			switch (direction) {
 			case ControlDirection.Middle:
 			case ControlDirection.Up:
 			case ControlDirection.Down:
-				singleAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
+				master.OnAttackSlash(nextAttackMotion);
+				singleAnimator.Play ("Slash" + nextAttackMotion);
+				nextAttackMotion = (nextAttackMotion + 1) % 2;
 				break;
 			default:
+				master.OnAttackDash();
 				singleAnimator.Play ("StabAttack", 0, 0);
+				nextAttackMotion = 0;
 				break;
 			}
 		}
 	}
 
 	private void SetSingleAnim(ControlDirection direction){
-		if (!isAttackAnimationPlaying) {
-			if (!isAttackButtonPressing) {
-				switch (direction) {
-				case ControlDirection.Middle:
-				case ControlDirection.Up:
-				case ControlDirection.Down:
-					singleAnimator.Play ("Idle");
-					break;
-				default:
-					singleAnimator.Play ("Run");
-					break;
+		if(!isFlying){
+			if (!isAttackAnimationPlaying) {
+				if (!isAttackButtonPressing) {
+					switch (direction) {
+					case ControlDirection.Middle:
+					case ControlDirection.Up:
+					case ControlDirection.Down:
+						singleAnimator.Play ("Idle");
+						break;
+					default:
+						singleAnimator.Play ("Run");
+						break;
+					}
 				}
-			} else {
-				Debug.LogWarning ("의도치 않은 SetSingleAnim의 Call이 감지됨. SetAttackAnim을 이용 할 것.");
-				SetAttackAnim (direction);
 			}
 		}
 	}
 	#endregion
 
+	#region ControlFlag
+	private void SetAttackDelay(){
+		if(master){
+			controlFlags.move = false;
+		}
+	}
+	private void ReleaseAttackDelay(){
+		if(master){
+			controlFlags.move = true;
+		}
+	}
+
+	#endregion
+
 	#region AnimationCallBack
-	public void EndSlashMotion(){		//평타, 찌르기, 질풍참, 점프어택 모두 해당
+	public void EndAttackMotion(){		//평타, 찌르기, 질풍참, 점프어택 모두 해당
+		isAttackAnimationPlaying = false;
 		if (isAttackButtonPressing) {
 			SetAttackAnim (currentInputDirection);
 		} else {
+			ReleaseAttackDelay();
 			nextAttackMotion = 0;
 			SetSingleAnim (currentInputDirection);
 		}
@@ -147,9 +176,6 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 
 	//충돌체 생성 시점
 	public void AttackCollision(){
-		if(master){
-			
-		}
 	}
 
 	public void EndRecall(){

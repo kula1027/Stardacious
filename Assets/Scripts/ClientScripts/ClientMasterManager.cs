@@ -10,6 +10,7 @@ public class ClientMasterManager : MonoBehaviour {
 
 	public GameObject pfHeavy;
 	public GameObject pfDoctor;
+	public GameObject pfEsper;
 
 	public bool friendlyFire = true;
 
@@ -32,6 +33,10 @@ public class ClientMasterManager : MonoBehaviour {
 
 		case ChIdx.Heavy:
 			pCharacter = (GameObject)Instantiate(pfHeavy);
+			break;
+
+		case ChIdx.Esper:
+			pCharacter = (GameObject)Instantiate(pfEsper);
 			break;
 
 			default:
