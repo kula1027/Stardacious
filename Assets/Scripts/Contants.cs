@@ -10,13 +10,15 @@ public enum ProjType{
 	GuidanceDevice,
 	BindBullet,
 	EnergyBall,
-	SpiderBullet
+	SpiderBullet,
+	EffectIce
 }
 
 public enum ChIdx{
 	NotInitialized,
 	Heavy,
-	Doctor
+	Doctor,
+	Esper
 }
 	
 public static class NetworkConst{

@@ -41,9 +41,9 @@ public class FlyingProjectile : PoolingObject, IHitter {
 			}else{
 				hbt.OnHit(hitObject);
 			}
+		}else{
+			ReturnObject();
 		}
-
-		ReturnObject();
 	}
 	#endregion
 

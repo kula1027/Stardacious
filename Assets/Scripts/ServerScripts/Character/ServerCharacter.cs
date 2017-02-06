@@ -26,6 +26,8 @@ namespace ServerSide{
 			nmHit = new NetworkMessage(commonHeader, new MsgSegment(MsgAttr.hit));
 
 			nmDefault = new NetworkMessage(commonHeader);
+
+			CurrentHp = 250;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
@@ -43,8 +45,7 @@ namespace ServerSide{
 
 			case MsgAttr.hit:
 				int damage = int.Parse(bodies[0].Content);
-				CurrentHp -= damage;
-				Network_Server.BroadCastTcp(nmHit);
+				CurrentHp += damage;
 				break;
 
 			case MsgAttr.freeze:
@@ -83,7 +84,7 @@ namespace ServerSide{
 
 		#endregion
 
-		public override void OnHpChanged (){
+		public override void OnHpChanged (int hpChange){
 			nmHit.Body[0].Content = CurrentHp.ToString();
 			Network_Server.BroadCastTcp(nmHit);
 		}

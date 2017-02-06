@@ -7,6 +7,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public BoxCollider2D colGroundChecker;
 
+	protected MsgSegment commonHeader;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
 	private NetworkMessage nmAttack;
@@ -20,6 +21,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		get{return characterGraphicCtrl;}
 	}
 
+	protected HitBoxTrigger hbt;
+
 	public ControlFlags controlFlags;
 
 	protected bool canControl = true;
@@ -32,14 +35,15 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected float[] skillCoolDown = new float[3];
 	#endregion
 
-	void Awake(){
+	void Awake(){		
 		rgd2d = GetComponent<Rigidbody2D>();
+		hbt = GetComponentInChildren<HitBoxTrigger>();
 		instance = this;
+		CurrentHp = 250;
 	}
 
 	public virtual void Initialize(){
-		
-		MsgSegment commonHeader = new MsgSegment(MsgAttr.character, Network_Client.NetworkId);
+		commonHeader = new MsgSegment(MsgAttr.character, Network_Client.NetworkId);
 
 		MsgSegment[] bDir = {
 			new MsgSegment(MsgAttr.Character.controlDirection, "0"),
@@ -88,7 +92,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		if(canControl == false)return;
 
 		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
-
 		bool movablebByInput = true;
 		if(vec3_.y > 0){//위 쪽 반원 영역
 			if(inputAngle < 22.5f){
@@ -125,7 +128,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 				currentDir = ControlDirection.Left;
 			}
 		}
-		if(vec3_.x == 0){	
+		if(vec3_.Equals(Vector3.zero)){	
 			currentDir = ControlDirection.Middle;
 		}
 
@@ -230,6 +233,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.hit:
+			CurrentHp = int.Parse(bodies[0].Content);
 			break;
 
 		case MsgAttr.dead:
@@ -267,6 +271,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public virtual void OnHit (HitObject hitObject_){
 		hitObject_.Apply(this);
 	}
+		
 
 	#endregion
 
@@ -276,15 +281,42 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		rgd2d.AddForce(dirForce_);
 	}
 
+	GameObject effectIce;
 	public override void Freeze (){
+		ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
+		effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
+
 		canControl = false;
-		StartCoroutine(FreezeRoutine());
-		//characterGraphicCtrl
+		StartCoroutine(FreezeRoutine());		
 	}
 
 	private IEnumerator FreezeRoutine(){
-		yield return new WaitForSeconds(BindBullet.freezeTime);
+		float timeAcc = 0f;
+		hbt.enabled = false;
+
+		while(true){
+			effectIce.transform.position = transform.position;
+
+			timeAcc += Time.deltaTime;
+
+			if(timeAcc > BindBullet.freezeTime){
+				break;
+			}
+				
+			yield return null;
+		}
+
+		hbt.enabled = true;
 		canControl = true;
+	}
+
+	public override void OnHpChanged (int hpChange){
+		Debug.Log(hpChange);
+	}
+
+	public override void OnDie (){
+		ConsoleMsgQueue.EnqueMsg("DEAD!");
+		ConsoleSystem.Show();
 	}
 
 	#endregion

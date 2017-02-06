@@ -5,8 +5,13 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	private Vector3 localPos;
 	private GameObject targetObj;
 
+	private Coroutine rotateRoutine;
+	private Transform trRenderer;
+
+
 	void Awake(){
 		flyingSpeed = GuidanceDevice.deviceSpeed;
+		trRenderer = transform.FindChild("Renderer");
 	}
 		
 	public override void OnReturned (){
@@ -14,6 +19,7 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 
 	public override void OnRequested (){
 		ReturnObject(2.5f);
+		rotateRoutine = StartCoroutine(RotatehRoutine());
 	}
 
 	public override void OnRecv (MsgSegment[] bodies){
@@ -34,8 +40,20 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	}
 
 	private IEnumerator AttachRoutine(){
+		if(rotateRoutine != null){
+			StopCoroutine(rotateRoutine);
+		}
+
 		while(true){
 			transform.position = targetObj.transform.position + localPos;
+
+			yield return null;
+		}
+	}
+
+	private IEnumerator RotatehRoutine(){
+		while(true){
+			trRenderer.Rotate(new Vector3(0, 0, Time.deltaTime * 1200f));
 
 			yield return null;
 		}

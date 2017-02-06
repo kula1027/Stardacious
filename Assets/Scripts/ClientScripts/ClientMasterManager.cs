@@ -11,6 +11,8 @@ public class ClientMasterManager : MonoBehaviour {
 	public GameObject pfHeavy;
 	public GameObject pfDoctor;
 
+	public bool friendlyFire = true;
+
 	void Awake(){
 		instance = this;
 

@@ -4,6 +4,9 @@ using System.Collections;
 public class GuidanceDevice : FlyingProjectile {
 	private Vector3 localPosition;
 
+	private Coroutine rotateRoutine;
+	private Transform trRenderer;
+
 	public const float deviceSpeed = 25f;
 
 	private StardaciousObject attachedTarget;
@@ -20,10 +23,12 @@ public class GuidanceDevice : FlyingProjectile {
 		hitObject = new HitObject(0);
 		objType = (int)ProjType.GuidanceDevice;
 		flyingSpeed = deviceSpeed;
+		trRenderer = transform.FindChild("Renderer");
 	}
 
 	public override void OnRequested (){
 		isAttached = false;
+		rotateRoutine = StartCoroutine(RotatehRoutine());
 		ReturnObject(1.5f);
 	}
 
@@ -74,11 +79,23 @@ public class GuidanceDevice : FlyingProjectile {
 	}
 
 	private IEnumerator AttachRoutine(){
+		if(rotateRoutine != null){
+			StopCoroutine(rotateRoutine);
+		}
+
 		while(true){
 			if(attachedTarget.IsDead){
 				ReturnObject();
 			}
 			transform.position = attachedTarget.transform.position + localPosition;
+
+			yield return null;
+		}
+	}
+
+	private IEnumerator RotatehRoutine(){
+		while(true){
+			trRenderer.Rotate(new Vector3(0, 0, Time.deltaTime * 1200f));
 
 			yield return null;
 		}

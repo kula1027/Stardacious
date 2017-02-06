@@ -11,11 +11,28 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 		centerPos = transform.position;
 		dir = Vector3.zero;
 	}
-
+		
 	void Update(){
-		if(CharacterCtrl.instance == null)return;
+		if(CharacterCtrl.instance == null){
+			return;
+		}
 
+		Vector3 dir_ = Vector3.zero;
 
+		if(Input.GetKey(KeyCode.RightArrow)){
+			dir_ += Vector3.right;
+		}
+		if(Input.GetKey(KeyCode.LeftArrow)){
+			dir_ += Vector3.left;
+		}
+		if(Input.GetKey(KeyCode.DownArrow)){
+			dir_ += Vector3.down;
+		}
+		if(Input.GetKey(KeyCode.UpArrow)){
+			dir_ += Vector3.up;
+		}
+
+		CharacterCtrl.instance.OnMovementInput(dir_);
 	}
 
 	private IEnumerator InputMoveRoutine(){
@@ -27,8 +44,8 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 	}
 
 	private Coroutine moveRoutine;
-	public void OnBeginDrag (PointerEventData eventData){
-		moveRoutine =  StartCoroutine(InputMoveRoutine());
+	public void OnBeginDrag (PointerEventData eventData){		
+		moveRoutine = StartCoroutine(InputMoveRoutine());
 	}
 
 	Vector3 dir;
@@ -45,7 +62,6 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 		dir = Vector3.zero;
 
 		StopCoroutine(moveRoutine);
-
 		CharacterCtrl.instance.OnMovementInput(Vector3.zero);
 	}
 }

@@ -88,12 +88,12 @@ public class ChaserBullet : PoolingObject, IHitter {
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 
 		if(hbt){
-			if(hbt.tag.Equals("Player")){
-				return;
-			}else{
+			if(hbt.tag.Equals("Player") == false || ClientMasterManager.instance.friendlyFire){
 				hbt.OnHit(hitObject);
 				ReturnObject();
 			}
+		}else{
+			ReturnObject();
 		}
 	}
 

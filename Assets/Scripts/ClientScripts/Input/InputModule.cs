@@ -22,6 +22,24 @@ public class InputModule : MonoBehaviour {
 		if (Input.GetKeyUp (KeyCode.LeftControl)) {
 			CharacterCtrl.instance.InputStopAttack();
 		}
+
+		if (Input.GetKeyDown (KeyCode.Z)) {
+			if(imgCoolDown[0].fillAmount < 0.001f){
+				CharacterCtrl.instance.UseSkill(0);
+			}
+		}
+
+		if (Input.GetKeyDown (KeyCode.X)) {
+			if(imgCoolDown[1].fillAmount < 0.001f){
+				CharacterCtrl.instance.UseSkill(1);
+			}
+		}
+
+		if (Input.GetKeyDown (KeyCode.C)) {
+			if(imgCoolDown[2].fillAmount < 0.001f){
+				CharacterCtrl.instance.UseSkill(2);
+			}
+		}
 	}
 
 	public void OnDownAttack(){

@@ -8,12 +8,17 @@ public class ClientProjectileManager : MonoBehaviour {
 	private ObjectPooler[] clientProjPool = new ObjectPooler[NetworkConst.maxPlayer];
 	private ObjectPooler serverProjPool;
 
+	//Projs
 	public GameObject pfMiniGunBullet;
 	public GameObject pfHeavyMine;
 	public GameObject pfChaserBullet;
 	public GameObject pfGuidanceDevice;
 	public GameObject pfBindBullet;
 	public GameObject pfEnergyBall;
+
+
+	//Effect
+	public GameObject pfIceEffect;
 
 	//Monster
 	public GameObject pfSpiderBullet;

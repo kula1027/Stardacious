@@ -39,10 +39,18 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 	public virtual void UseSkill(int idx_){
 	}
 		
+	public override void OnHpChanged (int hpChange){
+		MsgSegment h = new MsgSegment(MsgAttr.character, networkId);
+		MsgSegment[] b = {
+			new MsgSegment(MsgAttr.hit, hpChange)
+		};
+		NetworkMessage nmHit = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmHit);
+	}
 
 	#region IReceivable implementation
 
-	public void OnRecv (MsgSegment[] bodies){
+	public virtual void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.position:			
 			targetPos = bodies[0].ConvertToV3();
@@ -85,10 +93,32 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			break;
 
 		case MsgAttr.freeze:
-			//TODO freeze anim
+			ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
+			effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
+
+			StartCoroutine(FreezeRoutine());	
 			break;
 		}
 
+	}
+	#endregion
+
+	#region Freeze
+	GameObject effectIce;
+
+	private IEnumerator FreezeRoutine(){
+		float timeAcc = 0f;
+		while(true){
+			effectIce.transform.position = transform.position;
+
+			timeAcc += Time.deltaTime;
+
+			if(timeAcc > BindBullet.freezeTime){
+				break;
+			}
+
+			yield return null;
+		}			
 	}
 	#endregion
 

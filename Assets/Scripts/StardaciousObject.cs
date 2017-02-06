@@ -15,7 +15,7 @@ public class StardaciousObject : MonoBehaviour {
 		}
 		set{
 			currentHp = value;
-			OnHpChanged();
+			OnHpChanged(value);
 			if(currentHp <= 0){
 				isDead = true;
 				OnDie();
@@ -23,7 +23,7 @@ public class StardaciousObject : MonoBehaviour {
 		}
 	}
 
-	public virtual void OnHpChanged(){}
+	public virtual void OnHpChanged(int hpChange){}
 	public virtual void OnDie(){}
 	public virtual void AddForce(Vector2 dirForce_){}
 	public virtual void Freeze(){}

@@ -3,7 +3,11 @@ using System.Collections;
 
 public class NetworkServerProjectile : PoolingObject, IHitter {
 	protected float flyingSpeed = 10f;
+	private HitObject hitObject = new HitObject(10);
 	protected Coroutine flyingRoutine;
+
+	void Awkae(){		
+	}
 
 	public void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
@@ -26,7 +30,16 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 
 	#region IHitter implementation
 	public void OnHitSomebody (Collider2D col){
-		ReturnObject();
+		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
+
+		if(hbt){
+			if(hbt.tag.Equals("Player") == true){
+				hbt.OnHit(hitObject);
+				ReturnObject();
+			}
+		}else{
+			ReturnObject();
+		}
 	}
 	#endregion
 	

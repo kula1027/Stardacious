@@ -9,8 +9,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	public GameObject pfBindBullet;
 	public GameObject pfEnergyBall;
 
+	private NetworkMessage nmBoostState;
+
 	public override void Initialize (){
 		base.Initialize ();
+
+		nmBoostState = new NetworkMessage(commonHeader);
 
 		chrIdx = ChIdx.Doctor;
 
@@ -45,21 +49,29 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 				rgd2d.gravityScale = 1;
 				isHovering = false;
 				gcDoctor.EndHover();
+				nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.endHover);
+				Network_Client.SendTcp(nmBoostState);
 			}else{
 				if(isGround){
 					rgd2d.AddForce (Vector2.up * jumpPower);
 				}else{
-					if(canBoostJump && rgd2d.velocity.y > 0){
-						rgd2d.AddForce (Vector2.up * jumpPower * 0.7f);
-						canBoostJump = false;
-						gcDoctor.Boost();
+					if(canBoostJump){
+						if(rgd2d.velocity.y > 0){
+							rgd2d.AddForce (Vector2.up * jumpPower * 0.7f);
+							canBoostJump = false;
+							gcDoctor.Boost();
+							nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.boost);
+							Network_Client.SendTcp(nmBoostState);
+						}
 					}else{
-						if(hasHovered == false){
+						if(hasHovered == false && rgd2d.velocity.y < 0){
 							rgd2d.velocity = Vector2.zero;
 							rgd2d.gravityScale = 0;
 							isHovering = true;
 							hasHovered = true;
 							gcDoctor.Hover();
+							nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.beginHover);
+							Network_Client.SendTcp(nmBoostState);
 						}
 					}
 				}
@@ -72,6 +84,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			rgd2d.gravityScale = 1;
 			isHovering = false;
 			gcDoctor.EndHover();
+			nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.endHover);
+			Network_Client.SendTcp(nmBoostState);
 		}
 		canBoostJump = true;
 		isHovering = false;
@@ -198,6 +212,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 
 	public override void UseSkill (int idx_){
+		if(canControl == false)return;
+
 		base.UseSkill (idx_);
 		switch (idx_) {
 		case 0:			

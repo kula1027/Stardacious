@@ -7,31 +7,24 @@ using System;
 public class StartSceneManager : MonoBehaviour {
 	public static StartSceneManager instance;
 
-	private InputField inputIp;
-	private InputField inputName;
+	public InputField inputIp;
+	public InputField inputName;
 
-	private Text txtConfigState;
+	public Text txtConfigState;
 
-	private HidableUI readyPanel;
-	private HidableUI configPanel;
-	private HidableUI selCharPanel;
+	public HidableUI joinPanel;
+	public HidableUI readyPanel;
+	public HidableUI selCharPanel;
 
 	public Text[] tempState;
 
-	void Awake(){		
+	void Awake(){	
 		instance = this;
 
-		inputIp = GameObject.Find("IfIpAddress").GetComponent<InputField>();
-		inputName = GameObject.Find("IfName").GetComponent<InputField>();
-		txtConfigState = GameObject.Find("TextConfigState").GetComponent<Text>();
-
-		readyPanel = GameObject.Find("ReadyPanel").GetComponent<HidableUI>();
-		configPanel = GameObject.Find("NetworkConfig").GetComponent<HidableUI>();
-		selCharPanel = GameObject.Find("CharacterSelect").GetComponent<HidableUI>();
 	}
 
 	void Start(){
-		configPanel.Show();
+		joinPanel.Show();
 		KingGodClient.instance.OnEnterStartScene();
 	}
 
@@ -52,7 +45,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnNetworkSetupDone(){
-		configPanel.Hide();	
+		joinPanel.Hide();	
 
 		if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
 			tempState[Network_Client.NetworkId].text = "Touch!\nYeah!";
@@ -77,11 +70,9 @@ public class StartSceneManager : MonoBehaviour {
 		//Quit App
 	}
 
-	public void OnBtnSelCharacterClick(int idx_){
-		if(idx_ == Network_Client.NetworkId){
-			selCharPanel.Show();
-			readyPanel.Hide();
-		}
+	public void OnBtnSelCharacterClick(){
+		selCharPanel.Show();
+		readyPanel.Hide();
 	}
 
 	public void OnBtnSelBackClick(){
@@ -97,7 +88,11 @@ public class StartSceneManager : MonoBehaviour {
 		Network_Client.ShutDown();
 		txtConfigState.text = "BLAH BLAH";
 
-		configPanel.Show();
+		joinPanel.Show();
 		readyPanel.Hide();
 	}
+
+	public void SelectCharacter(){
+
+	}		
 }

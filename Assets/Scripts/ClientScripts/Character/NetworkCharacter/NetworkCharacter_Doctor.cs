@@ -30,4 +30,22 @@ public class NetworkCharacter_Doctor : NetworkCharacter {
 			break;
 		}
 	}
+
+	public override void OnRecv (MsgSegment[] bodies){
+		base.OnRecv (bodies);
+
+		switch(bodies[0].Attribute){
+		case MsgAttr.Character.boost:	
+			gcDoctor.Boost();
+			break;
+
+		case MsgAttr.Character.beginHover:	
+			gcDoctor.Hover();
+			break;
+
+		case MsgAttr.Character.endHover:	
+			gcDoctor.EndHover();
+			break;
+		}
+	}
 }

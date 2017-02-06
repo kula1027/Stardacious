@@ -3,8 +3,10 @@ using System.Collections;
 
 public class BindBullet : FlyingProjectile {
 	public const float freezeTime = 5f;
+	public const float bindBulletSpeed = 25f;
 
 	void Awake(){
+		flyingSpeed = bindBulletSpeed;
 		hitObject = new HoBind();
 		objType = (int)ProjType.BindBullet;	
 	}
@@ -14,9 +16,9 @@ public class BindBullet : FlyingProjectile {
 
 		if(hbt){
 			hbt.OnHit(hitObject);
+		}else{
+			ReturnObject();
 		}
-
-		ReturnObject();
 	}
 
 	public override void OnReturned (){
