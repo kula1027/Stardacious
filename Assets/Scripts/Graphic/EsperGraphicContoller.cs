@@ -48,6 +48,16 @@ public class EsperGraphicContoller : CharacterGraphicCtrl {
 		throw new System.NotImplementedException ();
 	}
 
+	public override void FreezeAnimation ()
+	{
+		throw new System.NotImplementedException ();
+	}
+
+	public override void ResumeAnimation ()
+	{
+		throw new System.NotImplementedException ();
+	}
+
 	#region private
 	private void SetSingleAnim(ControlDirection direction){
 		

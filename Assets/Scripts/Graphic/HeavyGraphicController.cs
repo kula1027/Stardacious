@@ -117,7 +117,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	private bool cartridgeIsPlayed = false;
-	public void AnimationFreeze(){
+	public override void FreezeAnimation(){
 		lowerAnimator.enabled = false;
 		upperAnimator.enabled = false;
 		miniEffectAnimator.enabled = false;
@@ -126,7 +126,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	public void AnimationResume(){
+	public override void ResumeAnimation(){
 		lowerAnimator.enabled = true;
 		upperAnimator.enabled = true;
 		miniEffectAnimator.enabled = true;

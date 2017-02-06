@@ -101,15 +101,19 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		SetLowerAnim (currentInputDirection);
 	}
 
-	public void AnimationFreeze(){
+	public override void FreezeAnimation(){
 		lowerAnimator.enabled = false;
 		upperAnimator.enabled = false;
-		EndHover ();
+		hair.timeScale = 0;
+		if(isHovering){
+			EndHover ();
+		}
 	}
 
-	public void AnimationResume(){
+	public override void ResumeAnimation(){
 		lowerAnimator.enabled = true;
 		upperAnimator.enabled = true;
+		hair.timeScale = 1;
 	}
 
 	public override void StartNormalAttack (){

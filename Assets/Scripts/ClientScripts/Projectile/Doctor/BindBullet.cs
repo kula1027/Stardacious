@@ -16,9 +16,8 @@ public class BindBullet : FlyingProjectile {
 
 		if(hbt){
 			hbt.OnHit(hitObject);
-		}else{
-			ReturnObject();
 		}
+		ReturnObject();
 	}
 
 	public override void OnReturned (){

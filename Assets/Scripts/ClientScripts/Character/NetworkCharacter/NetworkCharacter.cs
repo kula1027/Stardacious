@@ -107,6 +107,8 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 	GameObject effectIce;
 
 	private IEnumerator FreezeRoutine(){
+		characterGraphicCtrl.FreezeAnimation();
+
 		float timeAcc = 0f;
 		while(true){
 			effectIce.transform.position = transform.position;
@@ -118,7 +120,9 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			}
 
 			yield return null;
-		}			
+		}		
+
+		characterGraphicCtrl.ResumeAnimation();
 	}
 	#endregion
 

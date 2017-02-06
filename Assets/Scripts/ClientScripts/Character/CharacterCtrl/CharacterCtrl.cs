@@ -286,6 +286,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
 		effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
 
+		characterGraphicCtrl.FreezeAnimation();
+
 		canControl = false;
 		StartCoroutine(FreezeRoutine());		
 	}
@@ -306,12 +308,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			yield return null;
 		}
 
+
+		characterGraphicCtrl.ResumeAnimation();
 		hbt.enabled = true;
 		canControl = true;
 	}
 
 	public override void OnHpChanged (int hpChange){
-		Debug.Log(hpChange);
+		
 	}
 
 	public override void OnDie (){

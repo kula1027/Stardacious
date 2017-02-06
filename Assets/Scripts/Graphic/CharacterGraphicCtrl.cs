@@ -18,6 +18,8 @@ public abstract class CharacterGraphicCtrl : MonoBehaviour {
 	public abstract void Grounded();
 	public abstract void StartNormalAttack();
 	public abstract void StopNormalAttack();
+	public abstract void FreezeAnimation();
+	public abstract void ResumeAnimation();
 
 	#region Twinkle
 	protected SpriteRenderer[] unitParts;
