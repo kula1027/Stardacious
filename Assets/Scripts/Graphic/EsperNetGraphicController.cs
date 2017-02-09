@@ -7,7 +7,7 @@ public class EsperNetGraphicController : EsperGraphicController {
 		base.Awake ();
 	}
 
-	protected override void SetAttackAnim(ControlDirection direction){
+	/*protected override void SetAttackAnim(ControlDirection direction){
 		if (!isAttackAnimationPlaying) {
 			isAttackAnimationPlaying = true;
 			switch (direction) {
@@ -46,5 +46,5 @@ public class EsperNetGraphicController : EsperGraphicController {
 				}
 			}
 		}
-	}
+	}*/
 }

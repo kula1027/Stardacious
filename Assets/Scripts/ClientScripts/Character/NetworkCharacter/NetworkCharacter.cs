@@ -74,12 +74,7 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			break;
 
 		case MsgAttr.Character.normalAttack:
-			if(bodies[0].Content.Equals(NetworkMessage.sTrue)){
-				characterGraphicCtrl.StartNormalAttack();
-			}
-			if(bodies[0].Content.Equals(NetworkMessage.sFalse)){
-				characterGraphicCtrl.StopNormalAttack();
-			}
+			OnRecvNormalAttack(bodies);
 			break;
 
 		case MsgAttr.Character.skill:
@@ -99,9 +94,17 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			StartCoroutine(FreezeRoutine());	
 			break;
 		}
-
 	}
 	#endregion
+
+	protected virtual void OnRecvNormalAttack(MsgSegment[] bodies_){
+		if(bodies_[0].Content.Equals(NetworkMessage.sTrue)){
+			characterGraphicCtrl.StartNormalAttack();
+		}
+		if(bodies_[0].Content.Equals(NetworkMessage.sFalse)){
+			characterGraphicCtrl.StopNormalAttack();
+		}
+	}
 
 	#region Freeze
 	GameObject effectIce;

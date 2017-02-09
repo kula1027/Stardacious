@@ -64,6 +64,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	}
 
 	public void ShootShotGun(){
+		nmAttack.Body[0].Content = NetworkMessage.sTrue;
+		Network_Client.SendTcp(nmAttack);
 		StartCoroutine(ShotGunRoutine());
 	}
 
@@ -103,13 +105,19 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			StartMachineGun ();
 		}
 	}
-	public void StartMachineGun(){
+
+	private void StartMachineGun(){
+		nmAttack.Body[0].Content = NetworkMessage.sTrue;
+		Network_Client.SendTcp(nmAttack);
 		machinegunRoutine = StartCoroutine(MachineGunRoutine());
 	}
 
-	public void StopMachineGun(){
-		if(machinegunRoutine != null)
+	private void StopMachineGun(){
+		if(machinegunRoutine != null){
 			StopCoroutine(machinegunRoutine);
+			nmAttack.Body[0].Content = NetworkMessage.sFalse;
+			Network_Client.SendTcp(nmAttack);
+		}
 	}
 
 	private const float machineGunFireRate = 0.15f;
@@ -194,6 +202,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		switch (idx_) {
 		case 0:
 			gcHeavy.WeaponSwap ();
+			if(isMachineGunMode){
+				StopMachineGun();
+			}
 			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 			break;
 

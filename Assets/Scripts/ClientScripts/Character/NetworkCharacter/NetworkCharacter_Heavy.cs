@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class NetworkCharacter_Heavy : NetworkCharacter {
-	public HeavyGraphicController gcHeavy;
+	public HeavyNetGraphicController gcHeavy;
 
 	void Awake(){
 		gcHeavy.Initialize();

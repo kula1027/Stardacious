@@ -8,6 +8,27 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 		base.Awake ();
 	}
 
+	public override void StartNormalAttack(){
+		isAttackButtonPressing = true;
+
+		if (isMiniGunMode) {
+			SetUpperAnim (currentInputDirection);
+			SetLowerAnim (currentInputDirection);
+		} else {
+			isAttackAnimationPlaying = true;
+			SetShotGunShootAnim (currentInputDirection);
+			SetLowerAnim (currentInputDirection);
+		}
+	}
+	public override void StopNormalAttack(){
+		isAttackButtonPressing = false;
+
+		if (isMiniGunMode) {
+			SetUpperAnim (currentInputDirection);
+			SetLowerAnim (currentInputDirection);
+		}
+	}
+
 	public override void WeaponSwap(){
 		miniEffectAnimator.Play ("Idle");
 		cartridge.Stop ();
@@ -15,6 +36,7 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 		if (isMiniGunMode) {
 			lowerAnimator.Play ("Swap2");
 			upperAnimator.Play ("Swap2");
+			isMiniGunMode = false;
 		} else {
 			lowerAnimator.Play ("Swap1");
 			upperAnimator.Play ("Swap1");
@@ -102,5 +124,11 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 				}
 			}
 		}
+	}
+
+	public override void EndShotGunAttackMotion(){
+		isAttackAnimationPlaying = false;
+		SetUpperAnim (currentInputDirection);
+		SetLowerAnim (currentInputDirection);
 	}
 }

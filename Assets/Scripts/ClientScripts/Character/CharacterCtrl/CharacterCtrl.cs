@@ -10,7 +10,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected MsgSegment commonHeader;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
-	private NetworkMessage nmAttack;
+	protected NetworkMessage nmAttack;
 	private NetworkMessage nmGround;
 	private NetworkMessage nmSkill;
 
@@ -196,9 +196,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public virtual void InputStartAttack(){
 		if(canControl == false)return;
 
-		characterGraphicCtrl.StartNormalAttack ();
-		nmAttack.Body[0].Content = NetworkMessage.sTrue;
-		Network_Client.SendTcp(nmAttack);
+		characterGraphicCtrl.StartNormalAttack ();	
 	}
 
 	public virtual void InputStopAttack(){

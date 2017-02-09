@@ -19,7 +19,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	//State
 	protected HeavyLowerState lowerState;				//현재 하체상태
-	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
+	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
 	protected ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
 
 	//Flags
@@ -151,7 +151,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		SetAttackDelay ();
 	}
 
-	void SetShotGunShootAnim(ControlDirection direction){	//샷건 발사시에 방향 별 강제 슈팅(상체 모션 캔슬)
+	protected void SetShotGunShootAnim(ControlDirection direction){	//샷건 발사시에 방향 별 강제 슈팅(상체 모션 캔슬)
 		switch (direction) {
 		case ControlDirection.Left:
 		case ControlDirection.Right:
@@ -299,7 +299,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	#endregion
 
 	#region AnimationCallBack
-	public void EndShotGunAttackMotion(){
+	public virtual void EndShotGunAttackMotion(){
 		isAttackAnimationPlaying = false;
 
 		if (isAttackButtonPressing) {			//다시 공격
