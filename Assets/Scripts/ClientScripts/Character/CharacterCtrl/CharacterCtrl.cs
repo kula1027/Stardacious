@@ -246,6 +246,15 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		case MsgAttr.freeze:
 			Freeze();
 			break;
+
+		case MsgAttr.Character.summon:
+			transform.position = bodies[0].ConvertToV3();
+			NetworkMessage nmDpos = new NetworkMessage(
+				new MsgSegment(MsgAttr.character, Network_Client.NetworkId),
+				new MsgSegment(MsgAttr.directPosition, transform.position)
+			);
+			Network_Client.SendTcp(nmDpos);
+			break;
 		}
 	}
 

@@ -73,6 +73,11 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			}
 			break;
 
+		case MsgAttr.directPosition:
+			Vector3 dTargetPos = bodies[0].ConvertToV3();
+			itpl = new Interpolater(dTargetPos);
+			break;
+
 		case MsgAttr.Character.normalAttack:
 			OnRecvNormalAttack(bodies);
 			break;

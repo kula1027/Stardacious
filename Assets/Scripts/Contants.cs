@@ -11,7 +11,8 @@ public enum ProjType{
 	BindBullet,
 	EnergyBall,
 	SpiderBullet,
-	EffectIce
+	EffectIce,
+	RecallBullet
 }
 
 public enum ChIdx{

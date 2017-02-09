@@ -44,31 +44,36 @@ namespace ServerSide{
 			}
 		}
 
-		public void OnRecv(NetworkMessage networkMessage){
-			switch(networkMessage.Header.Content){
-			case MsgAttr.create:
-				int sender = int.Parse(networkMessage.Adress.Attribute);
-				ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
-				ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
-				break;
+		public void OnRecv(NetworkMessage networkMessage){			
+			if(networkMessage.Adress.Content.Equals(NetworkMessage.ServerId) == true){//서버를 향한 메시지가 아닐 경우				
+				switch(networkMessage.Header.Content){
+				case MsgAttr.create:					
+					int sender = int.Parse(networkMessage.Adress.Attribute);
+					ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
+					ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
+					break;
 
 				default:
-				int targetCharacter = int.Parse(networkMessage.Header.Content);
+					int targetCharacter = int.Parse(networkMessage.Header.Content);
 
-				if(targetCharacter == MsgAttr.Character.iTargetAll){
-					for(int loop = 0; loop < character.Length; loop++){
-						ServerCharacter nc =  character[loop];
+					if(targetCharacter == MsgAttr.Character.iTargetAll){
+						for(int loop = 0; loop < character.Length; loop++){
+							ServerCharacter nc =  character[loop];
+							if(nc){
+								nc.OnRecvMsg(networkMessage.Body);
+							}
+						}
+					}else{
+						ServerCharacter nc =  character[targetCharacter];
 						if(nc){
 							nc.OnRecvMsg(networkMessage.Body);
 						}
 					}
-				}else{
-					ServerCharacter nc =  character[targetCharacter];
-					if(nc){
-						nc.OnRecvMsg(networkMessage.Body);
-					}
+					break;
 				}
-				break;
+			}else{
+				int recver = int.Parse(networkMessage.Adress.Content);
+				Network_Server.UniCast(networkMessage, recver);
 			}
 		}
 	}
