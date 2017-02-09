@@ -29,6 +29,7 @@ namespace ServerSide{
 		private static void WelcomeConnection(){
 			ipEndPoint = new IPEndPoint(IPAddress.Any, tcpWelcomePort);
 			tcpListener = new TcpListener(ipEndPoint);
+			//tcpListener.Server.NoDelay//TODO
 
 			tcpListener.Start();
 

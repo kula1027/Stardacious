@@ -115,6 +115,8 @@ namespace ServerSide{
 			MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect, clientId.ToString());
 			NetworkMessage dyingMsg = new NetworkMessage(h, b);
 
+
+
 			string recStr;
 			try{
 				while(isConnected){
