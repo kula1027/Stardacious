@@ -18,19 +18,19 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	public ParticleSystem cartridge;
 
 	//State
-	private HeavyLowerState lowerState;				//현재 하체상태
+	protected HeavyLowerState lowerState;				//현재 하체상태
 	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
-	private ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
+	protected ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
 
 	//Flags
-	private bool isFlying = false;
-	private bool isAttackButtonPressing = false;		//미니건 모드일 경우 이걸로 즉시 발사 및 중지
-	private bool isAttackAnimationPlaying = false;		//샷건 모드일 경우 공격 선딜, 후딜을 이것으로 표시
-	private bool recentIsMiniGun = false;	//스왑전에 뭐였니
-	private bool isMiniGunMode = false;
+	protected bool isFlying = false;
+	protected bool isAttackButtonPressing = false;		//미니건 모드일 경우 이걸로 즉시 발사 및 중지
+	protected bool isAttackAnimationPlaying = false;		//샷건 모드일 경우 공격 선딜, 후딜을 이것으로 표시
+	protected bool recentIsMiniGun = false;	//스왑전에 뭐였니
+	protected bool isMiniGunMode = false;
 	private bool isSwapDelay = false;
 
-	void Awake () {
+	protected void Awake () {
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 		cartridge.Stop ();
@@ -94,9 +94,8 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 			SetLowerAnim (currentInputDirection);
 		}
 	}
-
-	//HACK : 네트워크 캐릭터의 스왑에서 시간이 꼬이면 스왑이 씹힐 수 있을 듯.
-	public void WeaponSwap(){			//상,하체 모션 캔슬 및 변경 금지
+		
+	public virtual void WeaponSwap(){			//상,하체 모션 캔슬 및 변경 금지
 		if (!isSwapDelay) {			//스왑중일때는 재스왑 불가
 
 			miniEffectAnimator.Play("Idle");
@@ -152,7 +151,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		SetAttackDelay ();
 	}
 
-	private void SetShotGunShootAnim(ControlDirection direction){	//샷건 발사시에 방향 별 강제 슈팅(상체 모션 캔슬)
+	void SetShotGunShootAnim(ControlDirection direction){	//샷건 발사시에 방향 별 강제 슈팅(상체 모션 캔슬)
 		switch (direction) {
 		case ControlDirection.Left:
 		case ControlDirection.Right:
@@ -174,21 +173,14 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		shotEffectAnimator.transform.rotation = gunMuzzle.rotation;
 		shotEffectAnimator.Play ("Shoot", 0, 0);
 	}
-
-	/*IEnumerator minigunEffectPlayer(){
-		yield return null;
-		miniEffectAnimator.transform.position = gunMuzzle.position;
-		miniEffectAnimator.Play("Shoot");
-	}*/
-	private void SetUpperAnim(ControlDirection direction){
+		
+	protected virtual void SetUpperAnim(ControlDirection direction){
 		if (!isSwapDelay) {			//스왑중 아닐 때
 			if (isMiniGunMode) {			//미니건 모드
 				if (isAttackButtonPressing) {
 					upperAnimator.Play ("TowerShoot");		//미니건 공격
-					//StartCoroutine(minigunEffectPlayer());
 					miniEffectAnimator.transform.position = gunMuzzle.position;
 					miniEffectAnimator.Play("Shoot");
-					//TODO 코루틴 없이 muzzle position 테스트
 					cartridge.Play();
 				} else {
 					upperAnimator.Play ("TowerIdle");		//미니건 정지
@@ -221,7 +213,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	private void SetLowerAnim(ControlDirection direction){
+	protected virtual void SetLowerAnim(ControlDirection direction){
 		if (!isFlying && !isSwapDelay) {//점프 및 스왑 예외 처리
 			
 			if (isMiniGunMode) {	//미니건 모드
