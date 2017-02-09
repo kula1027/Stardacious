@@ -11,7 +11,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	public SkeletonAnimation mufflerR;
 
 	//State
-	private int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
+	protected int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
 	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
 
 	//Flags
@@ -23,7 +23,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	private Animator singleAnimator;
 
-	void Awake(){
+	protected void Awake(){
 		singleAnimator = transform.FindChild("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 
 		currentInputDirection = ControlDirection.Middle;
@@ -46,17 +46,22 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	public override void ForcedFly (){
 		isFlying = true;
 		singleAnimator.Play ("LongJump");
+		MufflerActive ();
 	}
 	public override void Jump (){
 		isAttackAnimationPlaying = false;
 		ReleaseAttackDelay();
 		isFlying = true;
 		if (isAttackButtonPressing) {
-			master.OnJumpAttack();
+			if (master) {
+				master.OnJumpAttack ();
+			}
 			singleAnimator.Play ("JumpAttack");
+			MufflerActive ();
 			canJumpAttack = false;
 		} else {
 			singleAnimator.Play ("Jump");
+			MufflerActive ();
 		}
 	}
 	public override void Grounded (){
@@ -73,8 +78,11 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 		if (isFlying) {
 			if (canJumpAttack) {
-				master.OnJumpAttack();
+				if (master) {
+					master.OnJumpAttack ();
+				}
 				singleAnimator.Play ("JumpAttack");
+				MufflerActive ();
 				canJumpAttack = false;
 			}
 		}else{
@@ -83,7 +91,9 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 	public override void StopNormalAttack (){
 		isAttackButtonPressing = false;
-		nextAttackMotion = 0;
+		if (!isAttackAnimationPlaying) {
+			nextAttackMotion = 0;
+		}
 	}
 
 	public override void FreezeAnimation (){
@@ -96,6 +106,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public void Rush(){
 		singleAnimator.Play ("Rush");
+		MufflerActive ();
 	}
 
 	public void RushBack(){
@@ -107,7 +118,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	#region private
-	private void SetAttackAnim(ControlDirection direction){
+	protected virtual void SetAttackAnim(ControlDirection direction){
 		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
 			isAttackAnimationPlaying = true;
@@ -115,20 +126,26 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			case ControlDirection.Middle:
 			case ControlDirection.Up:
 			case ControlDirection.Down:
-				master.OnAttackSlash(nextAttackMotion);
+				if (master) {
+					master.OnAttackSlash (nextAttackMotion);
+				}
 				singleAnimator.Play ("Slash" + nextAttackMotion);
+				MufflerActive ();
 				nextAttackMotion = (nextAttackMotion + 1) % 2;
 				break;
 			default:
-				master.OnAttackDash();
+				if (master) {
+					master.OnAttackDash ();
+				}
 				singleAnimator.Play ("StabAttack", 0, 0);
+				MufflerActive ();
 				nextAttackMotion = 0;
 				break;
 			}
 		}
 	}
 
-	private void SetSingleAnim(ControlDirection direction){
+	protected virtual void SetSingleAnim(ControlDirection direction){
 		if(!isFlying){
 			if (!isAttackAnimationPlaying) {
 				if (!isAttackButtonPressing) {
@@ -137,14 +154,25 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					case ControlDirection.Up:
 					case ControlDirection.Down:
 						singleAnimator.Play ("Idle");
+						MufflerDeactive ();
 						break;
 					default:
 						singleAnimator.Play ("Run");
+						MufflerActive ();
 						break;
 					}
 				}
 			}
 		}
+	}
+
+	private void MufflerActive(){
+		mufflerL.AnimationName = "dynamic";
+		mufflerR.AnimationName = "dynamic";
+	}
+	private void MufflerDeactive(){
+		mufflerL.AnimationName = "idle";
+		mufflerR.AnimationName = "idle";
 	}
 	#endregion
 
