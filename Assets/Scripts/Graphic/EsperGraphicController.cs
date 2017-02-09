@@ -105,6 +105,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void Rush(){
+		ReleaseAttackDelay ();
+		isAttackAnimationPlaying = false;
 		singleAnimator.Play ("Rush");
 		MufflerActive ();
 	}
@@ -115,6 +117,14 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		} else {
 			SetSingleAnim (currentInputDirection);
 		}
+	}
+
+	public void Recall(){
+		
+	}
+
+	public void PsyShield(){
+		
 	}
 
 	#region private
@@ -146,7 +156,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	protected virtual void SetSingleAnim(ControlDirection direction){
-		if(!isFlying){
+		if (!isFlying) {
 			if (!isAttackAnimationPlaying) {
 				if (!isAttackButtonPressing) {
 					switch (direction) {
@@ -163,6 +173,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					}
 				}
 			}
+		} else {
+			singleAnimator.Play ("LongJump");
 		}
 	}
 

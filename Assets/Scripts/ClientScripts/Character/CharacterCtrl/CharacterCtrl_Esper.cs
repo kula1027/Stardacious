@@ -27,13 +27,15 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		base.OnMovementInput (vec3_);
 	}
 
-	public void OnAttackDash(){
+	public void OnAttackDash(){	
+		Debug.Log ("DASH");	
 		float dir = 0;
 		if(currentDirV3.x < 0){
 			dir = -1;
 		}else{
 			dir = 1;
 		}
+		Debug.Log (Vector3.right * dir * 800);
 		rgd2d.AddForce(Vector3.right * dir * 800);
 	}
 
@@ -44,8 +46,20 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	public void OnJumpAttack(){
 
 	}
+	public override void InputStartAttack (){
+		if(esperSelfControl == false)return;
+
+		base.InputStartAttack ();
+	}
+
+	public override void Jump (){
+		if(esperSelfControl == false)return;
+
+		base.Jump ();
+	}
 
 	private void SwiftRush(Vector3 dirRush){
+		gcEsper.StopNormalAttack ();
 		StartCoroutine(SwiftRushRoutine(dirRush));
 	}
 
