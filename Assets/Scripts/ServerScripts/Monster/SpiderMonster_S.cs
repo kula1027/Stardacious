@@ -30,7 +30,7 @@ namespace ServerSide{
 						currentCharacterPos[i] = ServerCharacterManager.instance.GetCharacter(i).transform.position;
 				}
 
-				closestCharacterPos = SetClosestCharacterPos (currentCharacterPos);
+				//closestCharacterPos = SetClosestCharacterPos (currentCharacterPos);
 
 				// main AIpart
 				if (Mathf.Abs (this.transform.position.x - closestCharacterPos.x) > 5) {
@@ -55,7 +55,7 @@ namespace ServerSide{
 					if (beHaviorFactor < 2) {
 						isBack = true;
 					} else {
-						MonsterShootProjectile ();
+						//MonsterShootProjectile ();
 					}
 				}
 
