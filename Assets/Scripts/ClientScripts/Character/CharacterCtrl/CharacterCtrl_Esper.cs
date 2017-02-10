@@ -235,16 +235,16 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		case 1:
 			SpaceDistortion();
-			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
 			break;
 
 		case 2:
 			if(recallTarget == -1){
 				FireRecallBullet();
-				InputModule.instance.BeginCoolDown(1, 1.2f);
+				InputModule.instance.BeginCoolDown(2, 1.2f);
 			}else{
 				Recall();
-				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			}
 			break;
 		}

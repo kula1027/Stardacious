@@ -8,7 +8,7 @@ public abstract class CharacterGraphicCtrl : MonoBehaviour {
 	protected Animator lowerAnimator;
 	protected Animator upperAnimator;
 
-	protected ControlFlags controlFlags;
+	protected ControlFlags controlFlags = new ControlFlags();
 
 	public abstract void Initialize();
 	public abstract void SetDirection(ControlDirection c);

@@ -119,6 +119,7 @@ public class MsgAttr{
 	public class Misc{
 		public const string exitClient = "exit";
 		public const string disconnect = "disc";
+		public const string hello = "hlo";
 	}
 
 	public const string stage = "stg";

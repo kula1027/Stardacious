@@ -12,7 +12,7 @@ public class ClientMasterManager : MonoBehaviour {
 	public GameObject pfDoctor;
 	public GameObject pfEsper;
 
-	public bool friendlyFire = true;
+	public bool friendlyFire = false;
 
 	void Awake(){
 		instance = this;

@@ -46,6 +46,16 @@ public class StartSceneManager : MonoBehaviour {
 			int chIdx = int.Parse(networkMessage.Body[0].Content);
 			readyPanel.SetSlotCharacter(sender, chIdx);
 			break;
+
+		case MsgAttr.Misc.hello:
+			SetOtherInfo(networkMessage.Body);
+			break;
+		}
+	}
+
+	private void SetOtherInfo(MsgSegment[] bodies){
+		for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+			
 		}
 	}
 
@@ -55,6 +65,12 @@ public class StartSceneManager : MonoBehaviour {
 		if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
 			tempState[Network_Client.NetworkId].text = "Touch!\nYeah!";
 		}
+
+		NetworkMessage nmHello = new NetworkMessage(
+			new MsgSegment(MsgAttr.misc),
+			new MsgSegment(MsgAttr.Misc.hello, PlayerData.nickName)
+		);
+		Network_Client.SendTcp(nmHello);
 
 		readyPanel.Show();
 	}

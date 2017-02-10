@@ -3,13 +3,34 @@ using System.Collections;
 
 public class ShowWindowHeavy : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
+	public HeavyGraphicController gcHeavy;
+
+	void Start(){
+		StartCoroutine(ShowRoutine());
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	private IEnumerator ShowRoutine(){
+		while(true){
+			int rand = Random.Range(0, 1);
+
+			switch(rand){
+			case 0:
+				gcHeavy.StartNormalAttack();
+				yield return new WaitForSeconds(1f);
+				gcHeavy.StopNormalAttack();
+				break;
+
+			case 1:
+
+				break;
+
+			case 2:
+
+				break;
+			}
+
+
+			yield return new WaitForSeconds(3f);
+		}
 	}
 }
