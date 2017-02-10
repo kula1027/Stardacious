@@ -7,7 +7,6 @@ namespace ServerSide{
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
 		private bool isJump = false;
-		//private bool isBack = false;
 
 
 		void Start(){
@@ -15,7 +14,6 @@ namespace ServerSide{
 			StartCoroutine(TestAI());
 		}
 
-		private Vector3 tempDir;
 		private IEnumerator TestAI(){
 			while(true){
 				int beHaviorFactor = Random.Range (0,9);	// set random range
@@ -78,22 +76,4 @@ namespace ServerSide{
 		}
 
 	}
-
-	/*
-		private IEnumerator TestAI(){
-			float timeAcc = 0;
-			float hahaa = Random.Range(4, 6);
-			tempDir = new Vector3(Random.Range(-1, 1), 0, 0);
-			while(true){					
-				timeAcc += Time.deltaTime;
-				if(timeAcc > hahaa){
-					hahaa = Random.Range(4, 6);
-					timeAcc = 0;
-					FireProjectile();
-				}
-
-				yield return null;
-			}
-		}
-	*/
 }
