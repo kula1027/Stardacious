@@ -9,6 +9,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	//Child
 	public SkeletonAnimation mufflerL;
 	public SkeletonAnimation mufflerR;
+	public Animator slashAnimator;
+	public GameObject rushEffect;
 
 	//State
 	protected int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
@@ -27,6 +29,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		singleAnimator = transform.FindChild("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 
 		currentInputDirection = ControlDirection.Middle;
+
+		rushEffect.SetActive (false);
 	}
 
 	public override void Initialize (){
@@ -57,6 +61,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 				master.OnJumpAttack ();
 			}
 			singleAnimator.Play ("JumpAttack");
+			slashAnimator.Play ("Slash1", 0, 0);
 			MufflerActive ();
 			canJumpAttack = false;
 		} else {
@@ -82,6 +87,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					master.OnJumpAttack ();
 				}
 				singleAnimator.Play ("JumpAttack");
+				slashAnimator.Play ("Slash1", 0, 0);
 				MufflerActive ();
 				canJumpAttack = false;
 			}
@@ -110,6 +116,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		canJumpAttack = true;
 		singleAnimator.Play ("Rush");
 		MufflerActive ();
+
+		rushEffect.SetActive (true);
 	}
 
 	public void RushBack(){
@@ -118,6 +126,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		} else {
 			SetSingleAnim (currentInputDirection);
 		}
+
+		rushEffect.SetActive (false);
 	}
 
 	public void Recall(){
@@ -137,6 +147,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					master.OnJumpAttack ();
 				}
 				singleAnimator.Play ("JumpAttack");
+				slashAnimator.Play ("Slash1", 0, 0);
 				MufflerActive ();
 				canJumpAttack = false;
 			}else{
@@ -148,7 +159,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					if (master) {
 						master.OnAttackSlash (nextAttackMotion);
 					}
-					singleAnimator.Play ("Slash" + nextAttackMotion);
+					singleAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
+					slashAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
 					MufflerActive ();
 					nextAttackMotion = (nextAttackMotion + 1) % 2;
 					break;
@@ -157,6 +169,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 						master.OnAttackDash ();
 					}
 					singleAnimator.Play ("StabAttack", 0, 0);
+					slashAnimator.Play ("StabAttack", 0, 0);
 					MufflerActive ();
 					nextAttackMotion = 0;
 					break;

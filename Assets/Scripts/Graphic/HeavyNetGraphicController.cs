@@ -58,24 +58,26 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 					cartridge.Stop();
 				}
 			} else {
-			switch (direction) {
-			case ControlDirection.Left:
-			case ControlDirection.Right:
-				upperAnimator.Play ("FrontIdle");
-				recentAimDirection = ShootDirection.Front;
-				break;
-			case ControlDirection.LeftUp:
-			case ControlDirection.RightUp:
-				upperAnimator.Play ("FrontUpIdle");
-				recentAimDirection = ShootDirection.FrontUp;
-				break;
-			case ControlDirection.Up:
-				upperAnimator.Play ("UpIdle");
-				recentAimDirection = ShootDirection.Up;
-				break;
-			default:
-				upperAnimator.Play (recentAimDirection.ToString () + "Idle");
-				break;
+			if (!isAttackAnimationPlaying) {
+				switch (direction) {
+				case ControlDirection.Left:
+				case ControlDirection.Right:
+					upperAnimator.Play ("FrontIdle");
+					recentAimDirection = ShootDirection.Front;
+					break;
+				case ControlDirection.LeftUp:
+				case ControlDirection.RightUp:
+					upperAnimator.Play ("FrontUpIdle");
+					recentAimDirection = ShootDirection.FrontUp;
+					break;
+				case ControlDirection.Up:
+					upperAnimator.Play ("UpIdle");
+					recentAimDirection = ShootDirection.Up;
+					break;
+				default:
+					upperAnimator.Play (recentAimDirection.ToString () + "Idle");
+					break;
+				}
 			}
 		}
 	}
