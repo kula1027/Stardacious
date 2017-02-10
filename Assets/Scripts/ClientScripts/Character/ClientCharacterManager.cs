@@ -46,7 +46,12 @@ public class ClientCharacterManager : MonoBehaviour {
 		case ChIdx.Heavy:
 			go = (GameObject)Instantiate(pfNetworkHeavy);
 			break;
+
+		case ChIdx.Esper:
+			go = (GameObject)Instantiate(pfNetworkEsper);
+			break;
 		}
+
 		characters[idx_] = go.GetComponent<NetworkCharacter>();
 		characters[idx_].NetworkId = idx_;
 	}

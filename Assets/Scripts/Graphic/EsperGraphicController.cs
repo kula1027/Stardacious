@@ -107,6 +107,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	public void Rush(){
 		ReleaseAttackDelay ();
 		isAttackAnimationPlaying = false;
+		canJumpAttack = true;
 		singleAnimator.Play ("Rush");
 		MufflerActive ();
 	}
@@ -131,26 +132,35 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	protected virtual void SetAttackAnim(ControlDirection direction){
 		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
-			isAttackAnimationPlaying = true;
-			switch (direction) {
-			case ControlDirection.Middle:
-			case ControlDirection.Up:
-			case ControlDirection.Down:
+			if (isFlying && canJumpAttack) {
 				if (master) {
-					master.OnAttackSlash (nextAttackMotion);
+					master.OnJumpAttack ();
 				}
-				singleAnimator.Play ("Slash" + nextAttackMotion);
+				singleAnimator.Play ("JumpAttack");
 				MufflerActive ();
-				nextAttackMotion = (nextAttackMotion + 1) % 2;
-				break;
-			default:
-				if (master) {
-					master.OnAttackDash ();
+				canJumpAttack = false;
+			}else{
+				isAttackAnimationPlaying = true;
+				switch (direction) {
+				case ControlDirection.Middle:
+				case ControlDirection.Up:
+				case ControlDirection.Down:
+					if (master) {
+						master.OnAttackSlash (nextAttackMotion);
+					}
+					singleAnimator.Play ("Slash" + nextAttackMotion);
+					MufflerActive ();
+					nextAttackMotion = (nextAttackMotion + 1) % 2;
+					break;
+				default:
+					if (master) {
+						master.OnAttackDash ();
+					}
+					singleAnimator.Play ("StabAttack", 0, 0);
+					MufflerActive ();
+					nextAttackMotion = 0;
+					break;
 				}
-				singleAnimator.Play ("StabAttack", 0, 0);
-				MufflerActive ();
-				nextAttackMotion = 0;
-				break;
 			}
 		}
 	}
@@ -212,10 +222,6 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			nextAttackMotion = 0;
 			SetSingleAnim (currentInputDirection);
 		}
-	}
-
-	//충돌체 생성 시점
-	public void AttackCollision(){
 	}
 
 	public void EndRecall(){

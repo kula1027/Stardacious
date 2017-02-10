@@ -6,9 +6,6 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	private HitObject hitObject = new HitObject(10);
 	protected Coroutine flyingRoutine;
 
-	void Awkae(){		
-	}
-
 	public void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
 		transform.right = bodies_[2].ConvertToV3();
@@ -18,6 +15,10 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 
 	public override void OnRequested (){
 		ReturnObject(10f);
+	}
+
+	public void ForceReturnObject(){
+		ReturnObject();
 	}
 
 	private IEnumerator FlyingRoutine(){

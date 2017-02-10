@@ -7,7 +7,7 @@ public class GuidanceDevice : FlyingProjectile {
 	private Coroutine rotateRoutine;
 	private Transform trRenderer;
 
-	public const float deviceSpeed = 25f;
+	public const float deviceSpeed = 30f;
 
 	private StardaciousObject attachedTarget;
 	public StardaciousObject AttachedTarget{
