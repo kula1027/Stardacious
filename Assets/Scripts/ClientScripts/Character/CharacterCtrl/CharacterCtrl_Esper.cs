@@ -76,7 +76,6 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		}else{
 			dir = 1;
 		}
-		Debug.Log (Vector3.right * dir * 800);
 		rgd2d.AddForce(Vector3.right * dir * 800);
 	}
 	#endregion
@@ -86,7 +85,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private const float slashAttackTime = 0.05f;
 	private HitObject hoSlash = new HitObject(damageSlash);
 
-	public void OnAttackSlash(int idx){		
+	public void OnAttackSlash(int idx){
 		StartCoroutine(AttackRoutine(hitterSlash, slashAttackTime));
 	}
 	public void OnHitNormalAttack(Collider2D col){		
@@ -235,6 +234,11 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 			break;
 
 		case 1:
+			SpaceDistortion();
+			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+			break;
+
+		case 2:
 			if(recallTarget == -1){
 				FireRecallBullet();
 				InputModule.instance.BeginCoolDown(1, 1.2f);
@@ -242,11 +246,6 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 				Recall();
 				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
 			}
-			break;
-
-		case 2:
-			SpaceDistortion();
-			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			break;
 		}
 	}

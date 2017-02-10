@@ -201,10 +201,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		base.UseSkill(idx_);
 		switch (idx_) {
 		case 0:
-			gcHeavy.WeaponSwap ();
-			if(isMachineGunMode){
-				StopMachineGun();
-			}
+			OverchargedShot();
 			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 			break;
 
@@ -220,7 +217,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			break;
 
 		case 2:
-			OverchargedShot();
+			gcHeavy.WeaponSwap ();
+			if(isMachineGunMode){
+				StopMachineGun();
+			}
 			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			break;
 		}

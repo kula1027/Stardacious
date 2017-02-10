@@ -5,9 +5,10 @@ using UnityEngine.EventSystems;
 public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler {
 
 	private Vector3 centerPos;
-	private const float radius = 70;
+	private const float radius = 60;
 
-	void Awake(){
+
+	void Start(){
 		centerPos = transform.position;
 		dir = Vector3.zero;
 	}
@@ -57,7 +58,7 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 		}
 	}
 
-	public void OnEndDrag (PointerEventData eventData){
+	public void OnEndDrag (PointerEventData eventData){		
 		transform.position = centerPos;
 		dir = Vector3.zero;
 

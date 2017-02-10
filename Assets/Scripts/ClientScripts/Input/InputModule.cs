@@ -23,7 +23,7 @@ public class InputModule : MonoBehaviour {
 			CharacterCtrl.instance.InputStopAttack();
 		}
 
-		if (Input.GetKeyDown (KeyCode.Z)) {
+		if (Input.GetKeyDown (KeyCode.C)) {
 			if(imgCoolDown[0].fillAmount < 0.001f){
 				CharacterCtrl.instance.UseSkill(0);
 			}
@@ -35,7 +35,7 @@ public class InputModule : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.C)) {
+		if (Input.GetKeyDown (KeyCode.Z)) {
 			if(imgCoolDown[2].fillAmount < 0.001f){
 				CharacterCtrl.instance.UseSkill(2);
 			}
