@@ -328,7 +328,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public override void OnDie (){
 		ConsoleMsgQueue.EnqueMsg("DEAD!");
-		ConsoleSystem.Show();
+		//ConsoleSystem.Show();
 	}
 
 	#endregion

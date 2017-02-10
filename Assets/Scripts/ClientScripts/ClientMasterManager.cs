@@ -40,7 +40,7 @@ public class ClientMasterManager : MonoBehaviour {
 			break;
 
 			default:
-			pCharacter = (GameObject)Instantiate(pfDoctor);
+			pCharacter = (GameObject)Instantiate(pfEsper);
 			break;
 		}
 
