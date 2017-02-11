@@ -6,7 +6,7 @@ public class MotionCaptureScript : MonoBehaviour {
 
 	void Start () {
 		Debug.Log (Application.dataPath);
-		StartCoroutine (CaptureRoutine());
+		StartCoroutine (AutoCaptureRoutine());
 		width = Camera.main.pixelWidth - 1;
 		height = Camera.main.pixelHeight - 1;
 	}
@@ -39,6 +39,18 @@ public class MotionCaptureScript : MonoBehaviour {
 				File.WriteAllBytes (Application.dataPath + "/../screenshot_" + captureCount.ToString () + ".png", pngShot);
 				captureCount++;
 			}
+		}
+	}
+
+	IEnumerator AutoCaptureRoutine(){
+		for (int i = 0; i < 60; i++) {
+			yield return new WaitForEndOfFrame ();
+			Texture2D sshot = new Texture2D (width, height);
+			sshot.ReadPixels (new Rect (0, 0, width, height), 0, 0);
+			sshot.Apply ();
+			byte[] pngShot = sshot.EncodeToPNG ();
+			Destroy (sshot);
+			File.WriteAllBytes (Application.dataPath + "/../screenshot_" + i.ToString () + ".png", pngShot);
 		}
 	}
 }

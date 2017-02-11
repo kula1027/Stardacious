@@ -15,19 +15,19 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	public Animator lazerEffectAnimator;
 
 	//State
-	private DoctorLowerState lowerState;			//현재 하체상태
-	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
-	private ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
+	//private DoctorLowerState lowerState;			//현재 하체상태
+	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
+	protected ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
 	private DoctorBulletType nextBulletType;		//이번에 발사될 총알타입
 
 	//Flags
 	private bool isFlying = false;					//호버링 포함 공중상태
-	private bool isHovering = false;				//호버링 상태
+	protected bool isHovering = false;				//호버링 상태
 	private bool isEnergyCharging = false;			//차징 시작 부터 발사가 끝날때(컨트롤 복구 시점) 까지 true
-	private bool isAttackAnimationPlaying = false;	//냉각탄 유도탄 발사 포함
-	private bool isAttackButtonPressing = false;
+	protected bool isAttackAnimationPlaying = false;	//냉각탄 유도탄 발사 포함
+	protected bool isAttackButtonPressing = false;
 
-	void Awake () {
+	protected void Awake () {
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 
@@ -35,7 +35,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		recentAimDirection = ShootDirection.Front;
 		nextBulletType = DoctorBulletType.Normal;
 
-		lowerState = DoctorLowerState.Idle;
+		//lowerState = DoctorLowerState.Idle;
 
 		unitParts = GetComponentsInChildren<SpriteRenderer> ();
 		hairRenderer = GetComponentInChildren<SkeletonRenderer> ();
@@ -165,7 +165,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 		SetAttackDelay ();
 	}
-	private void SetGunShootAnim(ControlDirection direction){
+	protected void SetGunShootAnim(ControlDirection direction){
 		switch (direction) {
 		case ControlDirection.LeftDown:
 		case ControlDirection.RightDown:
@@ -191,7 +191,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		lazerEffectAnimator.transform.rotation = muzzle.rotation;
 		lazerEffectAnimator.Play ("Shoot", 0, 0);
 	}
-	private void SetUpperAnim(ControlDirection direction){
+	protected virtual void SetUpperAnim(ControlDirection direction){
 		if (!isEnergyCharging) {			//원기옥중 아닐 때
 			if (!isAttackAnimationPlaying) {
 				switch (direction) {
@@ -222,7 +222,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			}
 		}
 	}
-	private void SetLowerAnim(ControlDirection direction){
+	protected virtual void SetLowerAnim(ControlDirection direction){
 		if (!isFlying && !isEnergyCharging) {//공중 상황 예외 처리
 
 			if (isAttackAnimationPlaying) {	//공격중 걸음
@@ -233,12 +233,12 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 				case ControlDirection.Right:
 				case ControlDirection.RightDown:
 				case ControlDirection.RightUp:			//이동중
-					lowerState = DoctorLowerState.Walk;
+					//lowerState = DoctorLowerState.Walk;
 					HairDeactive ();
 					lowerAnimator.Play ("Walk");
 					break;
 				default:			//정지
-					lowerState = DoctorLowerState.Idle;
+					//lowerState = DoctorLowerState.Idle;
 					HairDeactive ();
 					lowerAnimator.Play ("Idle");
 					break;
@@ -251,12 +251,12 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 				case ControlDirection.Right:
 				case ControlDirection.RightDown:
 				case ControlDirection.RightUp:			//이동중
-					lowerState = DoctorLowerState.Run;
+					//lowerState = DoctorLowerState.Run;
 					HairActive ();
 					lowerAnimator.Play ("Run");
 					break;
 				default:			//정지
-					lowerState = DoctorLowerState.Idle;
+					//lowerState = DoctorLowerState.Idle;
 					HairDeactive ();
 					lowerAnimator.Play ("Idle");
 					break;
@@ -266,10 +266,10 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	private void HairActive(){
+	protected void HairActive(){
 		hair.AnimationName = "move";
 	}
-	private void HairDeactive(){
+	protected void HairDeactive(){
 		hair.AnimationName = "animation";
 	}
 	#endregion
@@ -303,7 +303,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	#endregion
 
 	#region AnimationCallBack
-	public void EndShootMotion(){		//일반 공격뿐 아니라 냉각탄, 유도탄도 포함
+	public virtual void EndShootMotion(){		//일반 공격뿐 아니라 냉각탄, 유도탄도 포함
 		isAttackAnimationPlaying = false;
 
 		if (isAttackButtonPressing) {			//다시 공격
@@ -344,11 +344,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 
 		nextBulletType = DoctorBulletType.Normal;
-	}
-
-	//에너지볼 이동 시작
-	public void ShootEnergy(){
-		
 	}
 	#endregion
 
