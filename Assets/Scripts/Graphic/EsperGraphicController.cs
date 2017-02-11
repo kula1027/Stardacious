@@ -13,17 +13,16 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	public GameObject rushEffect;
 
 	//State
-	protected int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
-	private ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
+	private int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
+	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
 
 	//Flags
-	private bool isFlying = false;
-	private bool isAttackAnimationPlaying = false;
+	protected bool isFlying = false;
+	protected bool isAttackAnimationPlaying = false;
 	private bool isAttackButtonPressing = false;
 	private bool canJumpAttack = true;
 
-
-	private Animator singleAnimator;
+	protected Animator singleAnimator;
 
 	protected void Awake(){
 		singleAnimator = transform.FindChild("Offset").FindChild ("Pivot").GetComponent<Animator> ();
@@ -201,11 +200,11 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	private void MufflerActive(){
+	protected void MufflerActive(){
 		mufflerL.AnimationName = "dynamic";
 		mufflerR.AnimationName = "dynamic";
 	}
-	private void MufflerDeactive(){
+	protected void MufflerDeactive(){
 		mufflerL.AnimationName = "idle";
 		mufflerR.AnimationName = "idle";
 	}
@@ -226,7 +225,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	#endregion
 
 	#region AnimationCallBack
-	public void EndAttackMotion(){		//평타, 찌르기, 질풍참, 점프어택 모두 해당
+	public virtual void EndAttackMotion(){		//평타, 찌르기, 점프어택 모두 해당
 		isAttackAnimationPlaying = false;
 		if (isAttackButtonPressing) {
 			SetAttackAnim (currentInputDirection);

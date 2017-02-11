@@ -20,7 +20,7 @@ public class DoctorNetGraphicController : DoctorGraphicController {
 		SetLowerAnim (currentInputDirection);
 	}
 
-	protected virtual void SetUpperAnim(ControlDirection direction){
+	protected override void SetUpperAnim(ControlDirection direction){
 		if (!isAttackAnimationPlaying) {
 			switch (direction) {
 			case ControlDirection.LeftDown:

@@ -69,6 +69,9 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 
 	public void OnAttackDash(){		
+		nmAttack.Body[0].Content = ((int)EsperAttackType.StabAttack).ToString();
+		Network_Client.SendTcp(nmAttack);
+
 		StartCoroutine(AttackRoutine(hitterDash, dashAttackTime));
 		float dir = 0;
 		if(currentDirV3.x < 0){
@@ -87,6 +90,13 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnAttackSlash(int idx){
 		StartCoroutine(AttackRoutine(hitterSlash, slashAttackTime));
+		if (idx == 0) {
+			nmAttack.Body[0].Content = ((int)EsperAttackType.Slash0).ToString();
+		} else if(idx == 1) {
+			nmAttack.Body[0].Content = ((int)EsperAttackType.Slash1).ToString();
+		}
+
+		Network_Client.SendTcp(nmAttack);
 	}
 	public void OnHitNormalAttack(Collider2D col){		
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
@@ -101,6 +111,9 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private HitObject hoJump = new HitObject(damageJumpAttack);
 
 	public void OnJumpAttack(){
+		nmAttack.Body[0].Content = ((int)EsperAttackType.JumpAttack).ToString();
+		Network_Client.SendTcp(nmAttack);
+
 		StartCoroutine(AttackRoutine(hitterJumpAttack, jumpAttackTime));
 	}
 	public override void InputStartAttack (){
