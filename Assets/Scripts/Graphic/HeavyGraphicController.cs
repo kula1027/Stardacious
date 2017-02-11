@@ -314,7 +314,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	public void EndSwap(){
+	public virtual void EndSwap(){
 		if (recentIsMiniGun) {
 			isMiniGunMode = false;
 			recentIsMiniGun = false;
