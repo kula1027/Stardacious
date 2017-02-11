@@ -42,7 +42,7 @@ namespace ServerSide{
 
 			if(currentMonsterCount > 0){
 				for(int loop = 0; loop < currentMonsterCount; loop++){
-					GameObject mGo = monsterPooler.RequestObject((GameObject)Resources.Load("TestMonster_S"));
+					GameObject mGo = monsterPooler.RequestObject((GameObject)Resources.Load("Monster/Spider_S"));
 					mGo.transform.position = goStage[currentStage].transform.FindChild("MonsterPos").GetChild(loop).position;
 					mGo.GetComponent<ServerMonster>().Ready();
 				}

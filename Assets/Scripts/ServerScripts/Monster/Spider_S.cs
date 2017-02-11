@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class TestMonster_S : ServerMonster {
+	public class Spider_S : ServerMonster {
 		private Vector3[] currentCharacterPos = new Vector3[NetworkConst.maxPlayer];		/* give current all character's position */
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
@@ -32,47 +32,36 @@ namespace ServerSide{
 				// main AIpart
 				if (Vector3.Distance(this.transform.position, closestCharacterPos) > 20) {
 					// 몬스터가 근접하는 코드 
+					isJump = false;
 					isStop = false;
 
-
-					if (beHaviorFactor == 0 && isJump == false) {
-						// jump. 10%
+					if (beHaviorFactor < 2 && isJump == false) {
+						// jump. 2/10
 						isJump = true;
 						MonsterJump ();
-						isJump = false;
-					} else if (beHaviorFactor == 1) {
-						// short stop. 10 %
+
+					} else if (beHaviorFactor == 2) {
+						// short stop. 1/10
 						isStop = true;
-					} else if (!isStop) {
+
+					}
+
+					if (!isStop) {
+						// moving
 						yield return StartCoroutine (MonsterApproach (closestCharacterPos));
 					}
 
 				} else {
 					// 몬스터가 근접햇을때
-					isStop = true;
-					//isBack = false;
-
 					if (beHaviorFactor < 2) {
 						yield return StartCoroutine (MonsterBackStep (closestCharacterPos));
 					} else {
-						FireProjectileSpider ();
+						yield return StartCoroutine (FireProjectile (closestCharacterPos));
 					}
 				}
 
-				yield return new WaitForSeconds((Random.Range(1f, 2f)));
+				yield return new WaitForSeconds((Random.Range(0.8f, 1.3f)));
 			}
-		}
-
-		private void FireProjectileSpider(){
-			GameObject go = ServerProjectileManager.instance.GetLocalProjPool().RequestObject(
-				ServerProjectileManager.instance.pfLocalProj
-			);
-			go.transform.position = transform.position + Vector3.up * 2f;
-			//GameObject targetCh = ServerCharacterManager.instance.GetCharacter(0).gameObject;
-			go.transform.right = closestCharacterPos - go.transform.position;
-			//right : 투사체 진행방향 결정
-
-			go.GetComponent<ServerLocalProjectile>().Ready();
 		}
 
 	}
