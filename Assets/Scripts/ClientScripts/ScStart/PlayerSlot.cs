@@ -6,6 +6,8 @@ public class PlayerSlot : MonoBehaviour {
 	public int index;
 	private Button[] slotBtn;
 	public Image imggg;
+	public Text txtNickName;
+	public Text txtState;
 
 	void Awake(){
 		slotBtn = GetComponentsInChildren<Button>();
@@ -16,6 +18,7 @@ public class PlayerSlot : MonoBehaviour {
 			for(int loop = 0; loop < slotBtn.Length; loop++){
 				slotBtn[loop].gameObject.SetActive(true);
 			}
+			txtNickName.text = PlayerData.nickName;
 		}else{
 			for(int loop = 0; loop < slotBtn.Length; loop++){
 				slotBtn[loop].gameObject.SetActive(false);
@@ -24,6 +27,11 @@ public class PlayerSlot : MonoBehaviour {
 	}
 
 	public void SetCharacter(Sprite tempSprite){
-		imggg.sprite = tempSprite;
+		if(tempSprite == null){
+			imggg.enabled = false;
+		}else{
+			imggg.enabled = true;
+			imggg.sprite = tempSprite;
+		}
 	}
 }

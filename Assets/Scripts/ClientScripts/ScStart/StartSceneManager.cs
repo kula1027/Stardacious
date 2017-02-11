@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using System.Text.RegularExpressions;
 
 public class StartSceneManager : MonoBehaviour {
 	public static StartSceneManager instance;
@@ -15,8 +16,6 @@ public class StartSceneManager : MonoBehaviour {
 	public HidableUI joinPanel;
 	public ReadyPanel readyPanel;
 	public HidableUI selCharPanel;
-
-	public Text[] tempState;
 
 	void Awake(){	
 		instance = this;
@@ -47,6 +46,13 @@ public class StartSceneManager : MonoBehaviour {
 			readyPanel.SetSlotCharacter(sender, chIdx);
 			break;
 
+		case MsgAttr.Misc.exitClient:
+			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			readyPanel.SetSlotCharacter(exitIdx, (int)ChIdx.NotInitialized);
+			readyPanel.SetSlotNickName(exitIdx, "Empty");
+			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
+			break;
+
 		case MsgAttr.Misc.hello:
 			SetOtherInfo(networkMessage.Body);
 			break;
@@ -55,16 +61,18 @@ public class StartSceneManager : MonoBehaviour {
 
 	private void SetOtherInfo(MsgSegment[] bodies){
 		for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
-			
+			if(loop != Network_Client.NetworkId){
+				int chIdx = int.Parse(bodies[loop + 1].Content);
+				readyPanel.SetSlotCharacter(loop, chIdx);
+				readyPanel.SetSlotNickName(loop, bodies[loop + 1].Attribute);
+			}
 		}
 	}
 
 	public void OnNetworkSetupDone(){
 		joinPanel.Hide();	
 
-		if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
-			tempState[Network_Client.NetworkId].text = "Touch!\nYeah!";
-		}
+		readyPanel.SetSlotCharacter(Network_Client.NetworkId, (int)ChIdx.NotInitialized);
 
 		NetworkMessage nmHello = new NetworkMessage(
 			new MsgSegment(MsgAttr.misc),
@@ -76,13 +84,23 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnBtnJoinClick(){
+		PlayerData.Reset();
+
 		if(inputIp.text.Length < 6){
 			Network_Client.serverAddress = "127.0.0.1";
 		}else{
 			Network_Client.serverAddress = inputIp.text;
 		}
 
-		PlayerData.nickName = inputName.text;
+		if(inputName.text.Length > 1){			
+			string modifiedStr = inputName.text;
+			modifiedStr = modifiedStr.Replace(',', ' ');
+			modifiedStr = modifiedStr.Replace(':', ' ');
+			modifiedStr = modifiedStr.Replace('/', ' ');
+
+			PlayerData.nickName = modifiedStr;
+		}
+
 		KingGodClient.instance.BeginNetworking();//네트워크 연결이 성공적으로 끝나면 OnNetworkSetupDone을 콜한다
 		txtConfigState.text = "Connecting...";
 	}

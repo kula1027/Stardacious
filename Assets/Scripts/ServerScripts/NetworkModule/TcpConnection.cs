@@ -90,6 +90,7 @@ namespace ServerSide{
 		private Thread threadReceive_TCP;
 
 		private void InitTcp(){
+			socketTCP.NoDelay = true;
 			networkStream = new NetworkStream(socketTCP);
 			streamReader = new StreamReader(networkStream, Encoding.UTF8);
 			streamWriter = new StreamWriter(networkStream, Encoding.UTF8);

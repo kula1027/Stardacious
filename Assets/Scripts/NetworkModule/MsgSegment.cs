@@ -148,6 +148,7 @@ public class MsgAttr{
 	public class Projectile{
 		public const string attach = "atch";
 		public const string fire = "fire";
+		public const string server = "svr";
 	}
 
 

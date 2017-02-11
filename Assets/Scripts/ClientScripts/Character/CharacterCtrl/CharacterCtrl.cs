@@ -267,6 +267,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			nmPos.Body[0].SetContent(transform.position); 
 			Network_Client.SendUdp(nmPos);
 
+
 			yield return new WaitForSeconds(NetworkConst.chPosSyncTime);
 		}
 	}

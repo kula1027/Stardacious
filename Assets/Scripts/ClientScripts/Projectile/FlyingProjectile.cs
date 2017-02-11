@@ -28,7 +28,7 @@ public class FlyingProjectile : PoolingObject, IHitter {
 	}
 		
 	public override void OnRequested (){
-		ReturnObject(2f);
+		ReturnObject(1.5f);
 	}
 
 	#region ICollidable implementation
@@ -40,6 +40,7 @@ public class FlyingProjectile : PoolingObject, IHitter {
 				return;
 			}else{
 				hbt.OnHit(hitObject);
+				ReturnObject();
 			}
 		}else{
 			ReturnObject();

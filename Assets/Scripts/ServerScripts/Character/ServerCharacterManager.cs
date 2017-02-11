@@ -7,7 +7,7 @@ namespace ServerSide{
 
 		private GameObject prefabServerCharacter;
 		private ServerCharacter[] character = new ServerCharacter[NetworkConst.maxPlayer];
-		public int currentPlayerCount = 0;
+		public int currentCharacterCount = 0;
 
 		void Awake(){
 			instance = this;
@@ -29,7 +29,7 @@ namespace ServerSide{
 					character[loop].NotifyAppearence();
 				}
 			}
-			currentPlayerCount++;
+			currentCharacterCount++;
 
 			return character[idx_];
 		}
@@ -38,7 +38,7 @@ namespace ServerSide{
 			if(character[idx_] == null){
 				ConsoleMsgQueue.EnqueMsg("Remove Character " + idx_ + ": not exist");
 			}else{				
-				currentPlayerCount--;
+				currentCharacterCount--;
 				Destroy(character[idx_].gameObject);
 				character[idx_] = null;
 			}

@@ -27,6 +27,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	private ControlDirection currentDirGun = ControlDirection.Left;
 	public override void OnMovementInput (Vector3 vec3_){
+		if(isMachineGunMode)return;
+
 		base.OnMovementInput(vec3_);
 
 		if(currentDir != ControlDirection.Middle){
@@ -120,7 +122,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		}
 	}
 
-	private const float machineGunFireRate = 0.15f;
+	private const float machineGunFireRate = 0.1f;
 	private IEnumerator MachineGunRoutine(){
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);

@@ -18,7 +18,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		chrIdx = ChIdx.Esper;
 
-		skillCoolDown[0] = 1f;
+		skillCoolDown[0] = 0.3f;
 		skillCoolDown[1] = 5f;
 		skillCoolDown[2] = 2f;
 
@@ -123,6 +123,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region SwiftRush
+	private int rushCount = 0;
 	private const int damageRush = 60;
 	private HitObject hoRush = new HitObject(damageRush);
 	private bool isRushing = true;
@@ -131,7 +132,18 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private const float dashDistance = 15f;
 
 	private void SwiftRush(Vector3 dirRush){
-		StartCoroutine(SwiftRushRoutine(dirRush));
+		dirRush.Normalize();
+		if(dirRush.y >= -0.3f){			
+			StartCoroutine(SwiftRushRoutine(dirRush));
+
+			rushCount++;
+			if(rushCount > 2){
+				InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 25);
+				rushCount = 0;
+			}else{
+				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+			}
+		}
 	}
 
 	public void OnHitSwiftRush(Collider2D col){
@@ -230,7 +242,6 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		switch (idx_) {
 		case 0:			
 			SwiftRush(currentDirV3);
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 			break;
 
 		case 1:

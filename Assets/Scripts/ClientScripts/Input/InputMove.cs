@@ -5,8 +5,9 @@ using UnityEngine.EventSystems;
 public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler {
 
 	private Vector3 centerPos;
-	private const float radius = 60;
+	private const float radius = 70;
 
+	private bool controlByKeyboard = true;
 
 	void Start(){
 		centerPos = transform.position;
@@ -14,7 +15,7 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 	}
 		
 	void Update(){
-		if(CharacterCtrl.instance == null){
+		if(CharacterCtrl.instance == null || controlByKeyboard == false){
 			return;
 		}
 
@@ -45,7 +46,8 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 	}
 
 	private Coroutine moveRoutine;
-	public void OnBeginDrag (PointerEventData eventData){		
+	public void OnBeginDrag (PointerEventData eventData){
+		controlByKeyboard = false;
 		moveRoutine = StartCoroutine(InputMoveRoutine());
 	}
 
@@ -58,11 +60,13 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 		}
 	}
 
-	public void OnEndDrag (PointerEventData eventData){		
+	public void OnEndDrag (PointerEventData eventData){				
 		transform.position = centerPos;
 		dir = Vector3.zero;
 
 		StopCoroutine(moveRoutine);
 		CharacterCtrl.instance.OnMovementInput(Vector3.zero);
+
+		controlByKeyboard = true;
 	}
 }

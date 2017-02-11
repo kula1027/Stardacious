@@ -16,8 +16,9 @@ public class ReadyPanel : HidableUI {
 		base.Show ();
 	}
 
+
+
 	public void SetSlotCharacter(int idx_, int chIdx_){
-		
 		Sprite spr = null;
 		switch((ChIdx)chIdx_){
 		case ChIdx.Heavy:
@@ -34,5 +35,9 @@ public class ReadyPanel : HidableUI {
 		}
 			
 		playerSlot[idx_].SetCharacter(spr);
+	}
+
+	public void SetSlotNickName(int idx_, string nName){
+		playerSlot[idx_].txtNickName.text = nName;
 	}
 }

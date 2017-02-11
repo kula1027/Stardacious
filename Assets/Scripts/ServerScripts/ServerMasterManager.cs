@@ -9,6 +9,8 @@ namespace ServerSide{
 
 		PlayerInfo[] playerInfo = new PlayerInfo[NetworkConst.maxPlayer];
 
+		public int currentPlayerCount = 0;
+
 		void Awake(){
 			instance = this;
 
@@ -22,6 +24,8 @@ namespace ServerSide{
 		}
 
 		private void OnExitClient(int idx_){			
+			currentPlayerCount--;
+
 			NetworkMessage exitMsg = new NetworkMessage(
 				new MsgSegment(MsgAttr.misc),
 				new MsgSegment(MsgAttr.Misc.exitClient, idx_.ToString())
@@ -30,7 +34,7 @@ namespace ServerSide{
 
 			ServerCharacterManager.instance.RemoveCharacter(idx_);
 			playerInfo[idx_] = new PlayerInfo();
-			if(ServerCharacterManager.instance.currentPlayerCount < 1){
+			if(currentPlayerCount < 1){
 				Network_Server.ShutDown();
 				SceneManager.LoadScene("scServer");
 				ConsoleMsgQueue.EnqueMsg("0 Players Left, Reset Server");
@@ -45,6 +49,7 @@ namespace ServerSide{
 				break;
 
 			case MsgAttr.Misc.hello:
+				currentPlayerCount++;
 				int sender = int.Parse(networkMessage.Adress.Attribute);
 				playerInfo[sender].nickName = networkMessage.Body[0].Content;
 				SendInfo(sender);
@@ -70,13 +75,13 @@ namespace ServerSide{
 				new MsgSegment(MsgAttr.misc),
 				otherInfo
 			);
-			Network_Client.SendTcp(nmHello);
+			Network_Server.BroadCastTcp(nmHello);
 
 		}
 	}
 }
 	
 public class PlayerInfo{
-	public string nickName = "noname";
+	public string nickName = "Empty";
 	public int chosenCharacter = (int)ChIdx.NotInitialized;
 }

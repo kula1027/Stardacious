@@ -43,5 +43,13 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 		}
 	}
 	#endregion
-	
+
+	public override void OnReturned (){
+		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.Projectile.server);
+		MsgSegment[] b = {
+			new MsgSegment(MsgAttr.destroy, GetOpIndex())
+		};
+		NetworkMessage nmDestroy = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmDestroy);
+	}
 }

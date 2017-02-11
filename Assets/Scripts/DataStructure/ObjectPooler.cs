@@ -8,7 +8,7 @@ public class ObjectPooler : MonoBehaviour {
 	List<PoolList> managingPool = new List<PoolList>();
 
 	public GameObject RequestObject(GameObject go_){
-		IRecvPoolable op = go_.GetComponent<IRecvPoolable>();
+		IObjectPoolable op = go_.GetComponent<IObjectPoolable>();
 
 		PoolList mPool = GetManagingPool(op.GetType());
 
@@ -19,12 +19,12 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 	public GameObject RequestObjectAt(GameObject go_, int idx_){
-		IRecvPoolable op = go_.GetComponent<IRecvPoolable>();
+		IObjectPoolable op = go_.GetComponent<IObjectPoolable>();
 
 		PoolList mPool = GetManagingPoolAt(idx_, op.GetType());
 
 		GameObject rObj = mPool.RequestObjectAt(go_, idx_);
-		rObj.GetComponent<IRecvPoolable>().SetPooler(this);
+		rObj.GetComponent<IObjectPoolable>().SetPooler(this);
 
 		return rObj;
 	}
@@ -32,7 +32,7 @@ public class ObjectPooler : MonoBehaviour {
 	public IRecvPoolable GetObject(int idx_){
 		int pId = idx_ / poolIdRange;
 		if(managingPool.Count > pId){
-			return managingPool[pId].GetObject(idx_ % poolIdRange);
+			return managingPool[pId].GetObject(idx_ % poolIdRange) as IRecvPoolable;
 		}else{
 			return null;
 		}

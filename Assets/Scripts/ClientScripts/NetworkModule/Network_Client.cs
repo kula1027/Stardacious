@@ -128,6 +128,7 @@ public class Network_Client {
 
 	#region TCP
 	public static void InitTcp(){
+		tcpClient.NoDelay = true;
 		networkStream = tcpClient.GetStream();
 		streamWriter = new StreamWriter(networkStream, Encoding.UTF8);
 		streamReader = new StreamReader(networkStream, Encoding.UTF8);
@@ -145,10 +146,10 @@ public class Network_Client {
 				streamWriter.WriteLine(str);
 				streamWriter.Flush();
 			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg("Send: " + e.Message);
+				ConsoleMsgQueue.EnqueMsg("SendTcp: " + e.Message);
 			}
 		}else{
-			ConsoleMsgQueue.EnqueMsg("Send: Network Disconnected.", 2);
+			ConsoleMsgQueue.EnqueMsg("SendTcp: Network Disconnected.", 2);
 		}
 	}
 

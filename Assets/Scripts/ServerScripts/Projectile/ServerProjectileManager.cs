@@ -28,6 +28,10 @@ namespace ServerSide {
 		}
 
 		public void OnRecv(NetworkMessage networkMessage){
+			if(networkMessage.Header.Content.Equals(MsgAttr.Projectile.server)){
+				int objId = int.Parse(networkMessage.Body[0].Content);
+				serverProjPool.GetObject(objId).OnRecv(networkMessage.Body);
+			}
 			int sender = int.Parse(networkMessage.Adress.Attribute);
 			Network_Server.BroadCastTcp(networkMessage, sender);
 

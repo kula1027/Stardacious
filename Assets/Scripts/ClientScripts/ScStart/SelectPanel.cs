@@ -47,7 +47,6 @@ public class SelectPanel : HidableUI {
 			infoEsper.Show();
 			break;
 		}
-
 		readyPanel.SetSlotCharacter(Network_Client.NetworkId, chIdx_);
 
 		PlayerData.chosenCharacter = (ChIdx)chIdx_;

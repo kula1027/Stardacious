@@ -22,7 +22,7 @@ public class PoolList : MonoBehaviour{
 				GameObject iGo = Instantiate(go_);
 				iGo.transform.SetParent(transform);
 				iGo.SetActive(false);
-				iGo.GetComponent<IRecvPoolable>().SetOpIndex(loop + totalObjCount + poolId);
+				iGo.GetComponent<IObjectPoolable>().SetOpIndex(loop + totalObjCount + poolId);
 				usableIdxQue.Enqueue(loop + totalObjCount);
 			}
 
@@ -33,7 +33,7 @@ public class PoolList : MonoBehaviour{
 		//ConsoleMsgQueue.EnqueMsg(managingType.ToString() + " Created: " + objIdx);
 
 		transform.GetChild(objIdx).gameObject.SetActive(true);
-		transform.GetChild(objIdx).GetComponent<IRecvPoolable>().OnRequested();
+		transform.GetChild(objIdx).GetComponent<IObjectPoolable>().OnRequested();
 
 		return transform.GetChild(objIdx).gameObject;
 	}
@@ -49,7 +49,7 @@ public class PoolList : MonoBehaviour{
 				GameObject iGo = Instantiate(go_);
 				iGo.transform.SetParent(transform);
 				iGo.SetActive(false);
-				iGo.GetComponent<IRecvPoolable>().SetOpIndex(loop + totalObjCount + poolId);
+				iGo.GetComponent<IObjectPoolable>().SetOpIndex(loop + totalObjCount + poolId);
 				usableIdxQue.Enqueue(loop + totalObjCount);
 			}
 			totalObjCount += incPerInstantiate;
@@ -57,10 +57,10 @@ public class PoolList : MonoBehaviour{
 
 		GameObject rObj = transform.GetChild(localIdx).gameObject;
 		if(rObj.activeSelf){
-			rObj.GetComponent<IRecvPoolable>().OnReturned();
+			rObj.GetComponent<IObjectPoolable>().OnReturned();
 		}
 		rObj.SetActive(true);
-		rObj.GetComponent<IRecvPoolable>().OnRequested();
+		rObj.GetComponent<IObjectPoolable>().OnRequested();
 
 		return rObj;
 	}
@@ -71,12 +71,12 @@ public class PoolList : MonoBehaviour{
 			localIdx = idx_ % poolId;
 		}
 
-		transform.GetChild(localIdx).GetComponent<IRecvPoolable>().OnReturned();
+		transform.GetChild(localIdx).GetComponent<IObjectPoolable>().OnReturned();
 		transform.GetChild(localIdx).gameObject.SetActive(false);
 		usableIdxQue.Enqueue(localIdx);
 	}
 
-	public IRecvPoolable GetObject(int idx_){
+	public IObjectPoolable GetObject(int idx_){
 		int localIdx = idx_;
 		if(poolId > 0){
 			localIdx = idx_ % poolId;
@@ -86,7 +86,7 @@ public class PoolList : MonoBehaviour{
 			return null;
 
 		if(transform.GetChild(localIdx).gameObject.activeSelf){
-			return transform.GetChild(localIdx).GetComponent<IRecvPoolable>();
+			return transform.GetChild(localIdx).GetComponent<IObjectPoolable>();
 		}else{
 			return null;
 		}

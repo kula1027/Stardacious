@@ -23,5 +23,13 @@ namespace ServerSide{
 		}
 
 		#endregion
+
+		public override void OnRecv (MsgSegment[] bodies){
+			switch(bodies[0].Attribute){
+			case MsgAttr.destroy:
+				ReturnObject();
+				break;
+			}
+		}
 	}
 }
