@@ -44,7 +44,6 @@ public class HeavyMine : PoolingObject, IHitter {
 		};
 		NetworkMessage nmDestroy = new NetworkMessage(h, b);
 		Network_Client.SendTcp(nmDestroy);
-
 	}
 
 
