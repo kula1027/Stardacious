@@ -79,12 +79,11 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 		if (isMiniGunMode) {	//미니건 모드
 
 			if (isAttackButtonPressing) {
-				lowerAnimator.Play ("TowerShoot");		//미니건 공격
+				lowerAnimator.Play ("TowerShoot", 0, 0);		//미니건 공격
 			} else {
-				lowerAnimator.Play ("TowerIdle");		//미니건 정지
+				lowerAnimator.Play ("TowerIdle", 0, 0);		//미니건 정지
 			}
 		} else {				//샷건 모드
-
 			if (isAttackAnimationPlaying) {	//공격중 걸음
 				switch (direction) {
 				case ControlDirection.Left:
@@ -94,11 +93,11 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 				case ControlDirection.RightDown:
 				case ControlDirection.RightUp:			//이동중
 					lowerState = HeavyLowerState.Walk;
-					lowerAnimator.Play ("Walk");
+					lowerAnimator.Play ("Walk", 0, lowerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 					break;
 				default:			//정지
 					lowerState = HeavyLowerState.Idle;
-					lowerAnimator.Play ("Idle");
+					lowerAnimator.Play ("Idle", 0, lowerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 					break;
 				}
 			} else {
@@ -110,11 +109,11 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 				case ControlDirection.RightDown:
 				case ControlDirection.RightUp:			//이동중
 					lowerState = HeavyLowerState.Run;
-					lowerAnimator.Play ("Run");
+					lowerAnimator.Play ("Run", 0, lowerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 					break;
 				default:			//정지
 					lowerState = HeavyLowerState.Idle;
-					lowerAnimator.Play ("Idle");
+					lowerAnimator.Play ("Idle", 0, lowerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
 					break;
 				}
 			}

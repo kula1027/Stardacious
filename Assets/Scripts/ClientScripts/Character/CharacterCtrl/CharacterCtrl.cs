@@ -128,11 +128,10 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 				currentDir = ControlDirection.Left;
 			}
 		}
-		if(vec3_.Equals(Vector3.zero)){	
+		if(vec3_.Equals(Vector3.zero)){
 			currentDir = ControlDirection.Middle;
 		}
-
-
+			
 		if(vec3_.x > 0){
 			transform.localScale = new Vector3(-1, 1, 1);
 			if(movablebByInput && controlFlags.move)
@@ -235,7 +234,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			break;
 
 		case MsgAttr.dead:
-			ConsoleSystem.Show();
+			//ConsoleSystem.Show();
 			break;
 
 		case MsgAttr.addForce:

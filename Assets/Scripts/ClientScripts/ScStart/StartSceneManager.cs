@@ -19,7 +19,6 @@ public class StartSceneManager : MonoBehaviour {
 
 	void Awake(){	
 		instance = this;
-
 	}
 
 	void Start(){

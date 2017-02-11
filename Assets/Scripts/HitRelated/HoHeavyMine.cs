@@ -15,10 +15,8 @@ public class HoHeavyMine : HitObject {
 		if(sObj.tag.Equals("Player") == false){
 			sObj.CurrentHp -= damage;
 		}
-		if(sObj.GetComponent<Rigidbody2D>()){
-			Vector2 dir = sObj.transform.position - forceOrigin + new Vector3(0, 3, 0);
+		Vector2 dir = sObj.transform.position - forceOrigin + new Vector3(0, 3, 0);
 
-			sObj.AddForce(dir * 350);
-		}
+		sObj.AddForce(dir * 350);
 	}
 }
