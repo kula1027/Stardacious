@@ -56,13 +56,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		ReleaseAttackDelay();
 		isFlying = true;
 		if (isAttackButtonPressing) {
-			if (master) {
-				master.OnJumpAttack ();
-			}
-			singleAnimator.Play ("JumpAttack");
-			slashAnimator.Play ("Slash1", 0, 0);
-			MufflerActive ();
-			canJumpAttack = false;
+			JumpAttack ();
 		} else {
 			singleAnimator.Play ("Jump");
 			MufflerActive ();
@@ -82,13 +76,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 		if (isFlying) {
 			if (canJumpAttack) {
-				if (master) {
-					master.OnJumpAttack ();
-				}
-				singleAnimator.Play ("JumpAttack");
-				slashAnimator.Play ("Slash1", 0, 0);
-				MufflerActive ();
-				canJumpAttack = false;
+				JumpAttack ();
 			}
 		}else{
 			SetAttackAnim(currentInputDirection);
@@ -134,21 +122,26 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void PsyShield(){
-		
+		singleAnimator.Play ("PsyAttack");
 	}
 
 	#region private
+	private void JumpAttack(){
+		if (master) {
+			master.OnJumpAttack ();
+		}
+		isAttackAnimationPlaying = true;
+		singleAnimator.Play ("JumpAttack");
+		slashAnimator.Play ("Slash1", 0, 0);
+		MufflerActive ();
+		canJumpAttack = false;
+	}
+
 	protected virtual void SetAttackAnim(ControlDirection direction){
 		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
 			if (isFlying && canJumpAttack) {
-				if (master) {
-					master.OnJumpAttack ();
-				}
-				singleAnimator.Play ("JumpAttack");
-				slashAnimator.Play ("Slash1", 0, 0);
-				MufflerActive ();
-				canJumpAttack = false;
+				JumpAttack ();
 			}else{
 				isAttackAnimationPlaying = true;
 				switch (direction) {
@@ -227,12 +220,16 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	#region AnimationCallBack
 	public virtual void EndAttackMotion(){		//평타, 찌르기, 점프어택 모두 해당
 		isAttackAnimationPlaying = false;
-		if (isAttackButtonPressing) {
-			SetAttackAnim (currentInputDirection);
+		if (isFlying) {
+			singleAnimator.Play ("LongJump");
 		} else {
-			ReleaseAttackDelay();
-			nextAttackMotion = 0;
-			SetSingleAnim (currentInputDirection);
+			if (isAttackButtonPressing) {
+				SetAttackAnim (currentInputDirection);
+			} else {
+				ReleaseAttackDelay ();
+				nextAttackMotion = 0;
+				SetSingleAnim (currentInputDirection);
+			}
 		}
 	}
 

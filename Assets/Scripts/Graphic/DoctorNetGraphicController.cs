@@ -21,66 +21,30 @@ public class DoctorNetGraphicController : DoctorGraphicController {
 	}
 
 	protected override void SetUpperAnim(ControlDirection direction){
-		if (!isAttackAnimationPlaying) {
-			switch (direction) {
-			case ControlDirection.LeftDown:
-			case ControlDirection.RightDown:
-				upperAnimator.Play ("FrontDownIdle", 0, 0);
-				recentAimDirection = ShootDirection.FrontDown;
-				break;
-			case ControlDirection.Left:
-			case ControlDirection.Right:
-				upperAnimator.Play ("FrontIdle");
-				recentAimDirection = ShootDirection.Front;
-				break;
-			case ControlDirection.LeftUp:
-			case ControlDirection.RightUp:
-				upperAnimator.Play ("FrontUpIdle");
-				recentAimDirection = ShootDirection.FrontUp;
-				break;
-			case ControlDirection.Up:
-				upperAnimator.Play ("UpIdle");
-				recentAimDirection = ShootDirection.Up;
-				break;
-			default:
-				upperAnimator.Play (recentAimDirection.ToString () + "Idle");
-				break;
-			}
-		}
-	}
-
-	protected override void SetLowerAnim(ControlDirection direction){
-		if (!isHovering) {//공중 상황 예외 처리
-			if (isAttackAnimationPlaying) {	//공격중 걸음
+		if (!isEnergyCharging) {			//원기옥중 아닐 때
+			if (!isAttackAnimationPlaying) {
 				switch (direction) {
-				case ControlDirection.Left:
 				case ControlDirection.LeftDown:
-				case ControlDirection.LeftUp:
-				case ControlDirection.Right:
 				case ControlDirection.RightDown:
-				case ControlDirection.RightUp:			//이동중
-					HairDeactive ();
-					lowerAnimator.Play ("Walk");
+					upperAnimator.Play ("FrontDownIdle", 0, 0);
+					recentAimDirection = ShootDirection.FrontDown;
 					break;
-				default:			//정지
-					HairDeactive ();
-					lowerAnimator.Play ("Idle");
-					break;
-				}
-			} else {
-				switch (direction) {
 				case ControlDirection.Left:
-				case ControlDirection.LeftDown:
-				case ControlDirection.LeftUp:
 				case ControlDirection.Right:
-				case ControlDirection.RightDown:
-				case ControlDirection.RightUp:			//이동중
-					HairActive ();
-					lowerAnimator.Play ("Run");
+					upperAnimator.Play ("FrontIdle");
+					recentAimDirection = ShootDirection.Front;
 					break;
-				default:			//정지
-					HairDeactive ();
-					lowerAnimator.Play ("Idle");
+				case ControlDirection.LeftUp:
+				case ControlDirection.RightUp:
+					upperAnimator.Play ("FrontUpIdle");
+					recentAimDirection = ShootDirection.FrontUp;
+					break;
+				case ControlDirection.Up:
+					upperAnimator.Play ("UpIdle");
+					recentAimDirection = ShootDirection.Up;
+					break;
+				default:
+					upperAnimator.Play (recentAimDirection.ToString () + "Idle");
 					break;
 				}
 			}

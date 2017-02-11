@@ -21,9 +21,9 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	private DoctorBulletType nextBulletType;		//이번에 발사될 총알타입
 
 	//Flags
-	private bool isFlying = false;					//호버링 포함 공중상태
-	protected bool isHovering = false;				//호버링 상태
-	private bool isEnergyCharging = false;			//차징 시작 부터 발사가 끝날때(컨트롤 복구 시점) 까지 true
+	protected bool isFlying = false;					//호버링 포함 공중상태
+	private bool isHovering = false;				//호버링 상태
+	protected bool isEnergyCharging = false;			//차징 시작 부터 발사가 끝날때(컨트롤 복구 시점) 까지 true
 	protected bool isAttackAnimationPlaying = false;	//냉각탄 유도탄 발사 포함
 	protected bool isAttackButtonPressing = false;
 
@@ -222,7 +222,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			}
 		}
 	}
-	protected virtual void SetLowerAnim(ControlDirection direction){
+	protected void SetLowerAnim(ControlDirection direction){
 		if (!isFlying && !isEnergyCharging) {//공중 상황 예외 처리
 
 			if (isAttackAnimationPlaying) {	//공격중 걸음

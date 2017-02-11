@@ -12,7 +12,7 @@ public class HeavyUpperAnimator : MonoBehaviour {
 	public void EndSwap(){
 		master.EndSwap ();
 	}
-	public void ShootShotGun(){
+	/*public void ShootShotGun(){
 		master.ShootShotGun();
-	}
+	}*/
 }

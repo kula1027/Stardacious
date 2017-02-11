@@ -13,7 +13,7 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 	public override void UseSkill (int idx_){
 		switch(idx_){
 		case 0:
-			gcHeavy.WeaponSwap ();
+			
 			break;
 
 		case 1:
@@ -21,7 +21,7 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 			break;
 
 		case 2:
-
+			gcHeavy.WeaponSwap ();
 			break;
 		}
 	}

@@ -28,7 +28,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	protected bool isAttackAnimationPlaying = false;		//샷건 모드일 경우 공격 선딜, 후딜을 이것으로 표시
 	protected bool recentIsMiniGun = false;	//스왑전에 뭐였니
 	protected bool isMiniGunMode = false;
-	private bool isSwapDelay = false;
+	protected bool isSwapDelay = false;
 
 	protected void Awake () {
 		lowerAnimator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
@@ -98,7 +98,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	public virtual void WeaponSwap(){			//상,하체 모션 캔슬 및 변경 금지
 		if (!isSwapDelay) {			//스왑중일때는 재스왑 불가
 
-			miniEffectAnimator.Play("Idle");
+			miniEffectAnimator.Play ("Idle", 0, 0);
 			cartridge.Stop();
 
 			if (isMiniGunMode) {
@@ -172,6 +172,10 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		shotEffectAnimator.transform.position = gunMuzzle.position;
 		shotEffectAnimator.transform.rotation = gunMuzzle.rotation;
 		shotEffectAnimator.Play ("Shoot", 0, 0);
+
+		if(master){
+			master.ShootShotGun();
+		}
 	}
 		
 	protected virtual void SetUpperAnim(ControlDirection direction){
@@ -337,10 +341,10 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	//총알 생성 시점
-	public void ShootShotGun(){
+	/*public void ShootShotGun(){
 		if(master){
 			master.ShootShotGun();
 		}
-	}
+	}*/
 	#endregion
 }

@@ -21,24 +21,36 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 		}
 	}
 
+	public override void StopNormalAttack(){
+		isAttackButtonPressing = false;
+
+		if (!isSwapDelay && isMiniGunMode) {
+			SetUpperAnim (currentInputDirection);
+			SetLowerAnim (currentInputDirection);
+		}
+	}
+
 	public override void WeaponSwap(){
-		miniEffectAnimator.Play ("Idle");
+		miniEffectAnimator.Play ("Idle", 0, 0);
 		cartridge.Stop ();
 
 		if (isMiniGunMode) {
 			lowerAnimator.Play ("Swap2");
 			upperAnimator.Play ("Swap2");
 			isMiniGunMode = false;
+			recentIsMiniGun = true;
 			isAttackButtonPressing = false;
 		} else {
+			isSwapDelay = true;
 			lowerAnimator.Play ("Swap1");
 			upperAnimator.Play ("Swap1");
 			isMiniGunMode = true;
+			recentIsMiniGun = false;
 		}
 		isAttackAnimationPlaying = false;
 	}
 	
-	/*protected override void SetUpperAnim(ControlDirection direction){
+	protected override void SetUpperAnim(ControlDirection direction){
 		if (isMiniGunMode) {			//미니건 모드
 			if (isAttackButtonPressing) {
 				upperAnimator.Play ("TowerShoot");		//미니건 공격
@@ -51,29 +63,31 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 				cartridge.Stop ();
 			}
 		} else {
-			if (!isAttackAnimationPlaying) {
-				switch (direction) {
-				case ControlDirection.Left:
-				case ControlDirection.Right:
-					upperAnimator.Play ("FrontIdle");
-					recentAimDirection = ShootDirection.Front;
-					break;
-				case ControlDirection.LeftUp:
-				case ControlDirection.RightUp:
-					upperAnimator.Play ("FrontUpIdle");
-					recentAimDirection = ShootDirection.FrontUp;
-					break;
-				case ControlDirection.Up:
-					upperAnimator.Play ("UpIdle");
-					recentAimDirection = ShootDirection.Up;
-					break;
-				default:
-					upperAnimator.Play (recentAimDirection.ToString () + "Idle");
-					break;
+			if (!isSwapDelay) {
+				if (!isAttackAnimationPlaying) {
+					switch (direction) {
+					case ControlDirection.Left:
+					case ControlDirection.Right:
+						upperAnimator.Play ("FrontIdle");
+						recentAimDirection = ShootDirection.Front;
+						break;
+					case ControlDirection.LeftUp:
+					case ControlDirection.RightUp:
+						upperAnimator.Play ("FrontUpIdle");
+						recentAimDirection = ShootDirection.FrontUp;
+						break;
+					case ControlDirection.Up:
+						upperAnimator.Play ("UpIdle");
+						recentAimDirection = ShootDirection.Up;
+						break;
+					default:
+						upperAnimator.Play (recentAimDirection.ToString () + "Idle");
+						break;
+					}
 				}
 			}
 		}
-	}*/
+	}
 
 	protected override void SetLowerAnim(ControlDirection direction){
 		if (isMiniGunMode) {	//미니건 모드
@@ -127,18 +141,8 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 	}
 
 	public override void EndSwap(){
-		if (recentIsMiniGun) {
-			isMiniGunMode = false;
-			recentIsMiniGun = false;
-		} else {
-			recentIsMiniGun = true;
-		}
-
+		isSwapDelay = false;
 		SetUpperAnim (currentInputDirection);
 		SetLowerAnim (currentInputDirection);
-
-		if(master){
-			master.SetMachineGunMode (recentIsMiniGun);	//현재 미니건인지 아닌지 반환
-		}
 	}
 }

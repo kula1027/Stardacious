@@ -99,7 +99,10 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		trGunMuzzle = gcDoctor.muzzle;
 	}
 
-	public void OnShootNormal(){		
+	public void OnShootNormal(){	
+		nmAttack.Body[0].Content = NetworkMessage.sTrue;
+		Network_Client.SendTcp(nmAttack);
+
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfChaserBullet);
 		go.transform.position = trGunMuzzle.position;
 		go.transform.right = trGunMuzzle.right;
