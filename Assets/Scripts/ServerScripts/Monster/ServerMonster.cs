@@ -4,10 +4,14 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		public BoxCollider2D colGroundChecker;
+		private StageControl masterWave;
+		public StageControl MasterWave{
+			set{ masterWave = value; }
+		}
+
 		public bool isGround;
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
-		//protected bool isIdle;
 		Vector3 prevPosition;
 
 		private const float posSyncItv = 0.05f;
@@ -130,6 +134,8 @@ namespace ServerSide{
 		}
 
 		public override void OnDie (){
+			masterWave.WaveMonsterDead ();
+			// 내가 속한 stagecontrol 에게 죽음을 알림.
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);

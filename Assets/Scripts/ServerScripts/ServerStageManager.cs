@@ -6,12 +6,20 @@ namespace ServerSide{
 		public static ServerStageManager instance;
 
 		private ObjectPooler monsterPooler;
+		public ObjectPooler MonsterPooler{
+			get{ return monsterPooler; }
+		}
 
 		private int currentStage;//0번 스테이지부터 시작한다
+
+		public StageControl[] stages;
+
 		public int CurrentStage{
 			get{return currentStage;}
 		}
+
 		private int currentMonsterCount = 0;
+
 		public int CurrentMonsterCount{
 			get{return currentMonsterCount;}
 		}
@@ -34,21 +42,11 @@ namespace ServerSide{
 
 		}
 			
-		public void BeginStage(int idx){			
+		public void BeginStage(int idx){
 			currentStage = idx;
 			ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
 
-			currentMonsterCount = goStage[currentStage].transform.FindChild("MonsterPos").childCount;
-
-			if(currentMonsterCount > 0){
-				for(int loop = 0; loop < currentMonsterCount; loop++){
-					GameObject mGo = monsterPooler.RequestObject((GameObject)Resources.Load("Monster/Spider_S"));
-					mGo.transform.position = goStage[currentStage].transform.FindChild("MonsterPos").GetChild(loop).position;
-					mGo.GetComponent<ServerMonster>().Ready();
-				}
-			}else{
-				OnMonsterAllKill();
-			}
+			stages [0].StartWave(); // 일단 wave생성되게 함
 		}
 
 		public void OnRecv(NetworkMessage networkMsg){
