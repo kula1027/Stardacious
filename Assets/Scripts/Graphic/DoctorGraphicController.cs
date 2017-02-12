@@ -8,6 +8,12 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Doctor master;
 
+	//MuzzleValue
+	private Vector3 frontPos = new Vector3(-2.11f, 0.45f, 0f);
+	private Vector3 frontDownPos = new Vector3 (-1.716f, -0.745f, 0f);
+	private Vector3 frontUpPos = new Vector3 (-1.696f, 1.543f, 0f);
+	private Vector3 upPos = new Vector3 (-0.497f, 2.304f, 0f);
+
 	//Child
 	public SkeletonAnimation hair;
 	public ParticleSystem booster;
@@ -17,7 +23,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	//State
 	//private DoctorLowerState lowerState;			//현재 하체상태
 	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
-	protected ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
+	protected ShootAnimationName recentAimDirection;		//마지막으로 에이밍 한 방향
 	private DoctorBulletType nextBulletType;		//이번에 발사될 총알타입
 
 	//Flags
@@ -32,7 +38,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		upperAnimator = lowerAnimator.transform.FindChild ("body").GetComponent<Animator> ();
 
 		currentInputDirection = ControlDirection.Middle;
-		recentAimDirection = ShootDirection.Front;
+		recentAimDirection = ShootAnimationName.FrontShoot;
 		nextBulletType = DoctorBulletType.Normal;
 
 		//lowerState = DoctorLowerState.Idle;
@@ -40,6 +46,8 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		unitParts = GetComponentsInChildren<SpriteRenderer> ();
 		hairRenderer = GetComponentInChildren<SkeletonRenderer> ();
 		booster.Stop();
+
+		AnimationInit ();
 	}
 		
 	public override void Initialize (){
@@ -169,27 +177,80 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		switch (direction) {
 		case ControlDirection.LeftDown:
 		case ControlDirection.RightDown:
-			upperAnimator.Play ("FrontDownShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontDownShoot));
+			SetMuzzle (ShootAnimationName.FrontDownShoot);
 			break;
 		case ControlDirection.Left:
 		case ControlDirection.Right:
-			upperAnimator.Play ("FrontShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
+			SetMuzzle (ShootAnimationName.FrontShoot);
 			break;
 		case ControlDirection.LeftUp:
 		case ControlDirection.RightUp:
-			upperAnimator.Play ("FrontUpShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
+			SetMuzzle (ShootAnimationName.FrontUpShoot);
 			break;
 		case ControlDirection.Up:
-			upperAnimator.Play ("UpShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
+			SetMuzzle (ShootAnimationName.UpShoot);
 			break;
 		default:
-			upperAnimator.Play (recentAimDirection.ToString () + "Shoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
+			SetMuzzle (recentAimDirection);
 			break;
 		}
 
 		lazerEffectAnimator.transform.position = muzzle.position;
 		lazerEffectAnimator.transform.rotation = muzzle.rotation;
 		lazerEffectAnimator.Play ("Shoot", 0, 0);
+
+		ShootBullet ();
+	}
+	//총알 생성 시점
+	private void ShootBullet(){
+		if(master){
+			switch (nextBulletType) {
+			case DoctorBulletType.Normal:		
+				master.OnShootNormal();
+				break;
+			case DoctorBulletType.Bind:
+				master.OnShootBind();
+				break;
+			case DoctorBulletType.Device:
+				master.OnShootDevice();
+				break;
+			}
+		}
+
+		nextBulletType = DoctorBulletType.Normal;
+	}
+	private void SetMuzzle(ShootAnimationName shootAnimName){
+		switch (shootAnimName) {
+		case ShootAnimationName.FrontDownShoot:
+			muzzle.localPosition = frontDownPos;
+			muzzle.rotation = Quaternion.identity;
+			muzzle.Rotate (0, 0, 45f);
+			break;
+		case ShootAnimationName.FrontShoot:
+			muzzle.localPosition = frontPos;
+			muzzle.rotation = Quaternion.identity;
+			break;
+		case ShootAnimationName.FrontUpShoot:
+			muzzle.localPosition = frontUpPos;
+			muzzle.rotation = Quaternion.identity;
+			muzzle.Rotate (0, 0, -45f);
+			break;
+		case ShootAnimationName.UpShoot:
+			muzzle.localPosition = upPos;
+			muzzle.rotation = Quaternion.identity;
+			muzzle.Rotate (0, 0, -90f);
+			break;
+		}
 	}
 	protected virtual void SetUpperAnim(ControlDirection direction){
 		if (!isEnergyCharging) {			//원기옥중 아닐 때
@@ -198,24 +259,37 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 				case ControlDirection.LeftDown:
 				case ControlDirection.RightDown:
 					upperAnimator.Play ("FrontDownIdle", 0, 0);
-					recentAimDirection = ShootDirection.FrontDown;
+					recentAimDirection = ShootAnimationName.FrontDownShoot;
 					break;
 				case ControlDirection.Left:
 				case ControlDirection.Right:
 					upperAnimator.Play ("FrontIdle");
-					recentAimDirection = ShootDirection.Front;
+					recentAimDirection = ShootAnimationName.FrontShoot;
 					break;
 				case ControlDirection.LeftUp:
 				case ControlDirection.RightUp:
 					upperAnimator.Play ("FrontUpIdle");
-					recentAimDirection = ShootDirection.FrontUp;
+					recentAimDirection = ShootAnimationName.FrontUpShoot;
 					break;
 				case ControlDirection.Up:
 					upperAnimator.Play ("UpIdle");
-					recentAimDirection = ShootDirection.Up;
+					recentAimDirection = ShootAnimationName.UpShoot;
 					break;
 				default:
-					upperAnimator.Play (recentAimDirection.ToString () + "Idle");
+					switch (recentAimDirection) {
+					case ShootAnimationName.FrontDownShoot:
+						upperAnimator.Play ("FrontDownIdle", 0, 0);
+						break;
+					case ShootAnimationName.FrontShoot:
+						upperAnimator.Play ("FrontIdle");
+						break;
+					case ShootAnimationName.FrontUpShoot:
+						upperAnimator.Play ("FrontUpIdle");
+						break;
+					case ShootAnimationName.UpShoot:
+						upperAnimator.Play ("UpIdle");
+						break;
+					}
 					break;
 				}
 
@@ -326,25 +400,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 		ReleaseEnergyDelay ();
 	}
-
-	//총알 생성 시점
-	public void ShootBullet(){
-		if(master){
-			switch (nextBulletType) {
-			case DoctorBulletType.Normal:		
-				master.OnShootNormal();
-				break;
-			case DoctorBulletType.Bind:
-				master.OnShootBind();
-				break;
-			case DoctorBulletType.Device:
-				master.OnShootDevice();
-				break;
-			}
-		}
-
-		nextBulletType = DoctorBulletType.Normal;
-	}
 	#endregion
 
 	#region Twinkle
@@ -366,7 +421,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			}
 			for (int i = 0; i < unitParts.Length; i++) {
 				unitParts [i].color = new Color (colorR, 0, 0, 1);
-				//hairRenderer.skeleton.SetColor (new Color (1, 1 - colorR, 1 - colorR, 1));
 				hairRenderer.skeleton.SetColor (new Color (colorR, 0, 0, 1));
 			}
 			if (colorR <=  0) {
@@ -376,6 +430,37 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 
 		isTwinkling = false;
+	}
+	#endregion
+
+	#region AnimationRoutine
+	protected AnimationClip[] animationClips;
+	protected void AnimationInit(){
+		animationClips = new AnimationClip[(int)(ShootAnimationName.Tail)];
+		AnimationClip [] allClips = upperAnimator.runtimeAnimatorController.animationClips;
+		for(int i = 0; i < animationClips.Length; i++){
+			string nameCache = "upper" + ((ShootAnimationName)i).ToString();
+			for(int j = 0; j < allClips.Length;j++){
+				if(allClips[j].name == nameCache){
+					animationClips[i] = allClips[j];
+					break;
+				}
+			}
+		}
+	}
+	protected IEnumerator AnimationPlayWithCallBack(ShootAnimationName animationName){
+		upperAnimator.Play(animationName.ToString(),0,0);
+
+		yield return new WaitForSeconds(animationClips[(int)animationName].length);
+
+		switch(animationName){
+		case ShootAnimationName.FrontShoot:
+		case ShootAnimationName.FrontUpShoot:
+		case ShootAnimationName.UpShoot:
+		case ShootAnimationName.FrontDownShoot:
+			EndShootMotion ();
+			break;
+		}
 	}
 	#endregion
 }

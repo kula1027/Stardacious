@@ -289,7 +289,6 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		}
 	}
 	protected IEnumerator AnimationPlayWithCallBack(EsperAnimationName animationName){
-		Debug.Log(animationName.ToString());
 		singleAnimator.Play(animationName.ToString(),0,0);
 
 		yield return new WaitForSeconds(animationClips[(int)animationName].length);

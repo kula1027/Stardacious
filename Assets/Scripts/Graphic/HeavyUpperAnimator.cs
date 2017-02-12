@@ -7,12 +7,9 @@ public class HeavyUpperAnimator : MonoBehaviour {
 		master = transform.parent.parent.parent.GetComponent<HeavyGraphicController> ();
 	}
 	public void EndShotGunAttackMotion(){
-		master.EndShotGunAttackMotion ();
+		//master.EndShotGunAttackMotion ();
 	}
 	public void EndSwap(){
 		master.EndSwap ();
 	}
-	/*public void ShootShotGun(){
-		master.ShootShotGun();
-	}*/
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ShootDirection {Up, FrontUp, Front, FrontDown}
 public enum ControlDirection {NotInitialized, LeftDown, Down, RightDown, Left, Middle, Right, LeftUp, Up, RightUp}
 
 public abstract class CharacterGraphicCtrl : MonoBehaviour {

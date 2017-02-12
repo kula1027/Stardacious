@@ -12,10 +12,4 @@ public class DoctorUpperAnimator : MonoBehaviour {
 	public void EndEnergyShoot (){
 		master.EndEnergyShoot ();
 	}
-	public void ShootBullet(){
-		master.ShootBullet();
-	}
-	public void ShootEnergy(){
-		//master.ShootEnergy ();
-	}
 }

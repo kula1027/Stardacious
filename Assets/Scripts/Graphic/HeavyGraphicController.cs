@@ -6,10 +6,16 @@ using System.Collections;
 //SwapDelay - 모든것 불가능
 //AttackDelay - 이동만 가능. (조준은 어케할지 모르겠다)
 
+public enum ShootAnimationName{FrontShoot, FrontUpShoot, UpShoot, FrontDownShoot, Tail}
 public enum HeavyLowerState{Idle, Walk, Run}
 public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Heavy master;
+
+	//MuzzleValue
+	private Vector3 frontPos = new Vector3(-2.92f, 0.21f, -0.007f);
+	private Vector3 frontUpPos = new Vector3 (-2.061f, 1.556f, -0.007f);
+	private Vector3 upPos = new Vector3 (-0.9f, 2.77f, -0.007f);
 
 	//Child
 	public Transform gunMuzzle;
@@ -20,7 +26,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	//State
 	protected HeavyLowerState lowerState;				//현재 하체상태
 	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
-	protected ShootDirection recentAimDirection;		//마지막으로 에이밍 한 방향
+	protected ShootAnimationName recentAimDirection;		//마지막으로 에이밍 한 방향
 
 	//Flags
 	protected bool isFlying = false;
@@ -36,11 +42,13 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		cartridge.Stop ();
 
 		currentInputDirection = ControlDirection.Middle;
-		recentAimDirection = ShootDirection.Front;
+		recentAimDirection = ShootAnimationName.FrontShoot;
 
 		lowerState = HeavyLowerState.Idle;
 
 		unitParts = GetComponentsInChildren<SpriteRenderer> ();
+
+		AnimationInit ();
 	}
 
 	public override void Initialize (){
@@ -134,13 +142,6 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	void Update () {
-		if (Input.GetKeyDown (KeyCode.A)) {
-			Debug.Log ("a");
-			Twinkle ();
-		}
-	}
-
 	#region private
 	private void SetShotGunShoot(){
 		isAttackAnimationPlaying = true;
@@ -155,17 +156,25 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		switch (direction) {
 		case ControlDirection.Left:
 		case ControlDirection.Right:
-			upperAnimator.Play ("FrontShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
+			SetMuzzle (ShootAnimationName.FrontShoot);
 			break;
 		case ControlDirection.LeftUp:
 		case ControlDirection.RightUp:
-			upperAnimator.Play ("FrontUpShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
+			SetMuzzle (ShootAnimationName.FrontUpShoot);
 			break;
 		case ControlDirection.Up:
-			upperAnimator.Play ("UpShoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
+			SetMuzzle (ShootAnimationName.UpShoot);
 			break;
 		default:
-			upperAnimator.Play (recentAimDirection.ToString () + "Shoot",0,0);
+			StopAllCoroutines ();
+			StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
+			SetMuzzle (recentAimDirection);
 			break;
 		}
 
@@ -177,7 +186,27 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 			master.ShootShotGun();
 		}
 	}
-		
+
+	private void SetMuzzle(ShootAnimationName shootAnimName){
+		switch (shootAnimName) {
+		case ShootAnimationName.FrontShoot:
+			gunMuzzle.localPosition = frontPos;
+			gunMuzzle.rotation = Quaternion.identity;
+			StopAllCoroutines ();
+			break;
+		case ShootAnimationName.FrontUpShoot:
+			gunMuzzle.localPosition = frontUpPos;
+			gunMuzzle.rotation = Quaternion.identity;
+			gunMuzzle.Rotate (0, 0, -45f);
+			break;
+		case ShootAnimationName.UpShoot:
+			gunMuzzle.localPosition = upPos;
+			gunMuzzle.rotation = Quaternion.identity;
+			gunMuzzle.Rotate (0, 0, -90f);
+			break;
+		}
+	}
+
 	protected virtual void SetUpperAnim(ControlDirection direction){
 		if (!isSwapDelay) {			//스왑중 아닐 때
 			if (isMiniGunMode) {			//미니건 모드
@@ -197,19 +226,29 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 					case ControlDirection.Left:
 					case ControlDirection.Right:
 						upperAnimator.Play ("FrontIdle");
-						recentAimDirection = ShootDirection.Front;
+						recentAimDirection = ShootAnimationName.FrontShoot;
 						break;
 					case ControlDirection.LeftUp:
 					case ControlDirection.RightUp:
 						upperAnimator.Play ("FrontUpIdle");
-						recentAimDirection = ShootDirection.FrontUp;
+						recentAimDirection = ShootAnimationName.FrontUpShoot;
 						break;
 					case ControlDirection.Up:
 						upperAnimator.Play ("UpIdle");
-						recentAimDirection = ShootDirection.Up;
+						recentAimDirection = ShootAnimationName.UpShoot;
 						break;
 					default:
-						upperAnimator.Play (recentAimDirection.ToString () + "Idle");
+						switch (recentAimDirection) {
+						case ShootAnimationName.FrontShoot:
+							upperAnimator.Play ("FrontIdle");
+							break;
+						case ShootAnimationName.FrontUpShoot:
+							upperAnimator.Play ("FrontUpIdle");
+							break;
+						case ShootAnimationName.UpShoot:
+							upperAnimator.Play ("UpIdle");
+							break;
+						}
 						break;
 					}
 				}
@@ -339,12 +378,35 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 			master.SetMachineGunMode (recentIsMiniGun);	//현재 미니건인지 아닌지 반환
 		}
 	}
+	#endregion
 
-	//총알 생성 시점
-	/*public void ShootShotGun(){
-		if(master){
-			master.ShootShotGun();
+	#region AnimationRoutine
+	protected AnimationClip[] animationClips;
+	protected void AnimationInit(){
+		animationClips = new AnimationClip[(int)(ShootAnimationName.Tail)];
+		AnimationClip [] allClips = upperAnimator.runtimeAnimatorController.animationClips;
+		for(int i = 0; i < animationClips.Length; i++){
+			string nameCache = "upper" + ((ShootAnimationName)i).ToString();
+			for(int j = 0; j < allClips.Length;j++){
+				if(allClips[j].name == nameCache){
+					animationClips[i] = allClips[j];
+					break;
+				}
+			}
 		}
-	}*/
+	}
+	protected IEnumerator AnimationPlayWithCallBack(ShootAnimationName animationName){
+		upperAnimator.Play(animationName.ToString(),0,0);
+
+		yield return new WaitForSeconds(animationClips[(int)animationName].length);
+
+		switch(animationName){
+		case ShootAnimationName.FrontShoot:
+		case ShootAnimationName.FrontUpShoot:
+		case ShootAnimationName.UpShoot:
+			EndShotGunAttackMotion ();
+			break;
+		}
+	}
 	#endregion
 }
