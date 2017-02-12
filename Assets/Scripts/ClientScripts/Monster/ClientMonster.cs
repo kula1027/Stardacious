@@ -51,6 +51,42 @@ public class ClientMonster : PoolingObject, IHittable {
 		case MsgAttr.destroy:
 			OnDie();
 			break;
+
+		case MsgAttr.Monster.grounded:
+			if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+				gcMons.Jump ();
+			}
+			else if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+				gcMons.Idle ();
+			}
+			break;
+
+		case MsgAttr.Monster.moving:
+			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+				gcMons.Walk ();
+			}
+			else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+				gcMons.Idle ();
+			}
+			break;
+
+		case MsgAttr.Monster.direction:
+			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+				transform.localScale = new Vector3(-1, 1, 1);
+			}
+			else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+				transform.localScale = new Vector3(1, 1, 1);
+			}
+			break;
+
+		case MsgAttr.Monster.attack:
+			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+				gcMons.Attack ();
+			}
+			else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+				gcMons.Idle ();
+			}
+			break;
 		}
 	}
 		

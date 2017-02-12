@@ -50,7 +50,7 @@ public class ClientStageManager : MonoBehaviour {
 			CreateMonster(monsType, objIdx, startPos);
 			break;
 
-			default:
+		default:
 			int monsIdx = int.Parse(networkMessage.Header.Content);
 			IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
 			if(obj != null)

@@ -162,5 +162,9 @@ public class MsgAttr{
 
 	public const string monster = "mons";
 	public class Monster{
+		public const string attack = "attk";
+		public const string grounded = "mground";
+		public const string moving = "mmov";
+		public const string direction = "mdir";
 	}
 }
