@@ -13,19 +13,22 @@ public class EsperNetGraphicController : EsperGraphicController {
 
 		switch(attackType){
 		case EsperAttackType.Slash0:
-			singleAnimator.Play ("Slash0", 0, 0);
+			StopAllCoroutines();
+			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
 			slashAnimator.Play ("Slash0", 0, 0);
 			break;
 		case EsperAttackType.Slash1:
-			singleAnimator.Play ("Slash1", 0, 0);
+			StopAllCoroutines();
+			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
 		case EsperAttackType.JumpAttack:
 			singleAnimator.Play ("JumpAttack", 0, 0);
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
-		case EsperAttackType.StabAttack:
-			singleAnimator.Play ("StabAttack", 0, 0);
+		case EsperAttackType.StabAttack:			
+			StopAllCoroutines();
+			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
 			slashAnimator.Play ("StabAttack", 0, 0);
 			break;
 		}

@@ -2,6 +2,7 @@
 using System.Collections;
 using Spine.Unity;
 
+public enum EsperAnimationName {Slash0, Slash1, StabAttack, PsyAttack, Tail}
 public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Esper master;
@@ -30,6 +31,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		currentInputDirection = ControlDirection.Middle;
 
 		rushEffect.SetActive (false);
+
+		AnimationInit();
 	}
 
 	public override void Initialize (){
@@ -124,7 +127,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public void PsyShield(){
 		SetSkillDelay ();
-		singleAnimator.Play ("PsyAttack");
+		StopAllCoroutines();
+		StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.PsyAttack));
 	}
 
 	#region private
@@ -153,7 +157,13 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					if (master) {
 						master.OnAttackSlash (nextAttackMotion);
 					}
-					singleAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
+					if(nextAttackMotion ==0){
+						StopAllCoroutines();
+						StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
+					}else{
+						StopAllCoroutines();
+						StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
+					}
 					slashAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
 					MufflerActive ();
 					nextAttackMotion = (nextAttackMotion + 1) % 2;
@@ -162,7 +172,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					if (master) {
 						master.OnAttackDash ();
 					}
-					singleAnimator.Play ("StabAttack", 0, 0);
+					StopAllCoroutines();
+					StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
 					slashAnimator.Play ("StabAttack", 0, 0);
 					MufflerActive ();
 					nextAttackMotion = 0;
@@ -252,6 +263,47 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public void EndRecall(){
 		
+	}
+
+
+	public void StartAttackMotion(){
+		if (master) {
+			master.OnAttackSlash ((nextAttackMotion + 1) % 2);
+		}
+	}
+	#endregion
+
+	#region AnimationRoutine
+	protected AnimationClip[] animationClips;
+	protected void AnimationInit(){
+		animationClips = new AnimationClip[(int)(EsperAnimationName.Tail)];
+		AnimationClip [] allClips = singleAnimator.runtimeAnimatorController.animationClips;
+		for(int i = 0; i < animationClips.Length; i++){
+			string nameCache = ((EsperAnimationName)i).ToString();
+			for(int j = 0; j < allClips.Length;j++){
+				if(allClips[j].name == nameCache){
+					animationClips[i] = allClips[j];
+					break;
+				}
+			}
+		}
+	}
+	protected IEnumerator AnimationPlayWithCallBack(EsperAnimationName animationName){
+		Debug.Log(animationName.ToString());
+		singleAnimator.Play(animationName.ToString(),0,0);
+
+		yield return new WaitForSeconds(animationClips[(int)animationName].length);
+
+		switch(animationName){
+		case EsperAnimationName.Slash0:
+		case EsperAnimationName.Slash1:
+		case EsperAnimationName.StabAttack:
+			EndAttackMotion();
+			break;
+		case EsperAnimationName.PsyAttack:
+			EndPsyShield();
+			break;
+		}
 	}
 	#endregion
 }

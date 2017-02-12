@@ -10,7 +10,6 @@ public class HeavyNetGraphicController : HeavyGraphicController{
 
 	public override void StartNormalAttack(){
 		isAttackButtonPressing = true;
-
 		if (isMiniGunMode) {
 			SetUpperAnim (currentInputDirection);
 			SetLowerAnim (currentInputDirection);

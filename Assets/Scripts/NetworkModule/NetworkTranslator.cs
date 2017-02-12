@@ -13,31 +13,24 @@ public class NetworkTranslator : MonoBehaviour {
 	public void SetMsgHandler(MsgHandler msgHandler_){
 		msgHandler = msgHandler_;
 	}
+	int msgCount = 0;
+	int msgCountAcc = 0;
+	float timeAcc = 0;
 
-	void Start(){
-		StartCoroutine(DoParse());
-	}
-
-	private IEnumerator DoParse(){
-		int msgCount = 0;
-		int msgCountAcc = 0;
-		float timeAcc = 0;
-		while(true){
-			msgCount = ReceiveQueue.GetCount();
-			if(msgCount > 0){
-				for(int loop = 0; loop < msgCount; loop++){
-					msgHandler.HandleMsg(ReceiveQueue.SyncDequeMsg());
-				}
+	void LateUpdate(){
+		msgCount = ReceiveQueue.GetCount();
+		if(msgCount > 0){
+			for(int loop = 0; loop < msgCount; loop++){
+				msgHandler.HandleMsg(ReceiveQueue.SyncDequeMsg());
 			}
+		}
 
-			timeAcc += Time.deltaTime;
-			msgCountAcc += msgCount;
-			if(timeAcc > 1){
-				ConsoleSystem.instance.SetFpsText(msgCountAcc);
-				timeAcc = 0;
-				msgCountAcc = 0;
-			}
-			yield return null;
+		timeAcc += Time.deltaTime;
+		msgCountAcc += msgCount;
+		if(timeAcc > 1){
+			ConsoleSystem.instance.SetFpsText(msgCountAcc);
+			timeAcc = 0;
+			msgCountAcc = 0;
 		}
 	}
 }
