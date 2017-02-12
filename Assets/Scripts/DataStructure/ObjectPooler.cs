@@ -10,7 +10,7 @@ public class ObjectPooler : MonoBehaviour {
 	public GameObject RequestObject(GameObject go_){
 		IObjectPoolable op = go_.GetComponent<IObjectPoolable>();
 
-		PoolList mPool = GetManagingPool(op.GetType());
+		PoolList mPool = GetManagingPool(go_.name);
 
 		GameObject rObj = mPool.RequestObject(go_);
 		rObj.GetComponent<IRecvPoolable>().SetPooler(this);
@@ -21,7 +21,7 @@ public class ObjectPooler : MonoBehaviour {
 	public GameObject RequestObjectAt(GameObject go_, int idx_){
 		IObjectPoolable op = go_.GetComponent<IObjectPoolable>();
 
-		PoolList mPool = GetManagingPoolAt(idx_, op.GetType());
+		PoolList mPool = GetManagingPoolAt(idx_, go_.name);
 
 		GameObject rObj = mPool.RequestObjectAt(go_, idx_);
 		rObj.GetComponent<IObjectPoolable>().SetPooler(this);
@@ -44,18 +44,18 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 	//self pool get 전용
-	private PoolList GetManagingPool(Type t){
+	private PoolList GetManagingPool(string objName){
 		for(int loop = 0; loop < managingPool.Count; loop++){
-			if(managingPool[loop].managingType.Equals(t))
+			if(managingPool[loop].managingObjName.Equals(objName))
 				return managingPool[loop];
 		}
 			
 		PoolList pList;
 		GameObject objPoolList = new GameObject();
 		objPoolList.transform.SetParent(transform);
-		objPoolList.name = "Pool_" + t;
+		objPoolList.name = "Pool_" + objName;
 		pList = objPoolList.AddComponent<PoolList>();
-		pList.managingType = t;
+		pList.managingObjName = objName;
 		pList.PoolId = managingPool.Count * poolIdRange;
 		managingPool.Add(pList);
 
@@ -63,7 +63,7 @@ public class ObjectPooler : MonoBehaviour {
 	}
 
 	//other pool get 전용
-	private PoolList GetManagingPoolAt(int idx, Type t){
+	private PoolList GetManagingPoolAt(int idx, string objName){
 		int poolIdx = idx / poolIdRange;
 
 		if(managingPool.Count <= poolIdx){
@@ -80,8 +80,8 @@ public class ObjectPooler : MonoBehaviour {
 			}
 		}
 
-		managingPool[poolIdx].managingType = t;
-		managingPool[poolIdx].gameObject.name = "Pool_" + t;
+		managingPool[poolIdx].managingObjName = objName;
+		managingPool[poolIdx].gameObject.name = "Pool_" + objName;
 
 		return managingPool[poolIdx];
 	}

@@ -145,22 +145,21 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private HitObject hoRush = new HitObject(damageRush);
 	private bool isRushing = true;
 
-	private const float dashSpeed = 60f;
+	private const float rushSpeed = 1f;
 	private const float dashTime = 0.33f;
 
 	private void SwiftRush(Vector3 dirRush){
-		dirRush.Normalize();
-		if(dirRush.y >= -0.3f){			
-			StartCoroutine(SwiftRushRoutine(dirRush));
+		dirRush.Normalize();	
+		StartCoroutine(SwiftRushRoutine(dirRush));
 
-			rushCount++;
-			if(rushCount > 2){
-				InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 18);
-				rushCount = 0;
-			}else{
-				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
-			}
+		rushCount++;
+		if(rushCount > 2){
+			InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 18);
+			rushCount = 0;
+		}else{
+			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
 		}
+
 	}
 
 	public void OnHitSwiftRush(Collider2D col){
@@ -181,9 +180,9 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		while(dashTime > timeAcc){
 			timeAcc += Time.deltaTime;
-			transform.position += dirRush * Time.deltaTime * dashSpeed;
+			transform.position += dirRush * rushSpeed;
 
-			yield return null;
+			yield return new WaitForFixedUpdate();
 		}
 
 		hitterRush.SetActive(false);

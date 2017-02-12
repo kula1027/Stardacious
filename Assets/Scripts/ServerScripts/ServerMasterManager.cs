@@ -57,6 +57,7 @@ namespace ServerSide{
 				int sender = int.Parse(networkMessage.Adress.Attribute);
 				playerInfo[sender].gameState = GameState.Waiting;
 				playerInfo[sender].nickName = networkMessage.Body[0].Content;
+				playerInfo[sender].isActive = true;
 				SendInfo(sender);
 				break;
 
@@ -104,6 +105,10 @@ namespace ServerSide{
 						nmGameState.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
 						Network_Server.BroadCastTcp(nmGameState);
 						serverState = GameState.Playing;
+						for(int loop = 0; loop < 3; loop++){
+							if(playerInfo[loop].isActive)
+								playerInfo[loop].gameState = GameState.Playing;
+						}
 					}
 				}else{
 					readyCount--;
@@ -123,6 +128,7 @@ namespace ServerSide{
 }
 	
 public class PlayerInfo{
+	public bool isActive = false;
 	public string nickName = "";
 	public int chosenCharacter = (int)ChIdx.NotInitialized;
 	public GameState gameState = GameState.Empty;
