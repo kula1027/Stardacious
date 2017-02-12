@@ -64,6 +64,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 	public override void Grounded (){
 		isFlying = false;
+		isAttackAnimationPlaying = false;
 		if (isAttackButtonPressing) {
 			SetAttackAnim (currentInputDirection);
 		} else {
@@ -122,6 +123,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void PsyShield(){
+		SetSkillDelay ();
 		singleAnimator.Play ("PsyAttack");
 	}
 
@@ -131,7 +133,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			master.OnJumpAttack ();
 		}
 		isAttackAnimationPlaying = true;
-		singleAnimator.Play ("JumpAttack");
+		singleAnimator.Play ("JumpAttack", 0, 0);
 		slashAnimator.Play ("Slash1", 0, 0);
 		MufflerActive ();
 		canJumpAttack = false;
@@ -214,23 +216,38 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			controlFlags.move = true;
 		}
 	}
-
+	private void SetSkillDelay(){
+		if(master){
+			controlFlags.move = false;
+			controlFlags.attack = false;
+			controlFlags.aim = false;
+			controlFlags.run = false;
+		}
+	}
+	private void ReleaseSkillDelay(){
+		if(master){
+			controlFlags.move = true;
+			controlFlags.attack = true;
+			controlFlags.aim = true;
+			controlFlags.run = true;
+		}
+	}
 	#endregion
 
 	#region AnimationCallBack
 	public virtual void EndAttackMotion(){		//평타, 찌르기, 점프어택 모두 해당
 		isAttackAnimationPlaying = false;
-		if (isFlying) {
-			singleAnimator.Play ("LongJump");
+		ReleaseAttackDelay ();
+		if (isAttackButtonPressing) {
+			SetAttackAnim (currentInputDirection);
 		} else {
-			if (isAttackButtonPressing) {
-				SetAttackAnim (currentInputDirection);
-			} else {
-				ReleaseAttackDelay ();
-				nextAttackMotion = 0;
-				SetSingleAnim (currentInputDirection);
-			}
+			nextAttackMotion = 0;
+			SetSingleAnim (currentInputDirection);
 		}
+	}
+
+	public void EndPsyShield(){
+		ReleaseSkillDelay ();
 	}
 
 	public void EndRecall(){
