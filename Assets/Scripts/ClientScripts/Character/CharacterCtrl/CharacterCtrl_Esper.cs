@@ -18,7 +18,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		chrIdx = ChIdx.Esper;
 
-		skillCoolDown[0] = 0.3f;
+		skillCoolDown[0] = 0.4f;
 		skillCoolDown[1] = 5f;
 		skillCoolDown[2] = 2f;
 
@@ -122,6 +122,10 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		base.InputStartAttack ();
 	}
 
+	public override void InputStopAttack (){
+		characterGraphicCtrl.StopNormalAttack ();
+	}
+
 	public override void Jump (){
 		if(isRushing == false)return;
 
@@ -142,7 +146,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private bool isRushing = true;
 
 	private const float dashSpeed = 60f;
-	private const float dashDistance = 15f;
+	private const float dashTime = 0.33f;
 
 	private void SwiftRush(Vector3 dirRush){
 		dirRush.Normalize();
@@ -151,7 +155,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 			rushCount++;
 			if(rushCount > 2){
-				InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 25);
+				InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 18);
 				rushCount = 0;
 			}else{
 				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
@@ -173,10 +177,10 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		rgd2d.gravityScale = 0;
 		gcEsper.Rush();
 
-		float distAcc = 0;
+		float timeAcc = 0;
 
-		while(dashDistance > distAcc){
-			distAcc += dashSpeed * Time.deltaTime;
+		while(dashTime > timeAcc){
+			timeAcc += Time.deltaTime;
 			transform.position += dirRush * Time.deltaTime * dashSpeed;
 
 			yield return null;
@@ -187,6 +191,8 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		rgd2d.gravityScale = 1;
 		isRushing = true;
 		gcEsper.RushBack();
+		nmSkill.Body[0].Content = "1";
+		Network_Client.SendTcp(nmSkill);
 	}
 	#endregion
 
@@ -222,7 +228,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnMissRecallBullet(){
 		recallTarget = -1;
-		InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+		InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 	}
 
 	public void SetRecallTarget(int targetIdx_){
@@ -238,9 +244,10 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 
 	private IEnumerator DistortionRoutine(){
+		gcEsper.PsyShield();
 		hitboxDistortion.gameObject.SetActive(true);
 
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(0.5f);
 
 		hitboxDistortion.gameObject.SetActive(false);
 	}

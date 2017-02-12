@@ -28,7 +28,9 @@ public static class NetworkConst{
 	public const float projPosSyncTime = 0.1f;
 }
 	
-
-public static class DirPath{
-	
+public enum GameState{
+	Waiting,
+	Ready,
+	Playing,
+	Empty
 }

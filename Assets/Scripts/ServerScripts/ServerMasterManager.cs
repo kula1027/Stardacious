@@ -7,12 +7,16 @@ namespace ServerSide{
 	public class ServerMasterManager : MonoBehaviour {
 		public static ServerMasterManager instance;
 
+		private GameState serverState;
+
 		PlayerInfo[] playerInfo = new PlayerInfo[NetworkConst.maxPlayer];
 
 		public int currentPlayerCount = 0;
+		private int readyCount = 0;
 
 		void Awake(){
 			instance = this;
+			serverState = GameState.Waiting;
 
 			for(int loop = 0; loop < playerInfo.Length; loop++){
 				playerInfo[loop] = new PlayerInfo();
@@ -55,6 +59,10 @@ namespace ServerSide{
 				SendInfo(sender);
 				break;
 
+			case MsgAttr.Misc.ready:
+				HandleReadyMsg(networkMessage);
+				break;
+
 			case MsgAttr.character:
 				int senderr = int.Parse(networkMessage.Adress.Attribute);
 				playerInfo[senderr].chosenCharacter = int.Parse(networkMessage.Body[0].Content);
@@ -65,10 +73,13 @@ namespace ServerSide{
 
 		private void SendInfo(int recver){
 			MsgSegment[] otherInfo = {
-				new MsgSegment(MsgAttr.Misc.hello),
+				new MsgSegment(MsgAttr.Misc.hello, (int)serverState),
 				new MsgSegment(playerInfo[0].nickName, playerInfo[0].chosenCharacter),
+				new MsgSegment((int)playerInfo[0].gameState),
 				new MsgSegment(playerInfo[1].nickName, playerInfo[1].chosenCharacter),
-				new MsgSegment(playerInfo[2].nickName, playerInfo[2].chosenCharacter)
+				new MsgSegment((int)playerInfo[1].gameState),
+				new MsgSegment(playerInfo[2].nickName, playerInfo[2].chosenCharacter),
+				new MsgSegment((int)playerInfo[2].gameState)
 			};
 
 			NetworkMessage nmHello = new NetworkMessage(
@@ -78,10 +89,39 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp(nmHello);
 
 		}
+
+		private void HandleReadyMsg(NetworkMessage nm_){
+			NetworkMessage nmResponse = new NetworkMessage(
+				new MsgSegment(MsgAttr.misc)
+			);
+			switch(serverState){
+			case GameState.Waiting:
+				if(nm_.Body[0].Content.Equals(NetworkMessage.sTrue)){
+					readyCount++;
+					//nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.ready, );
+
+					if(readyCount >= currentPlayerCount){
+						nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
+						Network_Server.BroadCastTcp(nmResponse);
+					}
+				}else{
+					readyCount--;
+				}
+				break;
+
+			case GameState.Playing:
+				nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
+				Network_Server.UniCast(nmResponse, int.Parse(nm_.Adress.Attribute));
+				break;
+						
+			}
+
+		}
 	}
 }
 	
 public class PlayerInfo{
-	public string nickName = "Empty";
+	public string nickName = "";
 	public int chosenCharacter = (int)ChIdx.NotInitialized;
+	public GameState gameState = GameState.Empty;
 }

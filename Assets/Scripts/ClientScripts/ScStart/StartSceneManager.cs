@@ -17,8 +17,13 @@ public class StartSceneManager : MonoBehaviour {
 	public ReadyPanel readyPanel;
 	public HidableUI selCharPanel;
 
+	public HidablePopUp popUp;
+
+	private bool isReady;
+
 	void Awake(){	
 		instance = this;
+		isReady = false;
 	}
 
 	void Start(){
@@ -28,7 +33,13 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnRecv(NetworkMessage networkMessage){
 		switch(networkMessage.Body[0].Attribute){
-			case MsgAttr.Setup.reqId:
+
+		case MsgAttr.Misc.failConnect:
+			popUp.ShowPopUp("서버 접속에 실패했습니다.", true);
+			txtConfigState.text = "Stardacious";
+			break;
+
+		case MsgAttr.Setup.reqId:
 			string givenId = networkMessage.Body[0].Content;
 			Network_Client.NetworkId = int.Parse(givenId);
 			break;
@@ -48,30 +59,41 @@ public class StartSceneManager : MonoBehaviour {
 		case MsgAttr.Misc.exitClient:
 			int exitIdx = int.Parse(networkMessage.Body[0].Content);
 			readyPanel.SetSlotCharacter(exitIdx, (int)ChIdx.NotInitialized);
-			readyPanel.SetSlotNickName(exitIdx, "Empty");
+			readyPanel.SetSlotNickName(exitIdx, "");
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
 			break;
 
 		case MsgAttr.Misc.hello:
-			SetOtherInfo(networkMessage.Body);
+			SetOtherPlayerSlots(networkMessage.Body);
+			break;
+
+		case MsgAttr.Misc.ready:
+			
+			break;
+
+		case MsgAttr.Misc.letsgo:
+			SceneManager.LoadSceneAsync("scIngame");
 			break;
 		}
 	}
 
-	private void SetOtherInfo(MsgSegment[] bodies){
+	private void SetOtherPlayerSlots(MsgSegment[] bodies){
 		for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 			if(loop != Network_Client.NetworkId){
-				int chIdx = int.Parse(bodies[loop + 1].Content);
+				int chIdx = int.Parse(bodies[loop * 2 + 1].Content);
 				readyPanel.SetSlotCharacter(loop, chIdx);
-				readyPanel.SetSlotNickName(loop, bodies[loop + 1].Attribute);
+				readyPanel.SetSlotState(loop, (GameState)int.Parse(bodies[loop * 2 + 2].Attribute));
+				readyPanel.SetSlotNickName(loop, bodies[loop * 2 + 1].Attribute);
 			}
 		}
 	}
 
 	public void OnNetworkSetupDone(){
 		joinPanel.Hide();	
+		popUp.Hide();
 
 		readyPanel.SetSlotCharacter(Network_Client.NetworkId, (int)ChIdx.NotInitialized);
+		readyPanel.SetReady(isReady);
 
 		NetworkMessage nmHello = new NetworkMessage(
 			new MsgSegment(MsgAttr.misc),
@@ -83,6 +105,8 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnBtnJoinClick(){
+		isReady = false;
+		popUp.ShowPopUp("접속 중 ...", false);
 		PlayerData.Reset();
 
 		if(inputIp.text.Length < 6){
@@ -96,6 +120,7 @@ public class StartSceneManager : MonoBehaviour {
 			modifiedStr = modifiedStr.Replace(',', ' ');
 			modifiedStr = modifiedStr.Replace(':', ' ');
 			modifiedStr = modifiedStr.Replace('/', ' ');
+			modifiedStr = modifiedStr.Replace('\n', ' ');
 
 			PlayerData.nickName = modifiedStr;
 		}
@@ -120,11 +145,18 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnBtnReadyClick(){
 		SceneManager.LoadSceneAsync("scIngame");
+		isReady = !isReady;
+		readyPanel.SetReady(isReady);
+
+		NetworkMessage nmReady = new NetworkMessage(
+			new MsgSegment(MsgAttr.misc),
+			new MsgSegment(MsgAttr.Misc.ready, isReady ? NetworkMessage.sTrue : NetworkMessage.sFalse)
+		);
 	}
 
 	public void OnBtnReadyBackClick(){
 		Network_Client.ShutDown();
-		txtConfigState.text = "BLAH BLAH";
+		txtConfigState.text = "Stardacious";
 
 		joinPanel.Show();
 		readyPanel.Hide();

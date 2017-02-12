@@ -54,7 +54,11 @@ public class Network_Client {
 			}catch(SocketException e){
 				ConsoleMsgQueue.EnqueMsg("Connection Msg: " + e.SocketErrorCode.ToString(), 2);
 				conCount++;
-				if(conCount > 15){
+				if(conCount > 10){
+					MsgSegment h = new MsgSegment(MsgAttr.misc);
+					MsgSegment b = new MsgSegment(MsgAttr.Misc.failConnect);
+					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
+
 					ConsoleMsgQueue.EnqueMsg("Fail Connect, Exit Connecting");
 					isConnected = false;
 					return;

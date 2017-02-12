@@ -7,12 +7,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public BoxCollider2D colGroundChecker;
 
-	protected MsgSegment commonHeader;
+	private NetworkMessage nmGround;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
+
+	protected MsgSegment commonHeader;
 	protected NetworkMessage nmAttack;
-	private NetworkMessage nmGround;
-	private NetworkMessage nmSkill;
+	protected NetworkMessage nmSkill;
 
 	protected Rigidbody2D rgd2d;
 

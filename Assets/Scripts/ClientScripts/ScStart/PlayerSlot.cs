@@ -4,27 +4,35 @@ using UnityEngine.UI;
 
 public class PlayerSlot : MonoBehaviour {
 	public int index;
-	private Button[] slotBtn;
+	public ButtonControl btnReady;
+	public ButtonControl btnSelect;
+
 	public Image imggg;
 	public Text txtNickName;
-	public Text txtState;
+	public TextControl txtState;
 
-	void Awake(){
-		slotBtn = GetComponentsInChildren<Button>();
-	}
 
 	public void OnShow(){		
 		if(Network_Client.NetworkId == index){
-			for(int loop = 0; loop < slotBtn.Length; loop++){
-				slotBtn[loop].gameObject.SetActive(true);
-			}
+			btnReady.gameObject.SetActive(true);
+			btnSelect.gameObject.SetActive(true);
+
 			txtNickName.text = PlayerData.nickName;
-		}else{
-			for(int loop = 0; loop < slotBtn.Length; loop++){
-				slotBtn[loop].gameObject.SetActive(false);
+
+			if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
+				btnReady.SetInteractable(false);
+				btnSelect.SetInteractable(true);
+				btnSelect.Glow();
+			}else{
+				btnReady.SetInteractable(true);
+				btnReady.Glow();
+				btnSelect.SetInteractable(true);
 			}
+		}else{
+			btnReady.gameObject.SetActive(false);
+			btnSelect.gameObject.SetActive(false);
 		}
-	}
+	}		
 
 	public void SetCharacter(Sprite tempSprite){
 		if(tempSprite == null){

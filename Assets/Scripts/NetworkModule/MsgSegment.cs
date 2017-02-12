@@ -27,6 +27,11 @@ public class MsgSegment {
 		content = NotInitialized;
 	}
 
+	public MsgSegment(int attribute_){
+		attribute = attribute_.ToString();
+		content = NotInitialized;
+	}
+
 	public MsgSegment(string attribute_, string content_){
 		attribute = attribute_;
 		content = content_;
@@ -118,8 +123,11 @@ public class MsgAttr{
 	public const string misc = "misc";
 	public class Misc{
 		public const string exitClient = "exit";
+		public const string failConnect = "fcon";
 		public const string disconnect = "disc";
 		public const string hello = "hlo";
+		public const string ready = "rdy";
+		public const string letsgo = "begingame";
 	}
 
 	public const string stage = "stg";
