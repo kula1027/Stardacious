@@ -25,6 +25,7 @@ namespace ServerSide{
 			prevPosition = this.transform.position;
 		}
 
+
 		public override void Ready(){
 			maxHp = 100;
 			CurrentHp = maxHp;
@@ -66,19 +67,21 @@ namespace ServerSide{
 
 				if (isGround != prevGrounded){
 					if (!isMoving && isGround) {
+						// 땅에 떨졋는데 멈춰잇음
 						nmGround.Body [0].Content = NetworkMessage.sTrue;
 						Network_Server.BroadCastTcp(nmGround);
 
 					} else if (isMoving && isGround) {
+						// 땅에 떨졋는데 움직임
 						nmMoving.Body[0].Content = NetworkMessage.sTrue;
 						Network_Server.BroadCastTcp(nmMoving);
 
 					} else {
+						// 그외
 						colGroundChecker.enabled = false;
 						nmGround.Body[0].Content = NetworkMessage.sFalse;
 						Network_Server.BroadCastTcp(nmGround);
 					}
-					//Network_Server.BroadCastTcp(nmGround);
 				}
 
 				prevGrounded = isGround;
@@ -91,8 +94,7 @@ namespace ServerSide{
 			bool prevMoving = isMoving;
 
 			while (true) {
-
-				//isMoving || isGrounded 상태가 바끼면 상태 전송
+				//isMoving 상태가 바끼면 상태 전송
 				if (isMoving != prevMoving && isGround){
 					if (isMoving) {
 						nmMoving.Body[0].Content = NetworkMessage.sTrue;
@@ -193,21 +195,29 @@ namespace ServerSide{
 			isMoving = false; // now dont move
 		}
 
-		protected Vector3 SetClosestCharacterPos(Vector3[] currentCharacterPos_, int curruentPlayers){
-			//나랑젤가까운놈 지목, 방향까지 같이 조정
+		protected Vector3 SetCharacterPos(Vector3[] currentCharacterPos_, int curruentPlayers, int factor){
+			//아무나 한명 지목, 방향까지 같이 조정
+			// factor == 0 : closet position || factor == 1 : random position
 			int i = 0;
 
 			Vector3 returnCharacterPos = currentCharacterPos_[i];
 			float currentCharacterDistance = Vector3.Distance (currentCharacterPos_[i], this.transform.position);
 			float tempCharacterDistance;
 
-			for (i = 1; i < curruentPlayers; i++) {
-				tempCharacterDistance = Vector3.Distance (currentCharacterPos_[i], this.transform.position);
-				if (tempCharacterDistance < currentCharacterDistance) {
-					returnCharacterPos = currentCharacterPos_ [i];
+			if (factor == 0) {
+				for (i = 1; i < curruentPlayers; i++) {
+					tempCharacterDistance = Vector3.Distance (currentCharacterPos_ [i], this.transform.position);
+					if (tempCharacterDistance < currentCharacterDistance) {
+						returnCharacterPos = currentCharacterPos_ [i];
+					}
 				}
+			} else if (factor == 1) {
+				i = Random.Range (0, curruentPlayers);
+				returnCharacterPos = currentCharacterPos_ [i];
 			}
+			// defalut : first character member
 
+			// 현재방향 전송 : 이 루틴은 몬스터 행동 주기마다 call
 			if (this.transform.position.x < returnCharacterPos.x) {
 				nmDir.Body [0].Content = NetworkMessage.sTrue;
 			} else {
@@ -225,6 +235,7 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp (nmAttk);
 
 			while (true) {
+				// 공격 anim 선딜레이 0.5sec
 				timeAcc += Time.deltaTime;
 
 				if (timeAcc > 0.5f)
@@ -247,6 +258,16 @@ namespace ServerSide{
 			nmAttk.Body [0].Content = NetworkMessage.sFalse;
 			Network_Server.BroadCastTcp (nmAttk);
 
+			timeAcc = 0;
+			while (true) {
+				// 공격 anim 후딜레이 0.5sec
+				timeAcc += Time.deltaTime;
+
+				if (timeAcc > 1f)
+					break;
+
+				yield return null;
+			}
 		}
 	}
 }
