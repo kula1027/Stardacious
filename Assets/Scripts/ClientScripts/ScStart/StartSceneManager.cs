@@ -35,7 +35,18 @@ public class StartSceneManager : MonoBehaviour {
 		switch(networkMessage.Body[0].Attribute){
 
 		case MsgAttr.Misc.failConnect:
-			popUp.ShowPopUp("서버 접속에 실패했습니다.", true);
+			popUp.ShowPopUp("서버 접속에 실패했습니다.", true, false);
+			txtConfigState.text = "Stardacious";
+			break;
+
+		case MsgAttr.Misc.disconnect:
+			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
+			popUp.ShowPopUp("서버와 연결이 끊겼습니다.", true, false);
+
+			readyPanel.Hide();
+			selCharPanel.Hide();
+			joinPanel.Show();
+
 			txtConfigState.text = "Stardacious";
 			break;
 
@@ -58,6 +69,7 @@ public class StartSceneManager : MonoBehaviour {
 
 		case MsgAttr.Misc.exitClient:
 			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			readyPanel.SetSlotState(exitIdx, GameState.Empty);
 			readyPanel.SetSlotCharacter(exitIdx, (int)ChIdx.NotInitialized);
 			readyPanel.SetSlotNickName(exitIdx, "");
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
@@ -68,10 +80,17 @@ public class StartSceneManager : MonoBehaviour {
 			break;
 
 		case MsgAttr.Misc.ready:
-			
+			int sdr = int.Parse(networkMessage.Adress.Attribute);
+			if(networkMessage.Body[0].Content.Equals(NetworkMessage.sTrue)){
+				readyPanel.SetSlotState(sdr, GameState.Ready);
+			}else{
+				readyPanel.SetSlotState(sdr, GameState.Waiting);
+			}
+
 			break;
 
 		case MsgAttr.Misc.letsgo:
+			popUp.ShowPopUp("로딩 중 ...", false, true);
 			SceneManager.LoadSceneAsync("scIngame");
 			break;
 		}
@@ -106,7 +125,7 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnBtnJoinClick(){
 		isReady = false;
-		popUp.ShowPopUp("접속 중 ...", false);
+		popUp.ShowPopUp("접속 중 ...", false, true);
 		PlayerData.Reset();
 
 		if(inputIp.text.Length < 6){
@@ -144,7 +163,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnBtnReadyClick(){
-		SceneManager.LoadSceneAsync("scIngame");
+		//SceneManager.LoadSceneAsync("scIngame");
 		isReady = !isReady;
 		readyPanel.SetReady(isReady);
 
@@ -152,6 +171,7 @@ public class StartSceneManager : MonoBehaviour {
 			new MsgSegment(MsgAttr.misc),
 			new MsgSegment(MsgAttr.Misc.ready, isReady ? NetworkMessage.sTrue : NetworkMessage.sFalse)
 		);
+		Network_Client.SendTcp(nmReady);
 	}
 
 	public void OnBtnReadyBackClick(){

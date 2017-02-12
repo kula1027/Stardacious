@@ -22,7 +22,7 @@ namespace ServerSide{
 		void OnTriggerExit2D(Collider2D col){
 			master.isGround = false;
 		}
-}
+	}
 }
 
 

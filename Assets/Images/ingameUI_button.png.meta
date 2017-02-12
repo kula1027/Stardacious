@@ -1,11 +1,25 @@
 fileFormatVersion: 2
 guid: d8c267141b5ab5b4b99bef8b86ce3f50
-timeCreated: 1480540314
+timeCreated: 1486910900
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: ingameUI_button_0
     21300002: ingameUI_button_1
+    21300004: ingameUI_button_2
+    21300006: ingameUI_button_3
+    21300008: ingameUI_button_4
+    21300010: ingameUI_button_5
+    21300012: ingameUI_button_6
+    21300014: ingameUI_button_7
+    21300016: ingameUI_button_8
+    21300018: ingameUI_button_9
+    21300020: ingameUI_button_10
+    21300022: ingameUI_button_11
+    21300024: ingameUI_button_12
+    21300026: ingameUI_button_13
+    21300028: ingameUI_button_14
+    21300030: ingameUI_button_15
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -58,12 +72,12 @@ TextureImporter:
       name: ingameUI_button_0
       rect:
         serializedVersion: 2
-        x: 74
-        y: 59
-        width: 343
-        height: 340
+        x: 20
+        y: 872
+        width: 712
+        height: 180
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -71,12 +85,194 @@ TextureImporter:
       name: ingameUI_button_1
       rect:
         serializedVersion: 2
+        x: 892
+        y: 896
+        width: 77
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_2
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 947
+        width: 661
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_3
+      rect:
+        serializedVersion: 2
+        x: 888
+        y: 798
+        width: 84
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_4
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 859
+        width: 640
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_5
+      rect:
+        serializedVersion: 2
+        x: 1232
+        y: 771
+        width: 627
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_6
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 578
+        width: 105
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_7
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 579
+        width: 100
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_8
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 577
+        width: 97
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_9
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 579
+        width: 117
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_10
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 575
+        width: 108
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_11
+      rect:
+        serializedVersion: 2
+        x: 1239
+        y: 672
+        width: 620
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_12
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 60
+        width: 334
+        height: 336
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_13
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 64
+        width: 334
+        height: 336
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_14
+      rect:
+        serializedVersion: 2
         x: 1032
         y: 67
         width: 336
-        height: 336
+        height: 334
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ingameUI_button_15
+      rect:
+        serializedVersion: 2
+        x: 1495
+        y: 76
+        width: 161
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

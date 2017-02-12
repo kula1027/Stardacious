@@ -55,6 +55,7 @@ namespace ServerSide{
 			case MsgAttr.Misc.hello:
 				currentPlayerCount++;
 				int sender = int.Parse(networkMessage.Adress.Attribute);
+				playerInfo[sender].gameState = GameState.Waiting;
 				playerInfo[sender].nickName = networkMessage.Body[0].Content;
 				SendInfo(sender);
 				break;
@@ -87,31 +88,32 @@ namespace ServerSide{
 				otherInfo
 			);
 			Network_Server.BroadCastTcp(nmHello);
-
 		}
 
 		private void HandleReadyMsg(NetworkMessage nm_){
-			NetworkMessage nmResponse = new NetworkMessage(
+			NetworkMessage nmGameState = new NetworkMessage(
 				new MsgSegment(MsgAttr.misc)
 			);
+
 			switch(serverState){
 			case GameState.Waiting:
 				if(nm_.Body[0].Content.Equals(NetworkMessage.sTrue)){
 					readyCount++;
-					//nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.ready, );
 
 					if(readyCount >= currentPlayerCount){
-						nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
-						Network_Server.BroadCastTcp(nmResponse);
+						nmGameState.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
+						Network_Server.BroadCastTcp(nmGameState);
+						serverState = GameState.Playing;
 					}
 				}else{
 					readyCount--;
 				}
+				Network_Server.BroadCastTcp(nm_, int.Parse(nm_.Adress.Attribute));
 				break;
 
 			case GameState.Playing:
-				nmResponse.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
-				Network_Server.UniCast(nmResponse, int.Parse(nm_.Adress.Attribute));
+				nmGameState.Body[0] = new MsgSegment(MsgAttr.Misc.letsgo);
+				Network_Server.UniCast(nmGameState, int.Parse(nm_.Adress.Attribute));
 				break;
 						
 			}

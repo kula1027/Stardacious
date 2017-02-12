@@ -33,6 +33,10 @@ public class ClientMonster : PoolingObject, IHittable {
 		}
 	}
 
+	public override void OnHpChanged (int hpChange){
+		//Do Nothing
+	}
+
 	public override void OnDie (){
 		IsDead = true;
 		hTrigger.gameObject.SetActive(false);
@@ -87,13 +91,52 @@ public class ClientMonster : PoolingObject, IHittable {
 				gcMons.Idle ();
 			}
 			break;
+
+		case MsgAttr.freeze:
+			ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
+			effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
+
+			StartCoroutine(FreezeRoutine());	
+			break;
 		}
 	}
+
+	public override void Freeze (){
+		NetworkMessage nmFreeze = new NetworkMessage(
+			nmHit.Header,
+			new MsgSegment(MsgAttr.freeze)
+		);
+
+		Network_Client.SendTcp(nmFreeze);
+	}
+
+	#region Freeze
+	GameObject effectIce;
+
+	private IEnumerator FreezeRoutine(){
+		
+		float timeAcc = 0f;
+		while(true){
+			effectIce.transform.position = transform.position;
+
+			timeAcc += Time.deltaTime;
+
+			if(timeAcc > BindBullet.freezeTime){
+				break;
+			}
+
+			yield return null;
+		}		
+
+	}
+	#endregion
 		
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
 		gcMons.Twinkle();
+		hitObject_.Apply(this);
+
 		nmHit.Body[0].Content = hitObject_.Damage.ToString();
 		Network_Client.SendTcp(nmHit);
 	}

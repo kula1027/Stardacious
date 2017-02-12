@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class BindBullet : FlyingProjectile {
-	public const float freezeTime = 5f;
-	public const float bindBulletSpeed = 25f;
+	public const float freezeTime = 8f;
+	public const float bindBulletSpeed = 30f;
 
 	void Awake(){
 		flyingSpeed = bindBulletSpeed;

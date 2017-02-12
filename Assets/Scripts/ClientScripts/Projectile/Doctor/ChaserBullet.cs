@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ChaserBullet : PoolingObject, IHitter {
 	private HitObject hitObject;
-	public const float flyingSpeed = 15f;
+	public const float flyingSpeed = 25f;
 
 	public GuidanceDevice targetDevice;
 

@@ -7,8 +7,6 @@ namespace ServerSide{
 		public bool isGround;
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
-		//protected bool isIdle;
-		Vector3 prevPosition;
 
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;			// for sync position
@@ -20,12 +18,16 @@ namespace ServerSide{
 
 		protected Rigidbody2D rgd2d;
 
+		protected bool canControl = true;
+
 		void Awake(){
 			rgd2d = GetComponent<Rigidbody2D>();
-			prevPosition = this.transform.position;
 		}
 
-
+		public override void OnRequested (){
+			canControl = true;
+		}
+			
 		public override void Ready(){
 			maxHp = 100;
 			CurrentHp = maxHp;
@@ -53,6 +55,16 @@ namespace ServerSide{
 				int damage = int.Parse(bodies[0].Content);
 				CurrentHp -= damage;
 				Network_Server.BroadCastTcp(nmHit);
+				break;
+
+			case MsgAttr.freeze:
+				canControl = false;
+				Network_Server.BroadCastTcp(
+					new NetworkMessage(
+						nmPos.Header,
+						new MsgSegment(MsgAttr.freeze)
+					)
+				);
 				break;
 			}
 		}

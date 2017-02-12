@@ -6,10 +6,12 @@ public class HidablePopUp : HidableUI {
 
 	public Text txtMsg;
 	public GameObject btnClose;
+	public GameObject imageLoading;
 
-	public void ShowPopUp(string msg, bool showCloseBtn){
+	public void ShowPopUp(string msg, bool showCloseBtn, bool showLoading){
 		txtMsg.text = msg;
 		btnClose.SetActive(showCloseBtn);
+		imageLoading.SetActive(showLoading);
 
 		Show();
 	}

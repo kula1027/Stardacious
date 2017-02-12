@@ -48,8 +48,8 @@ public class ReadyPanel : HidableUI {
 			break;
 
 		case GameState.Waiting:
-			playerSlot[idx_].txtState.Glow();
 			playerSlot[idx_].txtState.SetText("Waiting...");
+			playerSlot[idx_].txtState.Glow();
 			break;
 
 		case GameState.Empty:			

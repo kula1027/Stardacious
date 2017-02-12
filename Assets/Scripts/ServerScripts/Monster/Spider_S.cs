@@ -13,6 +13,8 @@ namespace ServerSide{
 		private int spiderAgroRange = 50;
 
 		public override void OnRequested (){
+			base.OnRequested();
+
 			StartCoroutine(SpiderMainAI());
 		}
 
