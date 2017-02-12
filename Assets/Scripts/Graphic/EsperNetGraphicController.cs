@@ -9,22 +9,23 @@ public class EsperNetGraphicController : EsperGraphicController {
 	}
 
 	public void AttackAnimation(EsperAttackType attackType){
-		
+		isAttackAnimationPlaying = true;
+
 		switch(attackType){
 		case EsperAttackType.Slash0:
-			singleAnimator.Play ("Slash0");
+			singleAnimator.Play ("Slash0", 0, 0);
 			slashAnimator.Play ("Slash0", 0, 0);
 			break;
 		case EsperAttackType.Slash1:
-			singleAnimator.Play ("Slash1");
+			singleAnimator.Play ("Slash1", 0, 0);
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
 		case EsperAttackType.JumpAttack:
-			singleAnimator.Play ("JumpAttack");
+			singleAnimator.Play ("JumpAttack", 0, 0);
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
 		case EsperAttackType.StabAttack:
-			singleAnimator.Play ("StabAttack");
+			singleAnimator.Play ("StabAttack", 0, 0);
 			slashAnimator.Play ("StabAttack", 0, 0);
 			break;
 		}
@@ -44,17 +45,17 @@ public class EsperNetGraphicController : EsperGraphicController {
 				case ControlDirection.Middle:
 				case ControlDirection.Up:
 				case ControlDirection.Down:
-					singleAnimator.Play ("Idle");
+					singleAnimator.Play ("Idle", 0, 0);
 					MufflerDeactive ();
 					break;
 				default:
-					singleAnimator.Play ("Run");
+					singleAnimator.Play ("Run", 0, 0);
 					MufflerActive ();
 					break;
 				}
 			}
 		} else {
-			singleAnimator.Play ("LongJump");
+			singleAnimator.Play ("LongJump", 0, 0);
 		}
 	}
 }
