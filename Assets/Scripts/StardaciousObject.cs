@@ -16,10 +16,6 @@ public class StardaciousObject : MonoBehaviour {
 		set{
 			currentHp = value;
 			OnHpChanged(value);
-			if(currentHp <= 0){
-				isDead = true;
-				OnDie();
-			}
 		}
 	}
 

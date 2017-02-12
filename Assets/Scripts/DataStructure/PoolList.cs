@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class PoolList : MonoBehaviour{
 
-	public Type managingType = typeof(UnityEngine.Object);	 
+	public string managingObjName = "";	 
 
 	private int totalObjCount = 0;
 	private int incPerInstantiate = 1;//TODO 2이상일 경우 문제 있음

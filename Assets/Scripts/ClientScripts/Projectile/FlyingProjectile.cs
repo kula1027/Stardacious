@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class FlyingProjectile : PoolingObject, IHitter {
+	public GameObject pfHit;
+
 	protected float flyingSpeed = 20f;
 	protected HitObject hitObject;
 	protected Coroutine flyingRoutine;
@@ -50,6 +52,10 @@ public class FlyingProjectile : PoolingObject, IHitter {
 
 
 	public override void OnReturned (){
+		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
+		goHit.transform.position = transform.position + transform.right * 1.5f;
+		goHit.GetComponent<HitEffectGraphicController>().Blue();
+
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment[] b = {
 			new MsgSegment(MsgAttr.destroy)

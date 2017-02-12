@@ -141,6 +141,12 @@ namespace ServerSide{
 			}
 		}
 
+		public override void OnHpChanged (int hpChange){
+			if(CurrentHp <= 0){
+				OnDie();
+			}
+		}
+
 		public override void OnDie (){
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);

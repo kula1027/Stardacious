@@ -76,6 +76,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		controlFlags = new ControlFlags ();
 
 		StartCoroutine (GroundCheckRoutine ());
+		StartCoroutine(FixedUpdateMovement());
 	}
 
 	protected void NotifyAppearence(){
@@ -89,6 +90,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
 	protected Vector3 currentDirV3 = Vector3.left;
 	protected ControlDirection currentDir = ControlDirection.Left;
+	private Vector3 moveDir;
 	public virtual void OnMovementInput(Vector3 vec3_){
 		if(canControl == false)return;
 
@@ -131,17 +133,18 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		}
 		if(vec3_.Equals(Vector3.zero)){
 			currentDir = ControlDirection.Middle;
+			moveDir = Vector3.zero;
 		}
 			
 		if(vec3_.x > 0){
 			transform.localScale = new Vector3(-1, 1, 1);
 			if(movablebByInput && controlFlags.move)
-				transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+				moveDir = Vector3.right * moveSpeed;
 		}
 		if(vec3_.x < 0){
 			transform.localScale = new Vector3(1, 1, 1);
 			if(movablebByInput && controlFlags.move)
-				transform.position -= Vector3.right * moveSpeed * Time.deltaTime;
+				moveDir = Vector3.left * moveSpeed;
 		}
 
 		if(currentDir != prevCtrlDir){
@@ -156,6 +159,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		}
 
 		prevCtrlDir = currentDir;
+	}
+
+	private IEnumerator FixedUpdateMovement(){
+		while(true){
+			transform.position += moveDir;
+
+			yield return new WaitForFixedUpdate();
+		}
 	}
 		
 	public virtual void Jump(){				
@@ -314,7 +325,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 				break;
 			}
 				
-			yield return null;
+			yield return new WaitForFixedUpdate();
 		}
 
 
@@ -324,7 +335,9 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public override void OnHpChanged (int hpChange){
-		
+		if(CurrentHp <= 0){
+			OnDie();
+		}
 	}
 
 	public override void OnDie (){

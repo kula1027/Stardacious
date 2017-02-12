@@ -15,4 +15,9 @@ public class HidablePopUp : HidableUI {
 
 		Show();
 	}
+
+	public override void Hide (){
+		imageLoading.SetActive(false);
+		base.Hide ();
+	}
 }
