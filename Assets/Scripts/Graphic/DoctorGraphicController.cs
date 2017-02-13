@@ -107,6 +107,8 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	public override void Grounded (){
 		isFlying = false;
 		SetLowerAnim (currentInputDirection);
+		booster.Stop ();
+		boostCount = 0;
 	}
 
 	public override void FreezeAnimation(){
@@ -173,34 +175,33 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 		SetAttackDelay ();
 	}
+	private Coroutine shootAnimationRoutine = null;
 	protected void SetGunShootAnim(ControlDirection direction){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
 		switch (direction) {
 		case ControlDirection.LeftDown:
 		case ControlDirection.RightDown:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontDownShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontDownShoot));
 			SetMuzzle (ShootAnimationName.FrontDownShoot);
 			break;
 		case ControlDirection.Left:
 		case ControlDirection.Right:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
 			SetMuzzle (ShootAnimationName.FrontShoot);
 			break;
 		case ControlDirection.LeftUp:
 		case ControlDirection.RightUp:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
 			SetMuzzle (ShootAnimationName.FrontUpShoot);
 			break;
 		case ControlDirection.Up:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
 			SetMuzzle (ShootAnimationName.UpShoot);
 			break;
 		default:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
 			SetMuzzle (recentAimDirection);
 			break;
 		}

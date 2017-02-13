@@ -152,28 +152,28 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		SetAttackDelay ();
 	}
 
+	private Coroutine shootAnimationRoutine = null;
 	protected void SetShotGunShootAnim(ControlDirection direction){	//샷건 발사시에 방향 별 강제 슈팅(상체 모션 캔슬)
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
 		switch (direction) {
 		case ControlDirection.Left:
 		case ControlDirection.Right:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
 			SetMuzzle (ShootAnimationName.FrontShoot);
 			break;
 		case ControlDirection.LeftUp:
 		case ControlDirection.RightUp:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontUpShoot));
 			SetMuzzle (ShootAnimationName.FrontUpShoot);
 			break;
 		case ControlDirection.Up:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.UpShoot));
 			SetMuzzle (ShootAnimationName.UpShoot);
 			break;
 		default:
-			StopAllCoroutines ();
-			StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
+			shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (recentAimDirection));
 			SetMuzzle (recentAimDirection);
 			break;
 		}
@@ -192,7 +192,6 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		case ShootAnimationName.FrontShoot:
 			gunMuzzle.localPosition = frontPos;
 			gunMuzzle.rotation = Quaternion.identity;
-			StopAllCoroutines ();
 			break;
 		case ShootAnimationName.FrontUpShoot:
 			gunMuzzle.localPosition = frontUpPos;

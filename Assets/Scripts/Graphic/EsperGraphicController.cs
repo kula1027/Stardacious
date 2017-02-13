@@ -2,7 +2,7 @@
 using System.Collections;
 using Spine.Unity;
 
-public enum EsperAnimationName {Slash0, Slash1, StabAttack, PsyAttack, Tail}
+public enum EsperAnimationName {Slash0, Slash1, StabAttack, PsyAttack, JumpPsy, Tail}
 public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public CharacterCtrl_Esper master;
@@ -12,6 +12,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	public SkeletonAnimation mufflerR;
 	public Animator slashAnimator;
 	public GameObject rushEffect;
+	public ParticleSystem afterImage;
+	public ParticleSystem shieldEffect;
 
 	//State
 	private int nextAttackMotion = 0;		//다음에 플레이될 공격 모션
@@ -31,6 +33,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		currentInputDirection = ControlDirection.Middle;
 
 		rushEffect.SetActive (false);
+		afterImage.Stop ();
+		shieldEffect.Stop ();
 
 		AnimationInit();
 	}
@@ -108,6 +112,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		singleAnimator.Play ("Rush");
 		MufflerActive ();
 
+		afterImage.transform.localScale = transform.lossyScale * 5;
+		afterImage.Play ();
 		rushEffect.SetActive (true);
 	}
 
@@ -115,9 +121,14 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		if (isAttackButtonPressing) {
 			SetAttackAnim (currentInputDirection);
 		} else {
-			SetSingleAnim (currentInputDirection);
+			if (isFlying) {
+				singleAnimator.Play ("LongJump");
+			} else {
+				SetSingleAnim (currentInputDirection);
+			}
 		}
 
+		afterImage.Stop ();
 		rushEffect.SetActive (false);
 	}
 
@@ -127,8 +138,20 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	public void PsyShield(){
 		SetSkillDelay ();
-		StopAllCoroutines();
-		StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.PsyAttack));
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
+		StartCoroutine(ShieldEffectRoutine());
+		if (isFlying) {
+			StartCoroutine (AnimationPlayWithCallBack (EsperAnimationName.JumpPsy));
+		} else {
+			StartCoroutine (AnimationPlayWithCallBack (EsperAnimationName.PsyAttack));
+		}
+	}
+	IEnumerator ShieldEffectRoutine(){
+		shieldEffect.Play ();
+		yield return new WaitForSeconds (0.5f);
+		shieldEffect.Stop ();
 	}
 
 	#region private
@@ -136,13 +159,16 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		if (master) {
 			master.OnJumpAttack ();
 		}
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
 		isAttackAnimationPlaying = true;
 		singleAnimator.Play ("JumpAttack", 0, 0);
 		slashAnimator.Play ("Slash1", 0, 0);
 		MufflerActive ();
 		canJumpAttack = false;
 	}
-
+	protected Coroutine attackAnimationRoutine = null;
 	protected virtual void SetAttackAnim(ControlDirection direction){
 		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
@@ -150,6 +176,9 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 				JumpAttack ();
 			}else{
 				isAttackAnimationPlaying = true;
+				if (attackAnimationRoutine != null) {
+					StopCoroutine (attackAnimationRoutine);
+				}
 				switch (direction) {
 				case ControlDirection.Middle:
 				case ControlDirection.Up:
@@ -158,11 +187,9 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 						master.OnAttackSlash (nextAttackMotion);
 					}
 					if(nextAttackMotion ==0){
-						StopAllCoroutines();
-						StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
+						attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
 					}else{
-						StopAllCoroutines();
-						StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
+						attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
 					}
 					slashAnimator.Play ("Slash" + nextAttackMotion, 0, 0);
 					MufflerActive ();
@@ -172,8 +199,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					if (master) {
 						master.OnAttackDash ();
 					}
-					StopAllCoroutines();
-					StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
+					attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
 					slashAnimator.Play ("StabAttack", 0, 0);
 					MufflerActive ();
 					nextAttackMotion = 0;
@@ -201,8 +227,6 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 					}
 				}
 			}
-		} else {
-			singleAnimator.Play ("LongJump");
 		}
 	}
 
@@ -258,6 +282,11 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void EndPsyShield(){
+		if (isFlying) {
+			singleAnimator.Play ("LongJump");
+		} else {
+			SetSingleAnim (currentInputDirection);
+		}
 		ReleaseSkillDelay ();
 	}
 
@@ -300,6 +329,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			EndAttackMotion();
 			break;
 		case EsperAnimationName.PsyAttack:
+		case EsperAnimationName.JumpPsy:
 			EndPsyShield();
 			break;
 		}

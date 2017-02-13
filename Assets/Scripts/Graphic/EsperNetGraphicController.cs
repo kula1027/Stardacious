@@ -11,15 +11,17 @@ public class EsperNetGraphicController : EsperGraphicController {
 	public void AttackAnimation(EsperAttackType attackType){
 		isAttackAnimationPlaying = true;
 
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
+
 		switch(attackType){
 		case EsperAttackType.Slash0:
-			StopAllCoroutines();
-			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
+			attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash0));
 			slashAnimator.Play ("Slash0", 0, 0);
 			break;
 		case EsperAttackType.Slash1:
-			StopAllCoroutines();
-			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
+			attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.Slash1));
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
 		case EsperAttackType.JumpAttack:
@@ -27,8 +29,7 @@ public class EsperNetGraphicController : EsperGraphicController {
 			slashAnimator.Play ("Slash1", 0, 0);
 			break;
 		case EsperAttackType.StabAttack:			
-			StopAllCoroutines();
-			StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
+			attackAnimationRoutine = StartCoroutine(AnimationPlayWithCallBack(EsperAnimationName.StabAttack));
 			slashAnimator.Play ("StabAttack", 0, 0);
 			break;
 		}
@@ -57,8 +58,6 @@ public class EsperNetGraphicController : EsperGraphicController {
 					break;
 				}
 			}
-		} else {
-			singleAnimator.Play ("LongJump", 0, 0);
 		}
 	}
 }
