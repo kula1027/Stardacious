@@ -35,7 +35,6 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			currentDir != ControlDirection.Down &&
 			currentDir != ControlDirection.LeftDown &&
 			currentDir != ControlDirection.RightDown){
-
 			currentDirGun = currentDir;
 		}
 	}
@@ -162,29 +161,34 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	#endregion
 
 	#region OverchargedShot
-
+	private const float forceOvercharge = 1100f;
 	private void OverchargedShot(){
 		gcHeavy.OverChargeShot ();
+		rgd2d.velocity = Vector2.zero;
 
 		switch(currentDirGun){
 		case ControlDirection.Right:
-			rgd2d.AddForce(new Vector2(-1f, 0.2f) * 700);
+			rgd2d.AddForce(new Vector2(-1f, 0.2f) * forceOvercharge);
 			break;
 
 		case ControlDirection.RightUp:
-			rgd2d.AddForce(new Vector2(-1, -1) * 700);
+			rgd2d.AddForce(new Vector2(-1f, 0.2f) * forceOvercharge);
 			break;
 
 		case ControlDirection.Up:
-			rgd2d.AddForce(Vector2.down * 700);
+			if(currentDirV3.x > 0){
+				rgd2d.AddForce(new Vector2(-1f, 0.2f) * forceOvercharge);
+			}else{
+				rgd2d.AddForce(new Vector2(1f, 0.2f) * forceOvercharge);
+			}
 			break;
 
 		case ControlDirection.LeftUp:
-			rgd2d.AddForce(new Vector2(1, -1) * 700);
+			rgd2d.AddForce(new Vector2(1f, 0.2f) * forceOvercharge);
 			break;
 
 		case ControlDirection.Left:
-			rgd2d.AddForce(Vector2.right * 700);
+			rgd2d.AddForce(new Vector2(1f, 0.2f) * forceOvercharge);
 			break;
 		}
 	}
