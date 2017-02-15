@@ -29,7 +29,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected bool canControl = true;
 
 	#region chData
-	public float moveSpeed = 5f;
+	protected const float originalMoveSpeed = 0.15f;
+	protected float moveSpeed = originalMoveSpeed;
 	public float jumpPower;//controled by unity editor
 
 	protected ChIdx chrIdx;
@@ -316,6 +317,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	private IEnumerator FreezeRoutine(){
 		float timeAcc = 0f;
+		moveSpeed = originalMoveSpeed;
 		hbt.enabled = false;
 
 		while(true){

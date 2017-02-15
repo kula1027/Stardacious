@@ -60,4 +60,16 @@ public class EsperNetGraphicController : EsperGraphicController {
 			}
 		}
 	}
+
+	public virtual void PsyShield(){
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
+		StartCoroutine(ShieldEffectRoutine());
+		if (isFlying) {
+			StartCoroutine (AnimationPlayWithCallBack (EsperAnimationName.JumpPsy));
+		} else {
+			StartCoroutine (AnimationPlayWithCallBack (EsperAnimationName.PsyAttack));
+		}
+	}
 }

@@ -33,4 +33,8 @@ public class HitEffect : PoolingObject {
 	public void BlueLaser(){
 		effectAnimator.Play ("Doctor");
 	}
+
+	public void GreenSlash(){
+		effectAnimator.Play ("Slash");
+	}
 }

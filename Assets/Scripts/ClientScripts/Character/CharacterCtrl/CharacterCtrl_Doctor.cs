@@ -44,6 +44,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private bool isHovering = false;
 	private bool hasHovered = false;
 	public override void Jump (){		
+		moveSpeed = originalMoveSpeed;
+
 		if(controlFlags.jump && canControl){
 			if(isHovering){
 				rgd2d.gravityScale = 1;
@@ -108,6 +110,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	}
 
 	public void OnShootNormal(){	
+		moveSpeed = originalMoveSpeed * 0.5f;
+
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
 
@@ -129,11 +133,17 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		cb.Ready();
 	}
 
+	public void OnEndShootNormal(){
+		moveSpeed = originalMoveSpeed;
+	}
+
 	#endregion
 
 	#region Device
 	private GuidanceDevice activeDevice;
 	public void OnShootDevice(){
+		moveSpeed = originalMoveSpeed;
+
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfGuideDevice);
 		go.transform.position = trGunMuzzle.position;
 		if (transform.localScale.x < 0){
@@ -159,6 +169,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	#region Bind Shot
 
 	public void OnShootBind(){
+		moveSpeed = originalMoveSpeed;
+
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfBindBullet);
 		go.transform.position = trGunMuzzle.position;
 		if (transform.localScale.x < 0){
@@ -179,6 +191,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private DoctorEnergyBall activeEnergyBall;
 	private void ChargeEnergyBall(){
 		moveDir = Vector3.zero;
+		moveSpeed = originalMoveSpeed;
 
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfEnergyBall);
 		go.transform.position = transform.position + Vector3.up * 5;
@@ -255,6 +268,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			Network_Client.SendTcp(nmBoostState);
 		}
 
+		moveSpeed = originalMoveSpeed;
 		canBoostJump = true;
 		isHovering = false;
 		hasHovered = false;

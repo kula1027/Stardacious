@@ -20,6 +20,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	protected ControlDirection currentInputDirection;	//마지막으로 들어온 입력 방향
 
 	//Flags
+	private bool isPsying = false;
 	protected bool isFlying = false;
 	protected bool isAttackAnimationPlaying = false;
 	private bool isAttackButtonPressing = false;
@@ -54,11 +55,13 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		SetDirection ((ControlDirection)direction);
 	}
 	public override void ForcedFly (){
+		isPsying = false;
 		isFlying = true;
 		singleAnimator.Play ("LongJump");
 		MufflerActive ();
 	}
 	public override void Jump (){
+		isPsying = false;
 		isAttackAnimationPlaying = false;
 		ReleaseAttackDelay();
 		isFlying = true;
@@ -70,6 +73,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		}
 	}
 	public override void Grounded (){
+		isPsying = false;
 		isFlying = false;
 		isAttackAnimationPlaying = false;
 		if (isAttackButtonPressing) {
@@ -106,6 +110,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void Rush(){
+		isPsying = false;
 		ReleaseAttackDelay ();
 		isAttackAnimationPlaying = false;
 		canJumpAttack = true;
@@ -136,7 +141,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		
 	}
 
-	public void PsyShield(){
+	public virtual void PsyShield(){
+		isPsying = true;
 		SetSkillDelay ();
 		if (attackAnimationRoutine != null) {
 			StopCoroutine (attackAnimationRoutine);
@@ -148,14 +154,22 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 			StartCoroutine (AnimationPlayWithCallBack (EsperAnimationName.PsyAttack));
 		}
 	}
-	IEnumerator ShieldEffectRoutine(){
+	protected IEnumerator ShieldEffectRoutine(){
 		shieldEffect.Play ();
 		yield return new WaitForSeconds (0.5f);
 		shieldEffect.Stop ();
 	}
 
+	public void Die(){
+		singleAnimator.Play ("Die");
+	}
+
 	#region private
 	private void JumpAttack(){
+		if (isPsying) {
+			return;
+		}
+
 		if (master) {
 			master.OnJumpAttack ();
 		}
@@ -170,6 +184,10 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 	protected Coroutine attackAnimationRoutine = null;
 	protected virtual void SetAttackAnim(ControlDirection direction){
+		if (isPsying) {
+			return;
+		}
+
 		SetAttackDelay();
 		if (!isAttackAnimationPlaying) {
 			if (isFlying && canJumpAttack) {
@@ -210,6 +228,10 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	protected virtual void SetSingleAnim(ControlDirection direction){
+		if (isPsying) {
+			return;
+		}
+
 		if (!isFlying) {
 			if (!isAttackAnimationPlaying) {
 				if (!isAttackButtonPressing) {
@@ -282,6 +304,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void EndPsyShield(){
+		isPsying = false;
 		if (isFlying) {
 			singleAnimator.Play ("LongJump");
 		} else {
