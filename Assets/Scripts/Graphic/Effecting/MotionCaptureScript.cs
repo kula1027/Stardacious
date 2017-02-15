@@ -44,7 +44,7 @@ public class MotionCaptureScript : MonoBehaviour {
 
 	IEnumerator AutoCaptureRoutine(){
 		for (int i = 0; i < 60; i++) {
-			//yield return new WaitForSeconds (0.05f);
+			yield return new WaitForSeconds (0.05f);
 			yield return new WaitForEndOfFrame ();
 			Texture2D sshot = new Texture2D (width, height);
 			sshot.ReadPixels (new Rect (0, 0, width, height), 0, 0);

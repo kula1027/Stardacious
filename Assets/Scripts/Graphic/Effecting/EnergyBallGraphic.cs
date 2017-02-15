@@ -15,8 +15,11 @@ public class EnergyBallGraphic : MonoBehaviour {
 	public const float reduceSpeed = 2f;
 	private const float maxChargeTime = 3f;
 
+	private ObjectPooler lighteningPool = null;
 	void Awake(){
 		core = GetComponent<ParticleSystem> ();
+
+		lighteningPool = ClientProjectileManager.instance.GetLocalProjPool ();
 	}
 
 	private bool isEndCharge = false;
@@ -75,4 +78,15 @@ public class EnergyBallGraphic : MonoBehaviour {
 
 		StopCoroutine(BallShrinking());
 	}
+
+	#region Lightening
+	public GameObject pfLightening;
+	public void LighteningEffecting(Vector3 targetPos){
+		LighteningEffect lightEffect = lighteningPool.RequestObject (pfLightening).GetComponent<LighteningEffect> ();
+		lightEffect.SetTarget (transform.position, targetPos);
+
+		lightEffect = lighteningPool.RequestObject (pfLightening).GetComponent<LighteningEffect> ();
+		lightEffect.SetTarget (transform.position, targetPos);
+	}
+	#endregion
 }
