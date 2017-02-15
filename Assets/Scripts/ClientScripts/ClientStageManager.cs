@@ -4,6 +4,8 @@ using System.Collections;
 public class ClientStageManager : MonoBehaviour {
 	public static ClientStageManager instance;
 
+	public StageControl_C[] stages;
+
 	private int currentStage = 0;
 	public int CurrentStage{
 		get{return currentStage;}
@@ -50,6 +52,10 @@ public class ClientStageManager : MonoBehaviour {
 			CreateMonster(monsType, objIdx, startPos);
 			break;
 
+		case MsgAttr.Stage.stgObject:
+			stages [0].OnRecv(networkMessage.Body);
+			break;
+
 		default:
 			int monsIdx = int.Parse(networkMessage.Header.Content);
 			IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
@@ -64,4 +70,6 @@ public class ClientStageManager : MonoBehaviour {
 		objMon.transform.position = startPos_;
 		objMon.GetComponent<PoolingObject>().Ready();
 	}
+
+
 }

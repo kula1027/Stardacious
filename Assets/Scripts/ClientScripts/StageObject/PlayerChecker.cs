@@ -3,22 +3,22 @@ using System.Collections;
 
 namespace ServerSide{
 	public class PlayerChecker : MonoBehaviour {
-		private ObjectActive master;
+		private ServerStageManager master;
 
 		void Awake(){
-			master = GetComponentInParent<ObjectActive> ();
+			master = GetComponentInParent<ServerStageManager> ();
 		}
 
 		void OnTriggerEnter2D(Collider2D col){
-			master.isReady = true;
+			master.IsPlayerExist = true;
 		}
 
 		void OnTriggerStay2D(Collider2D col){
-			//master.isReady = true;
+			master.IsPlayerExist = true;
 		}
 
 		void OnTriggerExit2D(Collider2D col){
-			master.isReady = false;
+			master.IsPlayerExist = false;
 		}
 }
 }

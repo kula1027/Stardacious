@@ -4,6 +4,7 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		public BoxCollider2D colGroundChecker;
+
 		private StageControl masterWave;
 		public StageControl MasterWave{
 			set{ masterWave = value; }
@@ -31,7 +32,7 @@ namespace ServerSide{
 
 
 		public override void Ready(){
-			maxHp = 100;
+			maxHp = 1; // 디버그용으로 체력 1로함
 			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());

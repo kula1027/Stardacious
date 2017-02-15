@@ -26,7 +26,7 @@ namespace ServerSide{
 					break;
 
 				case Begin:
-					ServerStageManager.instance.BeginStage(int.Parse(splitCommand[1]));
+					ServerStageManager.instance.BeginStage(0);
 					break;
 				}
 			}catch(Exception e){

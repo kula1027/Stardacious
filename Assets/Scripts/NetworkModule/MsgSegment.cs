@@ -134,7 +134,8 @@ public class MsgAttr{
 	public class Stage{
 		public const string gatherSign = "stggsign";
 		public const string moveStg = "stgmnext";
-		public const string Objactive = "objativ";
+		public const string stgDoor = "stgdoor";
+		public const string stgObject = "stgobj";
 	}
 
 

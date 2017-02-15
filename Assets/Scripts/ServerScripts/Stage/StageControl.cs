@@ -4,6 +4,12 @@ using System.Collections;
 namespace ServerSide{
 	public class StageControl : MonoBehaviour {
 
+		public BoxCollider2D colPlayerChecker;
+
+		private ServerStageManager masterStage;
+		public ServerStageManager MasterStage{
+			set{ masterStage = value; }
+		}
 		private Transform[] waves;
 		private int currentMonsterCount = 0;
 		private int currentWaveNumber = 0;		// wave 갯수가 몇개?
@@ -40,11 +46,13 @@ namespace ServerSide{
 
 			} else {
 				// stageend();
+				// script end;
+				masterStage.CurrentStageEnd();
 			}
 		}
 
 		public void WaveMonsterDead(){
-			Debug.Log ("dead!");
+			// wave 가 다 죽으면
 			this.currentMonsterCount--;
 
 			if (currentMonsterCount <= 0) {
