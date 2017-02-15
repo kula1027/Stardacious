@@ -138,10 +138,14 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		isAttackButtonPressing = false;
 	}
 	public void BindShot(){
+		isEnergyCharging = false;
+		ReleaseEnergyDelay ();
 		nextBulletType = DoctorBulletType.Bind;
 		SetGunShoot ();
 	}
 	public void DeviceShot(){
+		isEnergyCharging = false;
+		ReleaseEnergyDelay ();
 		nextBulletType = DoctorBulletType.Device;
 		SetGunShoot ();
 	}

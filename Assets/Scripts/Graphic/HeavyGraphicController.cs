@@ -144,12 +144,14 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void OverChargeShot(){
-		ReleaseAttackDelay ();
-		ReleaseSwapDelay ();
+		ReleaseAll ();
 		isSwapDelay = false;
 		isAttackAnimationPlaying = false;
 		isMiniGunMode = false;
 		recentIsMiniGun = false;
+
+		cartridge.Stop ();
+		miniEffectAnimator.Play("Idle");
 
 		if (shootAnimationRoutine != null) {
 			StopCoroutine (shootAnimationRoutine);
@@ -325,6 +327,13 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	#endregion
 
 	#region ControlFlag
+	private void ReleaseAll(){
+		controlFlags.aim = true;
+		controlFlags.attack = true;
+		controlFlags.jump = true;
+		controlFlags.move = true;
+		controlFlags.run = true;
+	}
 	private void SetSwapDelay(){
 		isSwapDelay = true;
 		controlFlags.aim = false;
