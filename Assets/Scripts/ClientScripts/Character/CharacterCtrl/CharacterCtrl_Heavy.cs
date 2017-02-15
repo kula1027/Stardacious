@@ -159,7 +159,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	#region OverchargedShot
 
-	private void OverchargedShot(){		
+	private void OverchargedShot(){
+		gcHeavy.OverChargeShot ();
+
 		switch(currentDirGun){
 		case ControlDirection.Right:
 			rgd2d.AddForce(Vector2.left * 700);
