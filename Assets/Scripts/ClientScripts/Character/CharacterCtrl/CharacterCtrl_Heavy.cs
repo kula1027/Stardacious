@@ -31,7 +31,11 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 		base.OnMovementInput(vec3_);
 
-		if(currentDir != ControlDirection.Middle){
+		if(currentDir != ControlDirection.Middle && 
+			currentDir != ControlDirection.Down &&
+			currentDir != ControlDirection.LeftDown &&
+			currentDir != ControlDirection.RightDown){
+
 			currentDirGun = currentDir;
 		}
 	}
@@ -162,7 +166,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	private void OverchargedShot(){		
 		switch(currentDirGun){
 		case ControlDirection.Right:
-			rgd2d.AddForce(Vector2.left * 700);
+			rgd2d.AddForce(new Vector2(-1f, 0.2f) * 700);
 			break;
 
 		case ControlDirection.RightUp:
@@ -179,18 +183,6 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 		case ControlDirection.Left:
 			rgd2d.AddForce(Vector2.right * 700);
-			break;
-
-		case ControlDirection.LeftDown:
-			rgd2d.AddForce(new Vector2(1, 1) * 700);
-			break;
-
-		case ControlDirection.Down:
-			rgd2d.AddForce(Vector2.up * 700);
-			break;
-
-		case ControlDirection.RightDown:
-			rgd2d.AddForce(new Vector2(-1, 1) * 700);
 			break;
 		}
 	}
@@ -222,6 +214,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			gcHeavy.WeaponSwap ();
 			if(isMachineGunMode){
 				StopMachineGun();
+			}else{
+				moveDir = Vector3.zero;
 			}
 			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			break;

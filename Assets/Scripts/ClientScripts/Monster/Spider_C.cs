@@ -24,6 +24,6 @@ public class Spider_C : ClientMonster {
 
 		gcSpider.Die();
 
-		ReturnObject(3);
+		ReturnObject(8);
 	}
 }

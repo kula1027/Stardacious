@@ -66,6 +66,10 @@ namespace ServerSide{
 					)
 				);
 				break;
+
+			case MsgAttr.addForce:
+				rgd2d.AddForce(bodies[0].ConvertToV2());
+				break;
 			}
 		}
 
@@ -148,12 +152,14 @@ namespace ServerSide{
 		}
 
 		public override void OnDie (){
+			IsDead = true;
+
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);
 			Network_Server.BroadCastTcp(nmDestroy);
 
-			ReturnObject();
+			ReturnObject(8f);
 		}
 
 

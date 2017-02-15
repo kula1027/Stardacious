@@ -103,6 +103,7 @@ public class GuidanceDevice : FlyingProjectile {
 
 	public override void OnReturned (){
 		base.OnReturned();
+
 		ownerCharacter.OnDeviceDeactivated();
 	}
 }

@@ -90,7 +90,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
 	protected Vector3 currentDirV3 = Vector3.left;
 	protected ControlDirection currentDir = ControlDirection.Left;
-	private Vector3 moveDir;
+	protected Vector3 moveDir;
 	public virtual void OnMovementInput(Vector3 vec3_){
 		if(canControl == false)return;
 
@@ -106,6 +106,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			else if(inputAngle >= 67.5f && inputAngle < 112.5f){
 				currentDir = ControlDirection.Up;
 				movablebByInput = false;
+				moveDir = Vector3.zero;
 			}
 			else if(inputAngle >= 112.5f && inputAngle < 157.5f){
 				currentDir = ControlDirection.LeftUp;
@@ -122,6 +123,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			}
 			else if(inputAngle >= 67.5f && inputAngle < 112.5f){
 				currentDir = ControlDirection.Down;
+				moveDir = Vector3.zero;
 				movablebByInput = false;
 			}
 			else if(inputAngle >= 112.5f && inputAngle < 157.5f){

@@ -130,6 +130,15 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	}
 	#endregion
+
+	public override void AddForce (Vector2 dirForce_){
+		NetworkMessage nmForce = new NetworkMessage(
+			new MsgSegment(MsgAttr.monster, GetOpIndex()), 
+			new MsgSegment(MsgAttr.addForce, dirForce_)
+		);
+
+		Network_Client.SendTcp(nmForce);
+	} 
 		
 	#region ICollidable implementation
 

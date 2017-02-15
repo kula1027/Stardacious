@@ -58,11 +58,19 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 					if(canBoostJump){
 						if(rgd2d.velocity.y > 0){
 							rgd2d.AddForce (Vector2.up * jumpPower * 0.7f);
-							canBoostJump = false;
 							gcDoctor.Boost();
 							nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.boost);
 							Network_Client.SendTcp(nmBoostState);
+						}else{
+							rgd2d.velocity = Vector2.zero;
+							rgd2d.gravityScale = 0;
+							isHovering = true;
+							hasHovered = true;
+							gcDoctor.Hover();
+							nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.beginHover);
+							Network_Client.SendTcp(nmBoostState);
 						}
+						canBoostJump = false;
 					}else{
 						if(hasHovered == false && rgd2d.velocity.y < 0){
 							rgd2d.velocity = Vector2.zero;
@@ -105,9 +113,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfChaserBullet);
 		go.transform.position = trGunMuzzle.position;
-		go.transform.right = trGunMuzzle.right;
-		if (currentDirV3.x < 0)
+
+		if (transform.localScale.x < 0){
+			go.transform.right = trGunMuzzle.right;
+		}else{
 			go.transform.right = new Vector3(-trGunMuzzle.right.x, -trGunMuzzle.right.y, trGunMuzzle.right.z);
+		}
 
 		ChaserBullet cb = go.GetComponent<ChaserBullet>();
 		if(activeDevice){
@@ -125,9 +136,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	public void OnShootDevice(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfGuideDevice);
 		go.transform.position = trGunMuzzle.position;
-		go.transform.right = trGunMuzzle.right;
-		if (currentDirV3.x < 0)
+		if (transform.localScale.x < 0){
+			go.transform.right = trGunMuzzle.right;
+		}else{
 			go.transform.right = new Vector3(-trGunMuzzle.right.x, -trGunMuzzle.right.y, trGunMuzzle.right.z);
+		}
+		
 
 		activeDevice = go.GetComponent<GuidanceDevice>();
 
@@ -147,9 +161,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	public void OnShootBind(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfBindBullet);
 		go.transform.position = trGunMuzzle.position;
-		go.transform.right = trGunMuzzle.right;
-		if (currentDirV3.x < 0)
+		if (transform.localScale.x < 0){
+			go.transform.right = trGunMuzzle.right;
+		}else{
 			go.transform.right = new Vector3(-trGunMuzzle.right.x, -trGunMuzzle.right.y, trGunMuzzle.right.z);
+		}
+			
 
 		go.GetComponent<PoolingObject>().Ready();
 	}

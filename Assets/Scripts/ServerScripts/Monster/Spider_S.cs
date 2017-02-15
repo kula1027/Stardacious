@@ -112,5 +112,9 @@ namespace ServerSide{
 				yield return StartCoroutine (FireProjectile (closestCharacterPos_));
 			}
 		}
+
+		public override void OnDie (){
+			base.OnDie ();
+		}
 	}
 }
