@@ -164,6 +164,7 @@ public class StartSceneManager : MonoBehaviour {
 
 	public void OnBtnReadyClick(){
 		//SceneManager.LoadSceneAsync("scIngame");
+
 		isReady = !isReady;
 		readyPanel.SetReady(isReady);
 

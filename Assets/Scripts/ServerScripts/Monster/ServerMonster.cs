@@ -4,6 +4,12 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		public BoxCollider2D colGroundChecker;
+
+		private StageControl masterWave;
+		public StageControl MasterWave{
+			set{ masterWave = value; }
+		}
+
 		public bool isGround;
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
@@ -29,7 +35,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 100;
+			maxHp = 1; // 디버그용으로 체력 1로함
 			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -76,7 +82,7 @@ namespace ServerSide{
 		private IEnumerator GroundCheckRoutine(){
 			// 클라이언트들에게 점프상태에 있다는 것을 알려줌
 			bool prevGrounded = isGround;
-			while (true) {
+			while (IsDead == false) {
 				if(rgd2d.velocity.y <= 0){
 					colGroundChecker.enabled = true;
 				}
@@ -109,7 +115,7 @@ namespace ServerSide{
 			// 클라이언트들에게 움직임상태에 있다는 것을 알려줌
 			bool prevMoving = isMoving;
 
-			while (true) {
+			while (IsDead == false) {
 				//isMoving 상태가 바끼면 상태 전송
 				if (isMoving != prevMoving && isGround){
 					if (isMoving) {
@@ -154,6 +160,8 @@ namespace ServerSide{
 		public override void OnDie (){
 			IsDead = true;
 
+			masterWave.WaveMonsterDead ();
+			// 내가 속한 stagecontrol 에게 죽음을 알림.
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);
