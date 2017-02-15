@@ -160,7 +160,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		shieldEffect.Stop ();
 	}
 
-	public void Die(){
+	public override void Die(){
 		singleAnimator.Play ("Die");
 	}
 

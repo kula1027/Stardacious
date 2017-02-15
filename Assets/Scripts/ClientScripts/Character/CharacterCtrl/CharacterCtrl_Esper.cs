@@ -64,7 +64,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnHitDashAttack(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt)
+		if(hbt && hbt.tag.Equals("Player") == false)
 			hbt.OnHit(hoDash);
 	}
 
@@ -100,7 +100,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 	public void OnHitNormalAttack(Collider2D col){		
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt)
+		if(hbt && hbt.tag.Equals("Player") == false)
 			hbt.OnHit(hoSlash);
 	}
 	#endregion
@@ -134,7 +134,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnHitJumpAttack(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt)
+		if(hbt && hbt.tag.Equals("Player") == false)
 			hbt.OnHit(hoJump);
 	}
 	#endregion
@@ -164,7 +164,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnHitSwiftRush(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt)
+		if(hbt && hbt.tag.Equals("Player") == false)
 			hbt.OnHit(hoRush);
 	}
 

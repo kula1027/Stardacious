@@ -41,7 +41,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		rgd2d = GetComponent<Rigidbody2D>();
 		hbt = GetComponentInChildren<HitBoxTrigger>();
 		instance = this;
-		CurrentHp = 250;
+		CurrentHp = 20;
 	}
 
 	public virtual void Initialize(){
@@ -245,7 +245,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public void OnRecv (MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.hit:
-			CurrentHp = int.Parse(bodies[0].Content);
+			//CurrentHp = int.Parse(bodies[0].Content);
 			break;
 
 		case MsgAttr.dead:
@@ -339,13 +339,15 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public override void OnHpChanged (int hpChange){
-		if(CurrentHp <= 0){
+		if(CurrentHp <= 0 && IsDead == false){			
 			OnDie();
 		}
 	}
 
 	public override void OnDie (){
+		IsDead = true;
 		ConsoleMsgQueue.EnqueMsg("DEAD!");
+		characterGraphicCtrl.Die();
 		//ConsoleSystem.Show();
 	}
 

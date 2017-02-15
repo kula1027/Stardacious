@@ -170,7 +170,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
-	public void Die(){
+	public override void Die(){
 		upperAnimator.Play ("Die");
 		lowerAnimator.Play ("Die");
 	}

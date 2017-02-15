@@ -167,7 +167,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		overchargeEffect.transform.localScale = gunMuzzle.lossyScale;
 	}
 
-	public void Die(){
+	public override void Die(){
 		upperAnimator.Play ("Die");
 		lowerAnimator.Play ("Die");
 	}
