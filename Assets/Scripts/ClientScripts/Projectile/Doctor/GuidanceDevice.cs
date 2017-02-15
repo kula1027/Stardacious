@@ -41,7 +41,6 @@ public class GuidanceDevice : FlyingProjectile {
 		if(col.GetComponent<HitBoxTrigger>()){
 			isAttached = true;
 			StopCoroutine(flyingRoutine);
-			StopReturning();
 
 			ReturnObject(10f);
 

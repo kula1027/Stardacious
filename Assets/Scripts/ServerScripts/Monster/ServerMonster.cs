@@ -36,7 +36,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 400; // 디버그용으로 체력 1로함
+			maxHp = 100; // 디버그용으로 체력 1로함
 			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());

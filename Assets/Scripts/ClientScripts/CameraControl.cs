@@ -12,6 +12,8 @@ public class CameraControl : MonoBehaviour {
 	private float limitLeft;
 	private float limitRight;
 
+	private float groundHeight = 3;
+
 	private BackgroundMovement[] bgMove;
 
 	void Awake(){
@@ -35,15 +37,18 @@ public class CameraControl : MonoBehaviour {
 		Vector3 prevPos = transform.position;
 		Vector3 dif;
 		while(true){
-			if(targetTr != null){
+			if(targetTr != null){				
+				float camPosY = 
+					-0.8f * (targetTr.position.y - groundHeight) + 10;		
+
 				transform.position = Vector3.Lerp(
 										transform.position, 
 										new Vector3(
 											targetTr.position.x,
-											camHeight,
+											targetTr.position.y + camPosY,
 											camDepth
 										),
-										0.05f
+										0.3f
 									);
 				dif = prevPos - transform.position;
 
@@ -61,7 +66,7 @@ public class CameraControl : MonoBehaviour {
 				prevPos = transform.position;
 			}
 
-			yield return null;
+			yield return new WaitForFixedUpdate();
 		}
 	}
 
@@ -72,5 +77,23 @@ public class CameraControl : MonoBehaviour {
 
 	public void SetLimitR(float r){
 		limitRight = r;
+	}
+
+	private Coroutine routineGH;
+	public void SetGroundHeight(float gh){		
+		if(routineGH != null){
+			StopCoroutine(routineGH);
+		}
+		routineGH = StartCoroutine(GroundHeightChange(gh));
+	}
+
+	private IEnumerator GroundHeightChange(float gh){
+		float paramGh = gh;
+		while(true){
+			groundHeight = Mathf.Lerp(groundHeight, gh, 0.02f);
+			if(Mathf.Abs(paramGh - groundHeight) < 0.05f)break;
+
+			yield return new WaitForFixedUpdate();
+		}
 	}
 }

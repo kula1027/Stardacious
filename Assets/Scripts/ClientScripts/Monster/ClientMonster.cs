@@ -21,6 +21,7 @@ public class ClientMonster : PoolingObject, IHittable {
 		itpl = new Interpolater(transform.position);
 		hTrigger.gameObject.SetActive(true);
 		StartCoroutine(PositionRoutine());
+		IsDead = false;
 	}
 
 	public override void Ready (){
