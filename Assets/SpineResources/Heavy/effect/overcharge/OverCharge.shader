@@ -15,7 +15,7 @@ Properties {
          ZTest Less
          ZWrite Off
          Blend SrcAlpha OneMinusSrcAlpha
-         Cull Back
+         Cull Off
  CGPROGRAM
  
  #pragma surface surf Lambert alpha vertex:vert

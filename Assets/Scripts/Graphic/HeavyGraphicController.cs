@@ -142,6 +142,24 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
+	public void OverChargeShot(){
+		ReleaseAttackDelay ();
+		ReleaseSwapDelay ();
+		isSwapDelay = false;
+		isAttackAnimationPlaying = false;
+		isMiniGunMode = false;
+		recentIsMiniGun = false;
+
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
+		shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
+		SetMuzzle (ShootAnimationName.FrontShoot);
+		GameObject overchargeEffect = Instantiate (Resources.Load ("overCharge", typeof(GameObject)))as GameObject;
+		overchargeEffect.transform.position = gunMuzzle.position;
+		overchargeEffect.transform.localScale = gunMuzzle.lossyScale;
+	}
+
 	#region private
 	private void SetShotGunShoot(){
 		isAttackAnimationPlaying = true;
