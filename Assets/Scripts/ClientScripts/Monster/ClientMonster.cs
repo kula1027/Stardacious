@@ -8,9 +8,13 @@ public class ClientMonster : PoolingObject, IHittable {
 	private MonsterGraphicCtrl gcMons;
 	private NetworkMessage nmHit;
 
+	private AudioSource audioVoice;
+	public AudioClip audioDying;
+
 	void Awake(){
 		hTrigger = GetComponentInChildren<HitBoxTrigger>();
 		gcMons = GetComponentInChildren<MonsterGraphicCtrl>();
+		audioVoice = GetComponent<AudioSource>();
 	}
 
 	public override void OnRequested (){
@@ -38,6 +42,9 @@ public class ClientMonster : PoolingObject, IHittable {
 	}
 
 	public override void OnDie (){
+		audioVoice.clip = audioDying;
+		audioVoice.Play();
+
 		IsDead = true;
 		hTrigger.gameObject.SetActive(false);
 	}

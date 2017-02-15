@@ -214,9 +214,10 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private void FireRecallBullet(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfRecallBullet);
 		go.transform.position = transform.position + new Vector3(0, 2f, 0);
-		//go.transform.right = trGunMuzzle.right;
-		if (currentDirV3.x < 0){
-			//go.transform.right = new Vector3(-trGunMuzzle.right.x, -trGunMuzzle.right.y, trGunMuzzle.right.z);
+		if (transform.localScale.x < 0){
+			go.transform.right = Vector3.right;
+		}else{
+			go.transform.right = Vector3.left;
 		}
 
 		RecallBullet bullet = go.GetComponent<RecallBullet>();

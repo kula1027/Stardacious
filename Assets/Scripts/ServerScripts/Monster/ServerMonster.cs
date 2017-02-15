@@ -31,6 +31,7 @@ namespace ServerSide{
 		}
 
 		public override void OnRequested (){
+			IsDead = false;
 			canControl = true;
 		}
 			

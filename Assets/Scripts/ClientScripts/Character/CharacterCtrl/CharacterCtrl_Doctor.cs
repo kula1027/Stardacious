@@ -19,7 +19,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		chrIdx = ChIdx.Doctor;
 
 		skillCoolDown[0] = 2f;
-		skillCoolDown[1] = 4f;
+		skillCoolDown[1] = 6f;
 		skillCoolDown[2] = 4f;
 
 		gcDoctor = GetComponentInChildren<DoctorGraphicController> ();
@@ -178,17 +178,27 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private bool isChargingEnergy = false;
 	private DoctorEnergyBall activeEnergyBall;
 	private void ChargeEnergyBall(){
+		moveDir = Vector3.zero;
+
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfEnergyBall);
 		go.transform.position = transform.position + Vector3.up * 5;
 
 		activeEnergyBall = go.GetComponent<DoctorEnergyBall>();
 		activeEnergyBall.Ready();
+
+		gcDoctor.StartEnergyCharge();
+		isChargingEnergy = true;
+
+		InputModule.instance.BlockSkill(0);
+		InputModule.instance.BlockSkill(1);
+		InputModule.instance.BeginCoolDown(2, 0.5f);
 	}
 
 	public void ThrowEnegyBall(){
 		if(activeDevice){
 			activeEnergyBall.targetDevice = activeDevice;
 		}
+		gcDoctor.EndAndShootEnergyCharge();
 
 		Vector3 throwDir = Vector3.zero;
 		switch(currentDirGun){
@@ -226,6 +236,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		}
 			
 		activeEnergyBall.Throw(throwDir);
+
+		isChargingEnergy = false;
+		InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+
+		InputModule.instance.ResumeSkill(0, skillCoolDown[0]);
+		InputModule.instance.ResumeSkill(1, skillCoolDown[1]);
 	}
 
 	#endregion
@@ -238,6 +254,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.endHover);
 			Network_Client.SendTcp(nmBoostState);
 		}
+
 		canBoostJump = true;
 		isHovering = false;
 		hasHovered = false;
@@ -263,13 +280,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		case 2:
 			if(isChargingEnergy == false){
 				ChargeEnergyBall();
-				gcDoctor.StartEnergyCharge();
-				isChargingEnergy = true;
 			}else{
-				gcDoctor.EndAndShootEnergyCharge();
 				ThrowEnegyBall();
-				isChargingEnergy = false;
-				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 			}
 			break;
 		}

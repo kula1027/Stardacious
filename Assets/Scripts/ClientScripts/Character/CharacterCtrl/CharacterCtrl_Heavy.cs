@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
+public class CharacterCtrl_Heavy : CharacterCtrl {
 	private HeavyGraphicController gcHeavy;
 
 	public GameObject pfMinigunBullet;
@@ -20,6 +20,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		gcHeavy.Initialize();
 
 		PrepareShotGun();
+		PrepareOverchargeShot();
 
 		NotifyAppearence();
 		StartSendPos();
@@ -28,7 +29,6 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	private ControlDirection currentDirGun = ControlDirection.Left;
 	public override void OnMovementInput (Vector3 vec3_){
 		if(isMachineGunMode)return;
-
 		base.OnMovementInput(vec3_);
 
 		if(currentDir != ControlDirection.Middle && 
@@ -58,13 +58,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 
 	#region ShotGun
 	private HitObject hit_ShotGun;
-	private GameObject shotGunHitArea;
+	public GameObject shotGunHitArea;
 	private Transform trGunMuzzle;
 
 	private void PrepareShotGun(){
 		trGunMuzzle = gcHeavy.gunMuzzle;
 
-		shotGunHitArea = transform.FindChild("ShotGunHitter").gameObject;
 		shotGunHitArea.SetActive(false);
 	}
 
@@ -90,7 +89,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 		shotGunHitArea.SetActive(false);
 	}
 
-	public void OnHitSomebody (Collider2D col){
+	public void OnHitShotGun(Collider2D col){
 		float dis = Vector2.Distance(trGunMuzzle.position, col.transform.position);
 		if(dis < 1)dis = 1;
 		hit_ShotGun = new HitObject(15 + (int)(120 / dis));
@@ -161,10 +160,22 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 	#endregion
 
 	#region OverchargedShot
+	public GameObject overchageHitArea;
 	private const float forceOvercharge = 1100f;
+
+	private void PrepareOverchargeShot(){
+		overchageHitArea.SetActive(false);
+	}
+
 	private void OverchargedShot(){
 		gcHeavy.OverChargeShot ();
+
+		if(isMachineGunMode){
+			StopMachineGun();
+		}
+
 		rgd2d.velocity = Vector2.zero;
+		isMachineGunMode = false;
 
 		switch(currentDirGun){
 		case ControlDirection.Right:
@@ -191,6 +202,29 @@ public class CharacterCtrl_Heavy : CharacterCtrl, IHitter {
 			rgd2d.AddForce(new Vector2(1f, 0.2f) * forceOvercharge);
 			break;
 		}
+
+		StartCoroutine(OverchageShotRoutine());
+	}
+
+	public void OnHitOverchargeShot(Collider2D col){
+		float dis = Vector2.Distance(trGunMuzzle.position, col.transform.position);
+		if(dis < 1)dis = 1;
+		hit_ShotGun = new HitObject(15 + (int)(120 / dis));
+		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
+		if(hbt)
+			hbt.OnHit(hit_ShotGun);
+	}
+
+	private const float overchargeHitStayTime = 0.02f;
+	private IEnumerator OverchageShotRoutine(){
+		overchageHitArea.transform.right = trGunMuzzle.right;
+		overchageHitArea.transform.position = trGunMuzzle.position;
+
+		overchageHitArea.SetActive(true);
+
+		yield return new WaitForSeconds(overchargeHitStayTime);
+
+		overchageHitArea.SetActive(false);
 	}
 
 	#endregion

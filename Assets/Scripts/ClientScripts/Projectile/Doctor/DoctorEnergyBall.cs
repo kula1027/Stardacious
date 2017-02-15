@@ -69,6 +69,12 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 	}
 
 	public void Throw(Vector3 dirThrow_){
+		StartCoroutine(DelayThrow(dirThrow_));
+	}
+
+	private IEnumerator DelayThrow(Vector3 dirThrow_){
+		yield return new WaitForSeconds(0.6f);
+
 		movingDir = dirThrow_;
 		StartCoroutine(HitRoutine());
 

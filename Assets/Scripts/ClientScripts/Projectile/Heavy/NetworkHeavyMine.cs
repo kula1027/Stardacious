@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class NetworkHeavyMine : PoolingObject {
+	public GameObject boomEffect;
 
 	public void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
@@ -14,5 +15,18 @@ public class NetworkHeavyMine : PoolingObject {
 			ReturnObject();
 			break;
 		}
+	}
+
+	public override void OnReturned (){
+		GameObject objBoom = Instantiate(boomEffect);
+		Destroy(objBoom, 1f);
+		objBoom.transform.position = transform.position;
+
+		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
+		MsgSegment[] b = {
+			new MsgSegment(MsgAttr.destroy)
+		};
+		NetworkMessage nmDestroy = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmDestroy);
 	}
 }

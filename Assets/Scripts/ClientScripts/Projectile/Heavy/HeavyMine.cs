@@ -31,10 +31,11 @@ public class HeavyMine : PoolingObject, IHitter {
 
 	public void Detonate(){
 		expArea.SetActive(true);
-		GameObject gg = Instantiate(boomEffect);//TODO
-		gg.transform.position = transform.position;
+		GameObject objBoom = Instantiate(boomEffect);
+		Destroy(objBoom, 1f);
+		objBoom.transform.position = transform.position;
 
-		ReturnObject(0.2f);
+		ReturnObject(0.02f);
 	}
 
 	public override void OnReturned (){
