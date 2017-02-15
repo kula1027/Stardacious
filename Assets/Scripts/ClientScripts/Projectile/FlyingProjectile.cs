@@ -51,16 +51,5 @@ public class FlyingProjectile : PoolingObject, IHitter {
 	#endregion
 
 
-	public override void OnReturned (){
-		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
-		goHit.transform.position = transform.position + transform.right * 1.5f;
-		goHit.GetComponent<HitEffectGraphicController>().Blue();
 
-		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
-		MsgSegment[] b = {
-			new MsgSegment(MsgAttr.destroy)
-		};
-		NetworkMessage nmDestroy = new NetworkMessage(h, b);
-		Network_Client.SendTcp(nmDestroy);
-	}
 }

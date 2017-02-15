@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HitEffectGraphicController : MonoBehaviour {
+public class HitEffect : PoolingObject {
 
 	private Animator effectAnimator;
 
@@ -9,8 +9,9 @@ public class HitEffectGraphicController : MonoBehaviour {
 		effectAnimator = GetComponent<Animator> ();
 	}
 
-	void Start(){
+	public override void OnRequested (){
 		Init ();
+		ReturnObject(10f);
 	}
 
 	public void Init(){
@@ -23,5 +24,13 @@ public class HitEffectGraphicController : MonoBehaviour {
 
 	public void Green(){
 		effectAnimator.Play ("Green");
+	}
+
+	public void Yellow(){
+		effectAnimator.Play ("Yellow");
+	}
+
+	public void BlueLaser(){
+		effectAnimator.Play ("Doctor");
 	}
 }

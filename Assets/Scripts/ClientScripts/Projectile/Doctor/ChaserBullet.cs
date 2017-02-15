@@ -6,6 +6,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 	public const float flyingSpeed = 25f;
 
 	public GuidanceDevice targetDevice;
+	public GameObject pfHit;
 
 	void Awake(){
 		objType = (int)ProjType.ChaserBullet;
@@ -100,6 +101,11 @@ public class ChaserBullet : PoolingObject, IHitter {
 	#endregion
 
 	public override void OnReturned (){
+		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
+		goHit.transform.position = transform.position;
+		goHit.transform.right = transform.right;
+		goHit.GetComponent<HitEffect>().BlueLaser();
+
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment[] b = {
 			new MsgSegment(MsgAttr.destroy)
