@@ -265,6 +265,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		case 1:
 			SpaceDistortion();
+			moveDir = Vector3.zero;
 			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
 			break;
 

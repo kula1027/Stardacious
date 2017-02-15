@@ -22,6 +22,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	public Animator shotEffectAnimator;
 	public Animator miniEffectAnimator;
 	public ParticleSystem cartridge;
+	public GameObject overChargePrefab;
 
 	//State
 	protected HeavyLowerState lowerState;				//현재 하체상태
@@ -155,7 +156,7 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		}
 		shootAnimationRoutine = StartCoroutine (AnimationPlayWithCallBack (ShootAnimationName.FrontShoot));
 		SetMuzzle (ShootAnimationName.FrontShoot);
-		GameObject overchargeEffect = Instantiate (Resources.Load ("overCharge", typeof(GameObject)))as GameObject;
+		GameObject overchargeEffect = Instantiate (overChargePrefab)as GameObject;
 		overchargeEffect.transform.position = gunMuzzle.position;
 		overchargeEffect.transform.localScale = gunMuzzle.lossyScale;
 	}
