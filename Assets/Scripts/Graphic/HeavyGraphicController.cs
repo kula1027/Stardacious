@@ -105,6 +105,10 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 		
 	public virtual void WeaponSwap(){			//상,하체 모션 캔슬 및 변경 금지
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
+
 		if (!isSwapDelay) {			//스왑중일때는 재스왑 불가
 
 			miniEffectAnimator.Play ("Idle", 0, 0);
@@ -161,6 +165,11 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 		GameObject overchargeEffect = Instantiate (overChargePrefab)as GameObject;
 		overchargeEffect.transform.position = gunMuzzle.position;
 		overchargeEffect.transform.localScale = gunMuzzle.lossyScale;
+	}
+
+	public void Die(){
+		upperAnimator.Play ("Die");
+		lowerAnimator.Play ("Die");
 	}
 
 	#region private
@@ -376,11 +385,14 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 			SetShotGunShoot ();
 
-		} else {								//공격 중지
-			
+		} else {								//공격 중지			
 			SetUpperAnim (currentInputDirection);
 			SetLowerAnim (currentInputDirection);
 			ReleaseAttackDelay ();
+
+			if (master) {
+				master.OnEndShootShotGun ();
+			}
 		}
 	}
 

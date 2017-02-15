@@ -170,6 +170,11 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		}
 	}
 
+	public void Die(){
+		upperAnimator.Play ("Die");
+		lowerAnimator.Play ("Die");
+	}
+
 	#region private
 	private void SetGunShoot(){
 		isAttackAnimationPlaying = true;
@@ -391,6 +396,10 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			SetUpperAnim (currentInputDirection);
 			SetLowerAnim (currentInputDirection);
 			ReleaseAttackDelay ();
+
+			if (master) {
+				master.OnEndShootNormal ();
+			}
 		}
 	}
 

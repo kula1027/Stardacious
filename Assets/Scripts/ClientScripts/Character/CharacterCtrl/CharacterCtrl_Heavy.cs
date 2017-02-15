@@ -56,6 +56,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		StopMachineGun ();
 	}
 
+	public override void Jump (){
+		base.Jump ();
+
+		moveSpeed = originalMoveSpeed;
+	}
+
 	#region ShotGun
 	private HitObject hit_ShotGun;
 	public GameObject shotGunHitArea;
@@ -71,10 +77,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
 		StartCoroutine(ShotGunRoutine());
+
+		moveSpeed = originalMoveSpeed * 0.5f;
 	}
 
 	public void OnEndShootShotGun(){
-		moveSpeed = 5;
+		moveSpeed = originalMoveSpeed;
 	}
 
 	private const float shotgunHitStayTime = 0.02f;
@@ -105,6 +113,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	private Coroutine machinegunRoutine;
 	public void SetMachineGunMode (bool isMachineGunMode_){
 		isMachineGunMode = isMachineGunMode_;
+		moveSpeed = originalMoveSpeed;
 		if (isAttacking && isMachineGunMode) {
 			StartMachineGun ();
 		}
