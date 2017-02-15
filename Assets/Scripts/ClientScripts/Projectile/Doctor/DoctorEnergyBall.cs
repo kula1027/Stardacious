@@ -2,10 +2,8 @@
 using System.Collections;
 
 public class DoctorEnergyBall : PoolingObject, IHitter {		
-	public const float flyingSpeed = 6f;
+	public const float flyingSpeed = 4f;
 	public const float lifeTime = 10;
-
-	private const float hitItv = 0.1f;
 
 	private HitObject hitObject;
 
@@ -33,8 +31,7 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		
 	public override void OnRequested (){		
 		StartCoroutine (gcBall.BallGrowing());
-		col2d.radius = 0;
-		col2d.enabled = true;
+		col2d.enabled = false;
 	}
 
 	private Vector3 movingDir;
@@ -79,7 +76,6 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		StartCoroutine(HitRoutine());
 
 		gcBall.EndCharge();
-		col2d.radius = gcBall.chargeAmount * 0.8f;
 		StartCoroutine(FlyingRoutine());
 
 		gcBall.shrinkDelay = lifeTime - 1;
@@ -113,6 +109,8 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 	}
 
 	private IEnumerator HitRoutine(){
+		float hitItv = -(gcBall.chargeAmount + 0.2f) * 0.3f + 0.56f;
+
 		while(true){
 			col2d.enabled = true;
 
@@ -128,8 +126,9 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 
 		if(hbt){
-			if(hbt.tag.Equals("Player") == false || ClientMasterManager.instance.friendlyFire){
-				hbt.OnHit(hitObject);
+			if (hbt.tag.Equals ("Player") == false || ClientMasterManager.instance.friendlyFire) {				
+				hbt.OnHit (hitObject);
+				gcBall.LighteningEffecting (col.transform.position + new Vector3 (0, 1.5f, 0) + (Vector3)Random.insideUnitCircle);
 			}
 		}
 	}

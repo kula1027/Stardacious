@@ -4,13 +4,13 @@ using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LighteningEffect : PoolingObject{
-	private Vector3 centerPos;
+	private Transform centerTransform;
 	private Vector3 targetPos;
 
 
 	private int generations = 3;
-	private float chaosFactorMax = 1f;
-	private float chaosFactor = 1f;
+	private float chaosFactorMax = 0.7f;
+	private float chaosFactor = 0.7f;
 
 	private LineRenderer lineRenderer;
 	private List<KeyValuePair<Vector3, Vector3>> segments = new List<KeyValuePair<Vector3, Vector3>>();
@@ -18,6 +18,7 @@ public class LighteningEffect : PoolingObject{
 
 	void Awake(){
 		lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer.sortingOrder = 1;
 	}
 
 	public override void OnRequested (){
@@ -27,8 +28,8 @@ public class LighteningEffect : PoolingObject{
 		chaosFactor = chaosFactorMax;
 	}
 
-	public void SetTarget(Vector3 centorPos_, Vector3 targetPos_){
-		centerPos = centorPos_;
+	public void SetTarget(Transform centerTr, Vector3 targetPos_){
+		centerTransform = centerTr;
 		targetPos = targetPos_;
 		StartCoroutine (Effecting ());
 	}
@@ -37,7 +38,7 @@ public class LighteningEffect : PoolingObject{
 		Vector3 endPoint = GenerateRandomDirection();
 		while (true) {
 			chaosFactor -= 0.1f;
-			if (chaosFactor < 0f) {
+			if (chaosFactor <= 0.1f) {
 				/*chaosFactor = chaosFactorMax;
 				lineRenderer.enabled = false;
 				yield return new WaitForSeconds (Random.Range (0.3f, 1f));
@@ -46,7 +47,7 @@ public class LighteningEffect : PoolingObject{
 				ReturnObject ();
 			}
 			startIndex = 0;
-			GenerateLightningBolt(centerPos, endPoint, generations, generations, 0.0f);
+			GenerateLightningBolt(centerTransform.position, endPoint, generations, generations, 0.0f);
 			UpdateLineRenderer();
 			yield return new WaitForSeconds(0.05f);
 		}

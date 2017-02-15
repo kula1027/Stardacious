@@ -83,10 +83,10 @@ public class EnergyBallGraphic : MonoBehaviour {
 	public GameObject pfLightening;
 	public void LighteningEffecting(Vector3 targetPos){
 		LighteningEffect lightEffect = lighteningPool.RequestObject (pfLightening).GetComponent<LighteningEffect> ();
-		lightEffect.SetTarget (transform.position, targetPos);
+		lightEffect.SetTarget (transform, targetPos);
 
 		lightEffect = lighteningPool.RequestObject (pfLightening).GetComponent<LighteningEffect> ();
-		lightEffect.SetTarget (transform.position, targetPos);
+		lightEffect.SetTarget (transform, targetPos);
 	}
 	#endregion
 }
