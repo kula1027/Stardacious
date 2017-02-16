@@ -1,0 +1,215 @@
+
+pDoctor.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+armLD
+  rotate: true
+  xy: 732, 113
+  size: 196, 207
+  orig: 196, 207
+  offset: 0, 0
+  index: -1
+armLU
+  rotate: false
+  xy: 864, 595
+  size: 113, 202
+  orig: 113, 202
+  offset: 0, 0
+  index: -1
+body
+  rotate: true
+  xy: 2, 28
+  size: 289, 494
+  orig: 289, 494
+  offset: 0, 0
+  index: -1
+earLD
+  rotate: true
+  xy: 498, 2
+  size: 95, 142
+  orig: 95, 142
+  offset: 0, 0
+  index: -1
+earLU
+  rotate: false
+  xy: 941, 155
+  size: 53, 154
+  orig: 53, 154
+  offset: 0, 0
+  index: -1
+gownR
+  rotate: false
+  xy: 2, 319
+  size: 182, 702
+  orig: 182, 702
+  offset: 0, 0
+  index: -1
+gun
+  rotate: false
+  xy: 186, 580
+  size: 469, 441
+  orig: 469, 441
+  offset: 0, 0
+  index: -1
+hair2
+  rotate: false
+  xy: 657, 595
+  size: 205, 426
+  orig: 205, 426
+  offset: 0, 0
+  index: -1
+hair3
+  rotate: false
+  xy: 498, 99
+  size: 232, 479
+  orig: 232, 479
+  offset: 0, 0
+  index: -1
+handR
+  rotate: true
+  xy: 749, 6
+  size: 105, 193
+  orig: 105, 193
+  offset: 0, 0
+  index: -1
+jetpack
+  rotate: false
+  xy: 864, 799
+  size: 147, 222
+  orig: 147, 222
+  offset: 0, 0
+  index: -1
+legLD
+  rotate: false
+  xy: 732, 311
+  size: 275, 282
+  orig: 275, 282
+  offset: 0, 0
+  index: -1
+legLU
+  rotate: true
+  xy: 186, 336
+  size: 242, 305
+  orig: 242, 305
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 642, 4
+  size: 105, 93
+  orig: 105, 93
+  offset: 0, 0
+  index: -1
+
+pDoctor2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+armRD
+  rotate: true
+  xy: 2, 2
+  size: 128, 172
+  orig: 128, 172
+  offset: 0, 0
+  index: -1
+armRU
+  rotate: false
+  xy: 813, 761
+  size: 132, 256
+  orig: 132, 256
+  offset: 0, 0
+  index: -1
+earRD
+  rotate: false
+  xy: 589, 179
+  size: 117, 147
+  orig: 117, 147
+  offset: 0, 0
+  index: -1
+earRU
+  rotate: true
+  xy: 396, 66
+  size: 89, 181
+  orig: 89, 181
+  offset: 0, 0
+  index: -1
+gownB
+  rotate: false
+  xy: 2, 599
+  size: 413, 418
+  orig: 413, 418
+  offset: 0, 0
+  index: -1
+gownLD
+  rotate: false
+  xy: 617, 696
+  size: 194, 321
+  orig: 194, 321
+  offset: 0, 0
+  index: -1
+gownLU
+  rotate: false
+  xy: 640, 441
+  size: 113, 115
+  orig: 113, 115
+  offset: 0, 0
+  index: -1
+hair1
+  rotate: false
+  xy: 257, 224
+  size: 137, 373
+  orig: 137, 373
+  offset: 0, 0
+  index: -1
+hair4
+  rotate: false
+  xy: 2, 132
+  size: 253, 465
+  orig: 253, 465
+  offset: 0, 0
+  index: -1
+hair5
+  rotate: false
+  xy: 396, 328
+  size: 242, 269
+  orig: 242, 269
+  offset: 0, 0
+  index: -1
+hairTop
+  rotate: true
+  xy: 257, 47
+  size: 175, 137
+  orig: 175, 137
+  offset: 0, 0
+  index: -1
+handL
+  rotate: false
+  xy: 813, 631
+  size: 136, 128
+  orig: 136, 128
+  offset: 0, 0
+  index: -1
+head
+  rotate: true
+  xy: 396, 157
+  size: 169, 191
+  orig: 169, 191
+  offset: 0, 0
+  index: -1
+legRD
+  rotate: false
+  xy: 640, 558
+  size: 127, 136
+  orig: 127, 136
+  offset: 0, 0
+  index: -1
+legRU
+  rotate: false
+  xy: 417, 617
+  size: 198, 400
+  orig: 198, 400
+  offset: 0, 0
+  index: -1
