@@ -12,6 +12,7 @@ namespace ServerSide{
 		private bool isInRanged;
 		private int spiderAttkRange = 10;
 		private int spiderAgroRange = 20;
+		private float spiderAppearTime = 3;
 
 		public override void OnRequested (){
 			base.OnRequested();
@@ -20,10 +21,19 @@ namespace ServerSide{
 		}
 
 		private IEnumerator SpiderMainAI(){
-			yield return new WaitForSeconds (3f);
-			// 생성되는 애니메이션을 위해 3초 대기
+			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
+			// 생성되는 애니메이션을 위해 n초 대기
 
-			while(IsDead == false){
+
+			/************ AI START ************/
+			while(IsDead == false){				// 나는 죽엇나?
+				// 안죽었네
+
+				if (canControl == false) {		// 움직일 수 있나?
+					yield return StartCoroutine(MonsterFreeze());
+				}
+				//잇네
+
 				inRangeCharaterPos = new Vector3[NetworkConst.maxPlayer];
 				currentCharacterPos = new Vector3[NetworkConst.maxPlayer];
 				int curruentPlayers = 0;
@@ -68,6 +78,7 @@ namespace ServerSide{
 				}
 
 				yield return new WaitForSeconds((Random.Range(0.8f, 1.3f)));
+				// 0.8~1.3 초 사이 랜덤으로 
 			}
 		}
 
@@ -104,10 +115,6 @@ namespace ServerSide{
 			} else {
 				yield return StartCoroutine (FireProjectile (closestCharacterPos_));
 			}
-		}
-
-		public override void OnDie (){
-			base.OnDie ();
 		}
 	}
 }

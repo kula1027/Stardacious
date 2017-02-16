@@ -3,13 +3,22 @@ using System.Collections;
 
 namespace ServerSide{
 	public class StageControl : MonoBehaviour {
-
 		public BoxCollider2D colPlayerChecker;
+
+		private bool isPlayerExist;
+		public bool IsPlayerExist{
+			set{ this.isPlayerExist = value; }
+		}
+		public bool GetIsPlayerExist(){
+			return isPlayerExist;
+		}
 
 		private ServerStageManager masterStage;
 		public ServerStageManager MasterStage{
 			set{ masterStage = value; }
 		}
+
+
 		private Transform[] waves;
 		private int currentMonsterCount = 0;
 		private int currentWaveNumber = 0;		// wave 갯수가 몇개?
