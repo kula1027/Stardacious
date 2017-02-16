@@ -12,7 +12,7 @@ public class CameraControl : MonoBehaviour {
 	private float limitLeft;
 	private float limitRight;
 
-	private float groundHeight = 3;
+	private float groundHeight = 2;
 
 	private BackgroundMovement[] bgMove;
 
@@ -37,15 +37,18 @@ public class CameraControl : MonoBehaviour {
 		Vector3 prevPos = transform.position;
 		Vector3 dif;
 		while(true){
-			if(targetTr != null){				
-				float camPosY = 
-					-0.8f * (targetTr.position.y - groundHeight) + 10;		
+			if(targetTr != null){
+				float difY = targetTr.position.y - groundHeight;
+				if(difY < 0)difY = 0;
+
+				float camPosY = 0.3f * difY + 11f;
+
 
 				transform.position = Vector3.Lerp(
 										transform.position, 
 										new Vector3(
 											targetTr.position.x,
-											targetTr.position.y + camPosY,
+											camPosY,
 											camDepth
 										),
 										0.3f

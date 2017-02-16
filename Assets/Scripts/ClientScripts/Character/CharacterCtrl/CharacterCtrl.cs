@@ -78,6 +78,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 		StartCoroutine (GroundCheckRoutine ());
 		StartCoroutine(FixedUpdateMovement());
+
+		transform.position = new Vector3(-4.7f, 12f, 0f);
 	}
 
 	protected void NotifyAppearence(){
