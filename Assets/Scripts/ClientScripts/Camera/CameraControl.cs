@@ -24,7 +24,7 @@ public class CameraControl : MonoBehaviour {
 
 		bgMove = GetComponentsInChildren<BackgroundMovement>();
 	}
-
+		
 	void Start(){
 		StartCoroutine(CamRoutine());
 	}
@@ -98,5 +98,28 @@ public class CameraControl : MonoBehaviour {
 
 			yield return new WaitForFixedUpdate();
 		}
+	}
+
+	private Coroutine routineCS;
+	public void SetCamSize(float size){
+		if(routineCS != null){
+			StopCoroutine(routineCS);
+		}
+		routineCS = StartCoroutine(CamSizeChange(size));
+	}
+
+	private IEnumerator CamSizeChange(float cs){
+		float paramCs = cs;
+		while(true){
+			cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, cs, 0.02f);
+			camHeight = cam.orthographicSize;
+			camWidth = cam.orthographicSize * cam.aspect;
+
+			if(Mathf.Abs(paramCs - cam.orthographicSize) < 0.05f)break;
+
+			yield return new WaitForFixedUpdate();
+		}
+
+
 	}
 }
