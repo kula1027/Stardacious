@@ -13,10 +13,16 @@ public class Spider_C : ClientMonster {
 	}
 
 	private IEnumerator WakeUpRoutine(){
-		yield return new WaitForSeconds(1);
-	
-		gcSpider.WakeUp();
+		// 일어난 뒤 1sec > 애니메이션 재생 > 1sec > 무적판정 끝
+		// wakeup animation 재생 중 바로 죽을때 애니메이션이 씹히는 이슈 때문
 
+		yield return new WaitForSeconds(1);
+
+		gcSpider.WakeUp ();
+
+		yield return new WaitForSeconds (1);
+
+		hTrigger.gameObject.SetActive (true);
 	}
 
 	public override void OnDie (){
@@ -25,5 +31,13 @@ public class Spider_C : ClientMonster {
 		gcSpider.Die();
 
 		ReturnObject(8);
+	}
+
+	protected override void MonsterFreeze(){
+		gcSpider.AnimationFreeze ();
+	}
+
+	protected override void MonsterFreezeEnd(){
+		gcSpider.AnimationResume ();
 	}
 }

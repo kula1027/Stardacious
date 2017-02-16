@@ -18,10 +18,12 @@ public class ClientMonster : PoolingObject, IHittable {
 	}
 
 	public override void OnRequested (){
-		itpl = new Interpolater(transform.position);
-		hTrigger.gameObject.SetActive(true);
-		StartCoroutine(PositionRoutine());
 		IsDead = false;
+		itpl = new Interpolater(transform.position);
+		StartCoroutine(PositionRoutine());
+
+		hTrigger.gameObject.SetActive (false);
+		// wakeup animation 을 위해 일시적으로 hitbox set false
 	}
 
 	public override void Ready (){
@@ -61,24 +63,27 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.destroy:
+			IsDead = true;
 			OnDie();
 			break;
 
 		case MsgAttr.Monster.grounded:
-			if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
-				gcMons.Jump ();
-			}
-			else if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
-				gcMons.Idle ();
+			if (IsDead == false) {
+				if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+					gcMons.Jump ();
+				} else if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+					gcMons.Idle ();
+				}
 			}
 			break;
 
 		case MsgAttr.Monster.moving:
-			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
-				gcMons.Walk ();
-			}
-			else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
-				gcMons.Idle ();
+			if (IsDead == false) {
+				if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+					gcMons.Walk ();
+				} else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+					gcMons.Idle ();
+				}
 			}
 			break;
 
@@ -92,21 +97,26 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.Monster.attack:
-			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
-				gcMons.Attack ();
-			}
-			else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
-				gcMons.Idle ();
+			if (IsDead == false) {
+				if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+					gcMons.Attack ();
+				} else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+					gcMons.Idle ();
+				}
 			}
 			break;
 
 		case MsgAttr.freeze:
-			ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
-			effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
-
-			StartCoroutine(FreezeRoutine());	
+			ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool ();
+			effectIce = localPool.RequestObject (ClientProjectileManager.instance.pfIceEffect);
+			StartCoroutine(FreezeRoutine());
 			break;
 		}
+	}
+	protected virtual void MonsterFreezeEnd(){
+	}
+
+	protected virtual void MonsterFreeze(){
 	}
 
 	public override void Freeze (){
@@ -122,6 +132,8 @@ public class ClientMonster : PoolingObject, IHittable {
 	GameObject effectIce;
 
 	private IEnumerator FreezeRoutine(){
+		// freeze 시작
+		MonsterFreeze ();
 		
 		float timeAcc = 0f;
 		while(true){
@@ -130,6 +142,8 @@ public class ClientMonster : PoolingObject, IHittable {
 			timeAcc += Time.deltaTime;
 
 			if(timeAcc > BindBullet.freezeTime){
+				// freeze 끝!
+				MonsterFreezeEnd ();
 				break;
 			}
 

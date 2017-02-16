@@ -5,12 +5,6 @@ namespace ServerSide{
 	public class ServerStageManager : MonoBehaviour {
 		public static ServerStageManager instance;
 
-
-		private bool isPlayerExist;
-		public bool IsPlayerExist{
-			set{ this.isPlayerExist = value; }
-		}
-
 		private ObjectPooler monsterPooler;
 		public ObjectPooler MonsterPooler{
 			get{ return monsterPooler; }
@@ -35,6 +29,9 @@ namespace ServerSide{
 		void Awake(){
 			instance = this;
 
+			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
+			MsgSegment b = new MsgSegment (MsgAttr.Stage.stgDoor, currentStage.ToString());
+			nmStageClear = new NetworkMessage (h, b);
 			// stage clear 시 보낼 패킷 캐싱
 
 			safeBar = GameObject.Find("SafeBar").transform;
@@ -74,40 +71,24 @@ namespace ServerSide{
 			}
 		}
 
-		/*
-		public void OnMonsterDelete(int idx){			
-			currentMonsterCount--;
-			if(currentMonsterCount < 1){
-				OnMonsterAllKill();
-			}
-		}
-
-		public void OnMonsterAllKill(){
-			ConsoleMsgQueue.EnqueMsg("All Monsters Eliminated");
-			CurrentStageEnd();
-			MsgSegment h = new MsgSegment(MsgAttr.stage, "");
-			MsgSegment b = new MsgSegment(MsgAttr.Stage.moveStg, currentStage.ToString());
-			NetworkMessage nm = new NetworkMessage(h, b);
-
-			Network_Server.BroadCastTcp(nm);
-		}*/
-
 		public void CurrentStageEnd(){
-
-			StartCoroutine (PlayerCheckExistRoutine());
-			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
-			MsgSegment b = new MsgSegment (MsgAttr.Stage.stgDoor, currentStage.ToString());
-			nmStageClear = new NetworkMessage (h, b);
-
+			// stage 끝낫으니 다음거 문열라고 보냄
 			Network_Server.BroadCastTcp(nmStageClear);
+
+			StartCoroutine (PlayerCheckExistRoutine(currentStage));
+
 			currentStage++;
 			BeginStage (currentStage);
 		}
 
-		private IEnumerator PlayerCheckExistRoutine(){
+		protected IEnumerator PlayerCheckExistRoutine(int idx) {
 			while(true){
-				if (!isPlayerExist)
+
+				if (stages[idx].GetIsPlayerExist() == false) {
+					// 캐릭터가 더이상 없으면 한번 더 작동 : 닫게됨
+					Network_Server.BroadCastTcp (nmStageClear);
 					break;
+				}
 
 				yield return null;
 			}
