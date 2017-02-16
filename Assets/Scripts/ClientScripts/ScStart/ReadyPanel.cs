@@ -4,9 +4,9 @@ using System.Collections;
 public class ReadyPanel : HidableUI {
 	public PlayerSlot[] playerSlot;
 
-	public Sprite tempImgHeavy;
-	public Sprite tempImgDoctor;
-	public Sprite tempImgEsper;
+	public GameObject pfHeavy;
+	public GameObject pfDoctor;
+	public GameObject pfEsper;
 
 	public override void Show (){
 		for(int loop = 0; loop < playerSlot.Length; loop++){
@@ -19,22 +19,22 @@ public class ReadyPanel : HidableUI {
 
 
 	public void SetSlotCharacter(int idx_, int chIdx_){
-		Sprite spr = null;
+		GameObject pf = null;
 		switch((ChIdx)chIdx_){
 		case ChIdx.Heavy:
-			spr = tempImgHeavy;
+			pf = pfHeavy;
 			break;
 
 		case ChIdx.Doctor:
-			spr = tempImgDoctor;
+			pf = pfDoctor;
 			break;
 
 		case ChIdx.Esper:
-			spr = tempImgEsper;
+			pf = pfEsper;
 			break;
 		}
 			
-		playerSlot[idx_].SetCharacter(spr);
+		playerSlot[idx_].SetCharacter(pf);
 	}
 
 	public void SetSlotState(int idx_, GameState gs){
