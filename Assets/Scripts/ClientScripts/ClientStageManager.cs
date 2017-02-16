@@ -12,19 +12,21 @@ public class ClientStageManager : MonoBehaviour {
 	}
 
 	private GameObject[] goStage = new GameObject[1];	
-
 	private ObjectPooler monsterPooler;
 
 	void Awake(){
 		instance = this;
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
-
 	}
 
 	void Start(){
 		for(int loop = 0; loop < goStage.Length; loop++){
 			goStage[loop] = GameObject.Find("Stages").transform.GetChild(loop).gameObject;
 		}
+	}
+
+	public ClientStageManager SetMaster(){
+		return this;
 	}
 		
 	private void LoadStage(int idx){
@@ -70,6 +72,4 @@ public class ClientStageManager : MonoBehaviour {
 		objMon.transform.position = startPos_;
 		objMon.GetComponent<PoolingObject>().Ready();
 	}
-
-
 }

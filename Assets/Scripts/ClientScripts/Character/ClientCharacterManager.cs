@@ -66,7 +66,7 @@ public class ClientCharacterManager : MonoBehaviour {
 			}
 			break;
 
-			default:
+			default:	
 			int chId = int.Parse(networkMessage.Header.Content);
 			OnRecvCharacter(chId, networkMessage);
 			break;

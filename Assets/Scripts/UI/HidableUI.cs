@@ -9,7 +9,7 @@ public class HidableUI : MonoBehaviour {
 		get{return isShowing;}
 	}
 
-	void Awake () {
+	protected void Awake () {
 		rtTransform = GetComponent<RectTransform>();
 		oriPos = rtTransform.localPosition;
 		isShowing = false;

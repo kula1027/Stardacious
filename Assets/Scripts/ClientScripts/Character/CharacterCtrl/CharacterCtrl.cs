@@ -4,6 +4,8 @@ using System.Collections;
 public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
+	private int dieCount = 0;
+	private float defaultRespawnTime = 5f;
 
 	public BoxCollider2D colGroundChecker;
 
@@ -349,8 +351,34 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public override void OnDie (){
 		IsDead = true;
 		ConsoleMsgQueue.EnqueMsg("DEAD!");
+		RespawnPanel.instance.DieCount = dieCount;
+		RespawnPanel.instance.Show ();
 		characterGraphicCtrl.Die();
+
+		StartCoroutine (CharacterRespawn());
+		//respawn at respawn Point of current stage.
+
 		//ConsoleSystem.Show();
+	}
+
+	private IEnumerator CharacterRespawn(){
+		int stageIdx = 0; // 현재 stage number
+		float timeAcc = 0;
+
+		while (true) {
+			timeAcc += Time.deltaTime;
+
+			if (timeAcc > defaultRespawnTime + (float)dieCount) {
+				this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[Random.Range(0,3)].GetRespawnPoint();
+				this.CurrentHp = 20;
+				RespawnPanel.instance.Hide ();
+				dieCount++;
+				IsDead = false;
+				break;
+			}
+
+			yield return null;
+		}
 	}
 
 	#endregion
