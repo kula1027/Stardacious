@@ -23,8 +23,9 @@ public class EQEffecter : MonoBehaviour {
 	}
 
 	IEnumerator SpectrumRoutine(){
+		float[] spectrum = new float[1024]; 
 		while (true) {
-			float[] spectrum = AudioListener.GetSpectrumData (2048, 0, FFTWindow.Hamming);
+			AudioListener.GetSpectrumData (spectrum, 0, FFTWindow.Hamming);
 			for (int i = 0; i < 72; i++) {
 				eqFactors [i].localScale = new Vector3 (3f - 1f / (spectrum [i] + 0.5f), 1f, 1f);
 			}
