@@ -28,7 +28,7 @@ public class SdButton : EventTrigger {
 	private Coroutine colorRoutine = null;
 	public override void OnPointerDown (PointerEventData eventData){
 		if (colorRoutine != null) {
-			StopCoroutine (ButtonColorRoutine ());
+			StopCoroutine (colorRoutine);
 		}
 		buttonImage.color = new Color (1, 1, 1, 1);
 		colorRoutine = StartCoroutine (ButtonColorRoutine ());
