@@ -24,13 +24,5 @@ public class NetworkTranslator : MonoBehaviour {
 				msgHandler.HandleMsg(ReceiveQueue.SyncDequeMsg());
 			}
 		}
-
-		timeAcc += Time.deltaTime;
-		msgCountAcc += msgCount;
-		if(timeAcc > 1){
-			ConsoleSystem.instance.SetFpsText(msgCountAcc);
-			timeAcc = 0;
-			msgCountAcc = 0;
-		}
 	}
 }

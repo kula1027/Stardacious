@@ -109,11 +109,12 @@ public class ConsoleSystem : MonoBehaviour {
 		while(true){
 			timeAcc += Time.deltaTime;
 			fpsCount++;
-			if(timeAcc >= 1){
+			if(timeAcc >= 1){				
 				fpsText.text = fpsCount.ToString();
 				fpsCount = 0;
-				timeAcc = 0;
+				timeAcc--;
 			}
+			GetIns
 
 			yield return null;
 		}

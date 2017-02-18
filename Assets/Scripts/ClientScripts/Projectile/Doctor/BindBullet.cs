@@ -20,7 +20,7 @@ public class BindBullet : FlyingProjectile {
 		ReturnObject();
 	}
 
-	public override void OnReturned (){
+	protected override void Boom (){
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment[] b = {
 			new MsgSegment(MsgAttr.destroy)

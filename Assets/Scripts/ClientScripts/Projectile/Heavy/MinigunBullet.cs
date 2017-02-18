@@ -12,7 +12,7 @@ public class MinigunBullet : FlyingProjectile {
 		base.Ready ();
 	}
 
-	public override void OnReturned (){
+	protected override void Boom (){
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
 		goHit.transform.position = transform.position + transform.right * 1.5f;
 		goHit.GetComponent<HitEffect>().Yellow();

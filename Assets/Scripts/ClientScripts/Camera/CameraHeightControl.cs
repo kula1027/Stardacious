@@ -2,19 +2,18 @@
 using System.Collections;
 
 public class CameraHeightControl : MonoBehaviour {
-	public float yPos;
+	public Transform trReference;
 
 	public CameraHeightControl nextCamHC;
 	public CameraHeightControl prevCamHC;
 
 	void OnTriggerEnter2D(Collider2D col){
-		Camera.main.GetComponent<CameraControl>().SetGroundHeight(yPos);
-		gameObject.SetActive(false);
-		if(nextCamHC != null){
-			nextCamHC.gameObject.SetActive(true);
-		}
-		if(prevCamHC != null){
+		Camera.main.GetComponent<CameraControl>().SetGroundHeight(trReference.position.y);
+
+		if(nextCamHC != null && prevCamHC != null){
 			prevCamHC.gameObject.SetActive(true);
+			nextCamHC.gameObject.SetActive(true);
+			gameObject.SetActive(false);
 		}
 	}
 }

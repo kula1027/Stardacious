@@ -32,7 +32,7 @@ public class HeavyMine : PoolingObject, IHitter {
 	public void Detonate(){
 		expArea.SetActive(true);
 		GameObject objBoom = Instantiate(boomEffect);
-		Destroy(objBoom, 1f);
+		Destroy(objBoom, 2f);
 		objBoom.transform.position = transform.position;
 
 		ReturnObject(0.02f);

@@ -16,6 +16,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected NetworkMessage nmSkill;
 
 	protected Rigidbody2D rgd2d;
+	protected AudioSource audioSource;
 
 	public CharacterGraphicCtrl characterGraphicCtrl;
 	public CharacterGraphicCtrl cgCtrl{
@@ -40,6 +41,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	void Awake(){		
 		rgd2d = GetComponent<Rigidbody2D>();
 		hbt = GetComponentInChildren<HitBoxTrigger>();
+		audioSource = GetComponent<AudioSource>();
 		instance = this;
 		CurrentHp = 20;
 	}

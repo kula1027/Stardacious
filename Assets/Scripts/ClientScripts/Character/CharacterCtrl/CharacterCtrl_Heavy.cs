@@ -7,6 +7,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	public GameObject pfMinigunBullet;
 	public GameObject pfHeavyMine;
 
+	public AudioClip audioShotgun;
+	public AudioClip audioOvercharge;
+
 	public override void Initialize (){
 		base.Initialize ();
 
@@ -79,6 +82,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		StartCoroutine(ShotGunRoutine());
 
 		moveSpeed = originalMoveSpeed * 0.5f;
+
+		audioSource.clip = audioShotgun;
+		audioSource.Play();
 	}
 
 	public void OnEndShootShotGun(){
@@ -137,6 +143,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	private IEnumerator MachineGunRoutine(){
 		while(true){
 			yield return new WaitForSeconds(machineGunFireRate);
+
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfMinigunBullet);
 			go.transform.position = trGunMuzzle.position;
 			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
@@ -178,6 +185,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	private void OverchargedShot(){
 		gcHeavy.OverChargeShot ();
+
+		audioSource.clip = audioOvercharge;
+		audioSource.Play();
 
 		if(isMachineGunMode){
 			StopMachineGun();
