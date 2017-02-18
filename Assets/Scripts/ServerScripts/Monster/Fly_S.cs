@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace ServerSide{
-	public class Spider_S : ServerMonster {
+	public class Fly_S : ServerMonster {
 		private Vector3[] currentCharacterPos;		/* give current all character's position */
 		private Vector3[] inRangeCharaterPos;
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
@@ -10,24 +10,29 @@ namespace ServerSide{
 		private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
-		private int spiderAttkRange = 10;
-		private int spiderAgroRange = 50;
-		private float spiderAppearTime = 3;
+		private int flyAttkRange = 40;
+		private int flyAgroRange = 50;
+		private float walkerAppearTime = 3;
 
 		public override void OnRequested (){
 			base.OnRequested();
+			base.MonsterDefaultSpeed = new Vector3 (5, 5, 0);
+			// fly 만의 speed 를 정함
+			this.GetComponent<Rigidbody2D>().gravityScale = 0;
+			// gravity
 
-			StartCoroutine(SpiderMainAI());
+			StartCoroutine(FlyMainAI());
 		}
 
-		private IEnumerator SpiderMainAI(){
-			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
+		private IEnumerator FlyMainAI(){
+			yield return StartCoroutine (MonsterAppearence(walkerAppearTime));
 			// 생성되는 애니메이션을 위해 n초 대기
 
 
 			/************ AI START ************/
 			while(IsDead == false){				// 나는 죽엇나?
 				// 안죽었네
+				this.GetComponent<Rigidbody2D> ().gravityScale = 0;		// 시작할때 얼엇다 풀리는 경우를 생각해 중력을 0으로
 
 				if (canControl == false) {		// 움직일 수 있나?
 					yield return StartCoroutine(MonsterFreeze());
@@ -47,35 +52,33 @@ namespace ServerSide{
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
 					if (ServerCharacterManager.instance.GetCharacter (i) != null) {
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAgroRange) {
+						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= flyAgroRange) {
 							isAgroed = true;
 							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 							curruentPlayers++;
 						}
 
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAttkRange) {
+						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= flyAttkRange) {
 							isInRanged = true;
 							inRangeCharaterPos [inRangePlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 							inRangePlayers++;
 						}
 					}
 				}
-					
+
 				// main AIpart
 				if (notMoveMonster && isInRanged){
-					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
-					yield return StartCoroutine (SpiderNotMove (closestCharacterPos));
+					// nothing
 
 				} else if (isAgroed && !isInRanged) {
 					//어그로 끌림
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
-					yield return StartCoroutine (SpiderApproach (closestCharacterPos));
-
+					yield return StartCoroutine (FlyApproach (closestCharacterPos));
 
 				} else if (isAgroed && isInRanged) {
 					//사거리
 					closestCharacterPos = SetCharacterPos (inRangeCharaterPos, inRangePlayers, 1);
-					yield return StartCoroutine (SpiderInRange (closestCharacterPos));
+					yield return StartCoroutine (FlyInRange (closestCharacterPos));
 
 				} else if (!isAgroed) {
 					// nothing
@@ -86,45 +89,35 @@ namespace ServerSide{
 			}
 		}
 
-		private IEnumerator SpiderApproach(Vector3 closestCharacterPos_){
+		private IEnumerator FlyApproach(Vector3 closestCharacterPos_){
 			// 몬스터가 근접하는 코드 
 			int beHaviorFactor = Random.Range (0,10);
 
 			isJump = false;
 			isStop = false;
 
-			if (beHaviorFactor < 2 && isJump == false) {
-				// jump. 2/10
-				isJump = true;
-				MonsterJump ();
-
-			} else if (beHaviorFactor == 2) {
+			if (beHaviorFactor < 1) {
 				// short stop. 1/10
 				isStop = true;
-
 			}
-
 			if (!isStop) {
 				// moving
-				yield return StartCoroutine (MonsterApproach (closestCharacterPos_));
+				yield return StartCoroutine (AirMonsterApproach (closestCharacterPos_));
 			}
 		}
 
-		private IEnumerator SpiderInRange(Vector3 closestCharacterPos_){
+		private IEnumerator FlyInRange(Vector3 closestCharacterPos_){
 			// 몬스터가 근접햇을때
-			int beHaviorFactor = Random.Range (0,10);
-
-			if (beHaviorFactor < 2) {
-				yield return StartCoroutine (MonsterBackStep (closestCharacterPos_));
-			} else {
-				yield return StartCoroutine (FireProjectile (closestCharacterPos_));
-			}
-		}
-
-		private IEnumerator SpiderNotMove(Vector3 closestCharacterPos_){
-			// 아얘 안움직이는 놈일때
 
 			yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+			yield return StartCoroutine (AirMonsterApproach (closestCharacterPos_));
+		}
+
+		protected override void SetGravityOn(){
+			this.GetComponent<Rigidbody2D> ().gravityScale = 1;
+		}
+		protected override void SetGravityOff(){
+			this.GetComponent<Rigidbody2D> ().gravityScale = 0;
 		}
 	}
 }

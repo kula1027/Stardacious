@@ -11,6 +11,9 @@ namespace ServerSide{
 		}
 
 		public bool isGround;
+
+		public bool notMoveMonster = false;
+
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
 
@@ -36,7 +39,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 100; // 디버그용으로 체력 1로함
+			maxHp = 100;
 			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -66,6 +69,7 @@ namespace ServerSide{
 
 			case MsgAttr.freeze:
 				canControl = false;
+				SetGravityOn();	// 공중몹땜에 중력값 변경. 신경X
 				Network_Server.BroadCastTcp(
 					new NetworkMessage(
 						nmPos.Header,
@@ -161,6 +165,7 @@ namespace ServerSide{
 		public override void OnDie (){
 			IsDead = true;
 
+			SetGravityOn ();
 			masterWave.WaveMonsterDead ();
 			// 내가 속한 stagecontrol 에게 죽음을 알림.
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
@@ -169,6 +174,11 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp(nmDestroy);
 
 			ReturnObject(8f);
+		}
+
+		protected virtual void SetGravityOn(){
+		}
+		protected virtual void SetGravityOff(){
 		}
 
 		protected IEnumerator MonsterFreeze() {
@@ -203,7 +213,11 @@ namespace ServerSide{
 		}
 
 		/******* Monster's behavior methods. it will used by AI *******/
-		private Vector3 monsterDefaultSpeed = new Vector3(7, 0, 0);
+		private Vector3 monsterDefaultSpeed = new Vector3(7, 0, 0); // 기본속도 7
+		protected Vector3 MonsterDefaultSpeed {
+			set { monsterDefaultSpeed = value; }
+		}
+
 		private Vector3 monsterBackSpeed = new Vector3(3, 0, 0);
 
 		protected void MonsterJump(){
@@ -216,12 +230,50 @@ namespace ServerSide{
 			isMoving = true; // set the ismoving flag
 
 			while (true) {
-				if (this.transform.position.x < closestCharacterPos_.x) {
+				if (currentDir == true) {
 					// move to right
 					transform.position += monsterDefaultSpeed * Time.deltaTime;
-				} else {
+				} else if(currentDir == false) {
 					// move to left
 					transform.position -= monsterDefaultSpeed * Time.deltaTime;
+				}
+
+				timeAcc += Time.deltaTime;
+
+				if (timeAcc > 1.3f)
+					break;
+
+				yield return null;
+			}
+
+			isMoving = false; // now dont move
+		}
+
+		protected IEnumerator AirMonsterApproach(Vector3 closestCharacterPos_){
+			// 공중유닛을 위한 특별 모듈☆
+			float timeAcc = 0; 		// 움직임 명령 시간잼
+			Vector3 tempSpeed = monsterDefaultSpeed;
+
+			isMoving = true; 		// set the ismoving flag
+
+
+			// 천장이랑 바닥 안넘어가게
+			if (this.transform.position.y > 20) {
+				tempSpeed.y *= ((float)Random.Range (-10, 0) / 10f);;
+			} else if(this.transform.position.y < 15){
+				tempSpeed.y *= ((float)Random.Range (0, 10) / 10f);
+			} else {
+				tempSpeed.y *= ((float)Random.Range (-10, 10) / 10f);
+			}
+
+			while (canControl == true) {
+				if(currentDir == true) {
+					// move to right
+					transform.position += tempSpeed * Time.deltaTime;
+				} else if(currentDir == false) {
+					// move to left
+					tempSpeed.y *= -1;	// left 일때는 y값을 보존하기 위해 -1 곱함
+					transform.position -= tempSpeed * Time.deltaTime;
 				}
 
 				timeAcc += Time.deltaTime;
@@ -282,8 +334,10 @@ namespace ServerSide{
 
 			// 현재방향 전송 : 이 루틴은 몬스터 행동 주기마다 call
 			if (this.transform.position.x < returnCharacterPos.x) {
+				currentDir = true;
 				nmDir.Body [0].Content = NetworkMessage.sTrue;
 			} else {
+				currentDir = false;
 				nmDir.Body [0].Content = NetworkMessage.sFalse;
 			}
 			Network_Server.BroadCastTcp (nmDir);
