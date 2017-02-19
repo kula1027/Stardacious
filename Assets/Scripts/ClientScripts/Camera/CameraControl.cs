@@ -36,13 +36,15 @@ public class CameraControl : MonoBehaviour {
 	private IEnumerator CamRoutine(){
 		Vector3 prevPos = transform.position;
 		Vector3 dif;
+		float camPosY;
 		while(true){
-			if(targetTr != null){
+			if(targetTr != null){				
 				float difY = targetTr.position.y - groundHeight;
-				if(difY < 0)difY = 0;
-
-				float camPosY = 0.3f * difY + 11f;
-
+				if(difY < 0){
+					camPosY = groundHeight + 10f;
+				}else{
+					camPosY = targetTr.position.y -difY * 0.6f + 10f;
+				}
 
 				transform.position = Vector3.Lerp(
 										transform.position, 
@@ -58,13 +60,6 @@ public class CameraControl : MonoBehaviour {
 				for(int loop = 0; loop < bgMove.Length; loop++){
 					bgMove[loop].Move(dif);
 				}
-
-				/*if(transform.position.x + camWidth > limitRight){
-					transform.position = new Vector3(limitRight - camWidth, camHeight, camDepth);
-				}
-				if(transform.position.x - camWidth < limitLeft){
-					transform.position = new Vector3(limitLeft + camWidth, camHeight, camDepth);
-				}*/
 
 				prevPos = transform.position;
 			}
@@ -83,7 +78,7 @@ public class CameraControl : MonoBehaviour {
 	}
 
 	private Coroutine routineGH;
-	public void SetGroundHeight(float gh){		
+	public void SetGroundHeight(float gh){	
 		if(routineGH != null){
 			StopCoroutine(routineGH);
 		}

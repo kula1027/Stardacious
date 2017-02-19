@@ -9,12 +9,10 @@ public class CameraSizeControl : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		Camera.main.GetComponent<CameraControl>().SetCamSize(camSize);
-		gameObject.SetActive(false);
-		if(nextCamSC != null){
-			nextCamSC.gameObject.SetActive(true);
-		}
-		if(prevCamSC != null){
+		if(nextCamSC != null && prevCamSC != null){
 			prevCamSC.gameObject.SetActive(true);
+			nextCamSC.gameObject.SetActive(true);
+			gameObject.SetActive(false);
 		}
 	}
 }

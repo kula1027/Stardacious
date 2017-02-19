@@ -42,7 +42,8 @@ public class FlyingProjectile : PoolingObject, IHitter {
 				return;
 			}else{
 				hbt.OnHit(hitObject);
-				ReturnObject();
+				Boom();
+				ReturnObject(2f);
 			}
 		}else{
 			ReturnObject();
@@ -50,6 +51,8 @@ public class FlyingProjectile : PoolingObject, IHitter {
 	}
 	#endregion
 
+	protected virtual void Boom(){
 
+	}
 
 }
