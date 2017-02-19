@@ -7,7 +7,6 @@ namespace ServerSide{
 
 		void Awake(){
 			masterStage = GetComponentInParent<StageControl> ();
-			masterStage.IsPlayerExist = 0;
 		}
 
 		void OnTriggerEnter2D(Collider2D col){

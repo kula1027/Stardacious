@@ -52,14 +52,17 @@ namespace ServerSide{
 				// check every character's position first
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
-					if (ServerCharacterManager.instance.GetCharacter (i) != null) {
+					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
+						// servercharacter 가 존재하고 죽지 않앗을 때
 						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAgroRange) {
+							// if character is in agro range..
 							isAgroed = true;
 							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 							curruentPlayers++;
 						}
 
 						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAttkRange) {
+							// if character is in attack range..
 							isInRanged = true;
 							inRangeCharaterPos [inRangePlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 							inRangePlayers++;
@@ -68,9 +71,12 @@ namespace ServerSide{
 				}
 					
 				// main AIpart
-				if (notMoveMonster && isInRanged){
+				if (NotMoveMonster && isInRanged) {
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
 					yield return StartCoroutine (SpiderNotMove (closestCharacterPos));
+
+				} else if(NotMoveMonster) {
+					//nothing
 
 				} else if (isAgroed && !isInRanged) {
 					//어그로 끌림

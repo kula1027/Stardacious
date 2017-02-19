@@ -4,7 +4,7 @@ using System.Collections;
 public class WalkerGraphicController : MonsterGraphicCtrl {
 
 	void Awake(){
-		animator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
+		animator = transform.FindChild ("Offset").GetComponent<Animator> ();
 		unitParts = GetComponentsInChildren<SpriteRenderer>();
 	}
 

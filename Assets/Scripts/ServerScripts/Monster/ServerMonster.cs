@@ -12,7 +12,11 @@ namespace ServerSide{
 
 		public bool isGround;
 
-		public bool notMoveMonster = false;
+		private bool notMoveMonster = false;
+		public bool NotMoveMonster{
+			get{ return notMoveMonster; }
+			set{ this.notMoveMonster = value; }
+		}
 
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
@@ -36,11 +40,12 @@ namespace ServerSide{
 		public override void OnRequested (){
 			IsDead = false;
 			canControl = true;
+			CurrentHp = maxHp;
 		}
 			
 		public override void Ready(){
-			maxHp = 100;
-			CurrentHp = maxHp;
+			maxHp = 150; // for debug hp is 1
+ 			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
 

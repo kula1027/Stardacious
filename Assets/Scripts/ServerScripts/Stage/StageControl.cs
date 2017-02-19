@@ -5,7 +5,7 @@ namespace ServerSide{
 	public class StageControl : MonoBehaviour {
 		public BoxCollider2D colPlayerChecker;
 
-		private int isPlayerExist;
+		private int isPlayerExist = 0;
 		public int IsPlayerExist{
 			set{ this.isPlayerExist = value; }
 		}
@@ -16,19 +16,13 @@ namespace ServerSide{
 			isPlayerExist++;
 		}
 		public void IsPlayerExistMinus(){
-			isPlayerExist++;
+			isPlayerExist--;
 		}
-
-		private ServerStageManager masterStage;
-		public ServerStageManager MasterStage{
-			set{ masterStage = value; }
-		}
-
 
 		private Transform[] waves;
 		private int currentMonsterCount = 0;
-		private int currentWaveNumber = 0;		// wave 갯수가 몇개?
-		private int currentWaveCount = 0;		// 지금은 몇번 째 wave?
+		private int waveCountTotal = 0;		// wave 갯수가 몇개?
+		private int currentWaveIdx = 0;		// 지금은 몇번 째 wave?
 
 		void Awake(){
 			Transform objWave = transform.FindChild ("Waves");
@@ -37,65 +31,69 @@ namespace ServerSide{
 				waves [loop] = objWave.transform.GetChild (loop);
 			}
 
-			currentWaveNumber = objWave.transform.childCount;
+			waveCountTotal = objWave.transform.childCount;
 		}
 
 		public void StartWave(){
-			SpawnWaveMonster (0);
+			currentWaveIdx = 0;
+			SpawnWaveMonster ();	// 0 번째 wave 부터 시작
 		}
 
-		public void SpawnWaveMonster(int idx){
-			if (currentWaveCount < currentWaveNumber) {
+		public void SpawnWaveMonster(){			
+			if (currentWaveIdx < waveCountTotal) {
 				// 현재 wave가 남아잇다.
-				currentMonsterCount = waves [idx].childCount;
+				currentMonsterCount = waves [currentWaveIdx].childCount;
 
 				if (currentMonsterCount > 0) {
 					GameObject mGo;
 					GameObject pf;
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						switch(waves[idx].GetChild(loop).name){
-						case "spider":
+						string goName = waves[currentWaveIdx].GetChild(loop).name;
+						if(goName.Contains("spider")){
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
-
-						case "walker":
+						}else if(goName.Contains("spdnm")){
+							pf = ServerStageManager.instance.pfSpider;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().NotMoveMonster = true;
+							mGo.GetComponent<ServerMonster> ().Ready ();
+						}else if(goName.Contains("walker")){
 							pf = ServerStageManager.instance.pfWalker;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
-
-						case "fly":
+						}else if(goName.Contains("fly")){
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
 						}
+
 					}
 				} else {
+					
 				}
-
 			} else {
 				// stageend();
 				// script end;
-				masterStage.CurrentStageEnd();
+				ServerStageManager.instance.CurrentStageEnd();
 			}
 		}
 
 		public void WaveMonsterDead(){
-			// wave 가 다 죽으면
+			// 한마리의 몬스터가 죽으면 콜됨
 			this.currentMonsterCount--;
 
 			if (currentMonsterCount <= 0) {
-				currentWaveCount++;
-				SpawnWaveMonster(currentWaveCount);
+				currentWaveIdx++;
+				SpawnWaveMonster();
 			}
 		}
 	}

@@ -12,6 +12,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private NetworkMessage nmGround;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
+
 	private NetworkMessage nmDead;
 	private NetworkMessage nmRevive;
 
@@ -32,6 +33,11 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public ControlFlags controlFlags;
 
 	protected bool canControl = true;
+
+	protected Vector3 respawnPoint;
+	public Vector3 RespawnPoint{
+		set{ this.respawnPoint = value; }
+	}
 
 	#region chData
 	protected const float originalMoveSpeed = 0.15f;
@@ -391,15 +397,19 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		Network_Client.SendTcp(nmDead);
 
 		IsDead = true;
+
 		RespawnPanel.instance.DieCount = dieCount;
 		RespawnPanel.instance.Show ();
 		characterGraphicCtrl.Die();
 
 		StartCoroutine (CharacterRespawn());
 		//respawn at respawn Point of current stage.
+
+		dieCount++;
 	}
 
 	private IEnumerator CharacterRespawn(){
+
 		yield return new WaitForSeconds(defaultRespawnTime + (float)dieCount);
 			
 		OnRevive();
@@ -413,12 +423,11 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		int stageIdx = 0; // 현재 stage number
 
 		characterGraphicCtrl.Initialize();
-		this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[0].position;
+		this.transform.position = respawnPoint;
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
 		this.CurrentHp = 20;
 
-		dieCount++;
 		IsDead = false;
 
 		RespawnPanel.instance.Hide ();
