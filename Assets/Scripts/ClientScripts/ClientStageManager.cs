@@ -74,7 +74,6 @@ public class ClientStageManager : MonoBehaviour {
 	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_){
 		MonsterType mType = (MonsterType)monsType_;
 		GameObject objMon = null;
-		Debug.Log ("mType");
 
 		switch(mType){
 		case MonsterType.Spider:
