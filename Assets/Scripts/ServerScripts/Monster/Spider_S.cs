@@ -14,6 +14,12 @@ namespace ServerSide{
 		private int spiderAgroRange = 50;
 		private float spiderAppearTime = 3;
 
+		protected new void Awake(){
+			base.Awake ();
+
+			objType = (int)MonsterType.Spider;
+		}
+
 		public override void OnRequested (){
 			base.OnRequested();
 

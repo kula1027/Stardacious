@@ -14,6 +14,12 @@ namespace ServerSide{
 		private int flyAgroRange = 50;
 		private float walkerAppearTime = 3;
 
+		protected new void Awake(){
+			base.Awake ();
+
+			objType = (int)MonsterType.Fly;
+		}
+
 		public override void OnRequested (){
 			base.OnRequested();
 			base.MonsterDefaultSpeed = new Vector3 (5, 5, 0);

@@ -371,7 +371,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			timeAcc += Time.deltaTime;
 
 			if (timeAcc > defaultRespawnTime + (float)dieCount) {
-				this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[Random.Range(0,3)].GetRespawnPoint();
+				this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[0].position;
 				this.CurrentHp = 20;
 				RespawnPanel.instance.Hide ();
 				dieCount++;

@@ -26,6 +26,10 @@ namespace ServerSide{
 		private Transform safeBar;
 		private NetworkMessage nmStageClear;
 
+		public GameObject pfSpider;
+		public GameObject pfWalker;
+		public GameObject pfFly;
+
 		void Awake(){
 			instance = this;
 

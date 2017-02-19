@@ -3,17 +3,11 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
-		public static ServerMonster instance;
 		public BoxCollider2D colGroundChecker;
 
 		private StageControl masterWave;
 		public StageControl MasterWave{
 			set{ masterWave = value; }
-		}
-
-		protected string monsterType;
-		public string MonsterType{
-			set{ monsterType = value; }
 		}
 
 		public bool isGround;
@@ -35,9 +29,8 @@ namespace ServerSide{
 
 		protected bool canControl = true;
 
-		void Awake(){
+		protected void Awake(){
 			rgd2d = GetComponent<Rigidbody2D>();
-			instance = this;
 		}
 
 		public override void OnRequested (){
@@ -147,8 +140,7 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
-				new MsgSegment(transform.position),
-				new MsgSegment(monsterType)
+				new MsgSegment(transform.position)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 

@@ -50,33 +50,32 @@ namespace ServerSide{
 				currentMonsterCount = waves [idx].childCount;
 
 				if (currentMonsterCount > 0) {
+					GameObject mGo;
+					GameObject pf;
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						GameObject mGo;
-
 						switch(waves[idx].GetChild(loop).name){
-
 						case "spider":
-							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Spider_S"));
+							pf = ServerStageManager.instance.pfSpider;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [idx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().Ready ();
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterType = "spider";
+							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
 
 						case "walker":
-							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Walker_S"));
+							pf = ServerStageManager.instance.pfWalker;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [idx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().Ready ();
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterType = "walker";
+							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
 
 						case "fly":
-							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Fly_S"));
+							pf = ServerStageManager.instance.pfFly;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [idx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().Ready ();
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterType = "fly";
+							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
 						}
 					}

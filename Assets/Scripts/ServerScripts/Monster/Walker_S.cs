@@ -14,6 +14,13 @@ namespace ServerSide{
 		private int walkerAgroRange = 50;
 		private float walkerAppearTime = 3;
 
+
+		protected new void Awake(){
+			base.Awake ();
+
+			objType = (int)MonsterType.Walker;
+		}
+
 		public override void OnRequested (){
 			base.OnRequested();
 

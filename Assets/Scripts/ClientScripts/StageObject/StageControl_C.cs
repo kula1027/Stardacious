@@ -3,7 +3,7 @@ using System.Collections;
 
 public class StageControl_C : MonoBehaviour {
 
-	public RespawnPoint[] stageRespawnPoint;
+	public Transform[] stageRespawnPoint;
 	public ObjectActive[] objects;
 	// objects 0 : door
 

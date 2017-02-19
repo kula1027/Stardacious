@@ -14,6 +14,10 @@ public class ClientStageManager : MonoBehaviour {
 	private GameObject[] goStage = new GameObject[1];	
 	private ObjectPooler monsterPooler;
 
+	public GameObject pfSpider;
+	public GameObject pfWalker;
+	public GameObject pfFly;
+
 	void Awake(){
 		instance = this;
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
@@ -51,8 +55,7 @@ public class ClientStageManager : MonoBehaviour {
 			int monsType = int.Parse (networkMessage.Body [0].Attribute);
 			int objIdx = int.Parse (networkMessage.Body [0].Content);
 			Vector3 startPos = networkMessage.Body [1].ConvertToV3 ();
-			string monsterType = networkMessage.Body [2].ToString();
-			CreateMonster(monsType, objIdx, startPos, monsterType);
+			CreateMonster(monsType, objIdx, startPos);
 			break;
 
 		case MsgAttr.Stage.stgObject:
@@ -68,25 +71,26 @@ public class ClientStageManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_, string monsterType){
-		GameObject objMon;
+	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_){
+		MonsterType mType = (MonsterType)monsType_;
+		GameObject objMon = null;
+		Debug.Log ("mType");
 
-		switch(monsterType){
-		case "spider":
-			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Spider_C"), monsIdx_);
-			objMon.transform.position = startPos_;
-			objMon.GetComponent<PoolingObject> ().Ready ();
+		switch(mType){
+		case MonsterType.Spider:
+			objMon = monsterPooler.RequestObjectAt (pfSpider, monsIdx_);
 			break;
-		case "walker":
-			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Walker_C"), monsIdx_);
-			objMon.transform.position = startPos_;
-			objMon.GetComponent<PoolingObject> ().Ready ();
+
+		case MonsterType.Walker:
+			objMon = monsterPooler.RequestObjectAt (pfWalker, monsIdx_);
 			break;
-		case "fly":
-			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Fly_C"), monsIdx_);
-			objMon.transform.position = startPos_;
-			objMon.GetComponent<PoolingObject> ().Ready ();
+
+		case MonsterType.Fly:
+			objMon = monsterPooler.RequestObjectAt (pfFly, monsIdx_);
 			break;
 		}
+
+		objMon.transform.position = startPos_;
+		objMon.GetComponent<PoolingObject> ().Ready ();
 	}
 }
