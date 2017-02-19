@@ -84,7 +84,7 @@ namespace ServerSide{
 		protected IEnumerator PlayerCheckExistRoutine(int idx) {
 			while(true){
 
-				if (stages[idx].GetIsPlayerExist() == false) {
+				if (stages[idx].GetIsPlayerExist() == 0) {
 					// 캐릭터가 더이상 없으면 한번 더 작동 : 닫게됨
 					Network_Server.BroadCastTcp (nmStageClear);
 					break;

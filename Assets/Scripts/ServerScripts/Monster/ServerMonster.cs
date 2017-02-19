@@ -11,6 +11,11 @@ namespace ServerSide{
 			set{ masterWave = value; }
 		}
 
+		protected string monsterType;
+		public string MonsterType{
+			set{ monsterType = value; }
+		}
+
 		public bool isGround;
 
 		public bool notMoveMonster = false;
@@ -142,7 +147,8 @@ namespace ServerSide{
 			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
-				new MsgSegment(transform.position)
+				new MsgSegment(transform.position),
+				new MsgSegment(monsterType)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 

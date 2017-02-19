@@ -48,10 +48,11 @@ public class ClientStageManager : MonoBehaviour {
 		
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
-			int monsType = int.Parse(networkMessage.Body[0].Attribute);
-			int objIdx = int.Parse(networkMessage.Body[0].Content);
-			Vector3 startPos = networkMessage.Body[1].ConvertToV3();
-			CreateMonster(monsType, objIdx, startPos);
+			int monsType = int.Parse (networkMessage.Body [0].Attribute);
+			int objIdx = int.Parse (networkMessage.Body [0].Content);
+			Vector3 startPos = networkMessage.Body [1].ConvertToV3 ();
+			string monsterType = networkMessage.Body [2].ToString();
+			CreateMonster(monsType, objIdx, startPos, monsterType);
 			break;
 
 		case MsgAttr.Stage.stgObject:
@@ -67,9 +68,25 @@ public class ClientStageManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_){
-		GameObject objMon = monsterPooler.RequestObjectAt((GameObject)Resources.Load("Monster/Spider_C"), monsIdx_);
-		objMon.transform.position = startPos_;
-		objMon.GetComponent<PoolingObject>().Ready();
+	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_, string monsterType){
+		GameObject objMon;
+
+		switch(monsterType){
+		case "spider":
+			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Spider_C"), monsIdx_);
+			objMon.transform.position = startPos_;
+			objMon.GetComponent<PoolingObject> ().Ready ();
+			break;
+		case "walker":
+			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Walker_C"), monsIdx_);
+			objMon.transform.position = startPos_;
+			objMon.GetComponent<PoolingObject> ().Ready ();
+			break;
+		case "fly":
+			objMon = monsterPooler.RequestObjectAt ((GameObject)Resources.Load ("Monster/Fly_C"), monsIdx_);
+			objMon.transform.position = startPos_;
+			objMon.GetComponent<PoolingObject> ().Ready ();
+			break;
+		}
 	}
 }

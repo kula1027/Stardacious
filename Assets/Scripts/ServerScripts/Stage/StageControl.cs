@@ -5,12 +5,18 @@ namespace ServerSide{
 	public class StageControl : MonoBehaviour {
 		public BoxCollider2D colPlayerChecker;
 
-		private bool isPlayerExist;
-		public bool IsPlayerExist{
+		private int isPlayerExist;
+		public int IsPlayerExist{
 			set{ this.isPlayerExist = value; }
 		}
-		public bool GetIsPlayerExist(){
+		public int GetIsPlayerExist(){
 			return isPlayerExist;
+		}
+		public void IsPlayerExistPlus(){
+			isPlayerExist++;
+		}
+		public void IsPlayerExistMinus(){
+			isPlayerExist++;
 		}
 
 		private ServerStageManager masterStage;
@@ -45,10 +51,34 @@ namespace ServerSide{
 
 				if (currentMonsterCount > 0) {
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						GameObject mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Fly_S"));
-						mGo.transform.position = waves [idx].GetChild (loop).position;
-						mGo.GetComponent<ServerMonster> ().Ready ();
-						mGo.GetComponent<ServerMonster> ().MasterWave = this;
+						GameObject mGo;
+
+						switch(waves[idx].GetChild(loop).name){
+
+						case "spider":
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Spider_S"));
+							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().Ready ();
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().MonsterType = "spider";
+							break;
+
+						case "walker":
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Walker_S"));
+							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().Ready ();
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().MonsterType = "walker";
+							break;
+
+						case "fly":
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Fly_S"));
+							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().Ready ();
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().MonsterType = "fly";
+							break;
+						}
 					}
 				} else {
 				}

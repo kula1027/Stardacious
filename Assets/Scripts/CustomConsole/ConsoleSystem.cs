@@ -114,7 +114,7 @@ public class ConsoleSystem : MonoBehaviour {
 				fpsCount = 0;
 				timeAcc--;
 			}
-			GetIns
+			//GetIns
 
 			yield return null;
 		}
