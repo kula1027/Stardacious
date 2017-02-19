@@ -45,7 +45,7 @@ namespace ServerSide{
 		}
 
 		public void OnRecv(NetworkMessage networkMessage){			
-			if(networkMessage.Adress.Content.Equals(NetworkMessage.ServerId) == true){//서버를 향한 메시지가 아닐 경우				
+			if(networkMessage.Adress.Content.Equals(NetworkMessage.ServerId) == true){//서버를 향한 메시지일 경우			
 				switch(networkMessage.Header.Content){
 				case MsgAttr.create:					
 					int sender = int.Parse(networkMessage.Adress.Attribute);
@@ -64,7 +64,7 @@ namespace ServerSide{
 							}
 						}
 					}else{
-						ServerCharacter nc =  character[targetCharacter];
+						ServerCharacter nc = character[targetCharacter];
 						if(nc){
 							nc.OnRecvMsg(networkMessage.Body);
 						}

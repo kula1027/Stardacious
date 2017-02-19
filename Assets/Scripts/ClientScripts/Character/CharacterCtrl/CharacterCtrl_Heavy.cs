@@ -43,20 +43,27 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	}
 
 	private bool isAttacking = false;
-	public override void InputStartAttack (){
-		base.InputStartAttack ();
+	public override bool InputStartAttack (){
+		if(base.InputStartAttack ()){
+			
+			isAttacking = true;
 
-		isAttacking = true;
-		if (controlFlags.attack && isMachineGunMode) {			
-			StartMachineGun ();
+			if (isMachineGunMode) {			
+				StartMachineGun ();
+			}
 		}
+
+		return true;
 	}
 
-	public override void InputStopAttack (){
-		base.InputStopAttack ();
+	public override bool InputStopAttack (){
+		if(base.InputStopAttack ()){
+			isAttacking = false;
+			if(isMachineGunMode)
+				StopMachineGun ();
+		}
 
-		isAttacking = false;
-		StopMachineGun ();
+		return true;
 	}
 
 	public override void Jump (){
@@ -65,10 +72,18 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		moveSpeed = originalMoveSpeed;
 	}
 
+	protected override void OnGrounded (){
+		if(isShootingShotgun){
+			moveSpeed = originalMoveSpeed * 0.5f;
+		}
+	}
+
 	#region ShotGun
 	private HitObject hit_ShotGun;
 	public GameObject shotGunHitArea;
 	private Transform trGunMuzzle;
+
+	private bool isShootingShotgun = false;
 
 	private void PrepareShotGun(){
 		trGunMuzzle = gcHeavy.gunMuzzle;
@@ -77,11 +92,14 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	}
 
 	public void ShootShotGun(){
+		isShootingShotgun = true;
+
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
 		StartCoroutine(ShotGunRoutine());
 
-		moveSpeed = originalMoveSpeed * 0.5f;
+		if(isGround)
+			moveSpeed = originalMoveSpeed * 0.5f;
 
 		audioSource.clip = audioShotgun;
 		audioSource.Play();
@@ -89,6 +107,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	public void OnEndShootShotGun(){
 		moveSpeed = originalMoveSpeed;
+		isShootingShotgun = false;
 	}
 
 	private const float shotgunHitStayTime = 0.02f;
@@ -248,36 +267,56 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	#endregion
 
-	public override void UseSkill (int idx_){
-		if(canControl == false)return;
+	public override void OnDie (){
+		base.OnDie ();
 
-		base.UseSkill(idx_);
-		switch (idx_) {
-		case 0:
-			OverchargedShot();
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
-			break;
+		if(machinegunRoutine != null){
+			StopCoroutine(machinegunRoutine);
+		}
+	}
 
-		case 1:
-			if(mineDropped){		
-				dropMine.Detonate();
-				mineDropped = false;
-				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
-			}else{
-				DropMine();
-				InputModule.instance.BeginCoolDown(1, 0.5f);
+	protected override void OnRevive (){
+		base.OnRevive ();
+
+		isMachineGunMode = false;
+		isShootingShotgun = false;
+		moveSpeed = originalMoveSpeed;
+	}
+
+
+	public override bool UseSkill (int idx_){
+		if(base.UseSkill(idx_)){
+			switch (idx_) {
+			case 0:
+				OverchargedShot();
+				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+				break;
+
+			case 1:
+				if(mineDropped){		
+					dropMine.Detonate();
+					mineDropped = false;
+					InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				}else{
+					DropMine();
+					InputModule.instance.BeginCoolDown(1, 0.5f);
+				}
+				break;
+
+			case 2:
+				gcHeavy.WeaponSwap ();
+				if(isMachineGunMode){
+					StopMachineGun();
+				}else{
+					moveDir = Vector3.zero;
+				}
+				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+				break;
 			}
-			break;
 
-		case 2:
-			gcHeavy.WeaponSwap ();
-			if(isMachineGunMode){
-				StopMachineGun();
-			}else{
-				moveDir = Vector3.zero;
-			}
-			InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
-			break;
+			return true;
+		}else{
+			return false;
 		}
 	}
 }

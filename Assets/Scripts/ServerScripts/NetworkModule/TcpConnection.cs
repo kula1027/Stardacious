@@ -9,6 +9,8 @@ using System.Net;
 
 namespace ServerSide{
 	public class TcpConnection {
+		System.Object shutDownLock = new object();
+
 		private int clientId;
 		public int ClientId{
 			get{return clientId;}
@@ -64,8 +66,10 @@ namespace ServerSide{
 				ConsoleMsgQueue.EnqueMsg(clientId + ": SendUdp: " + e.Message);
 			}
 		}
+
 		private void ReceivingUDP(){
 			byte[] bufByte;
+
 			try{
 				while(isConnected){
 					bufByte = new byte[256];
@@ -76,6 +80,8 @@ namespace ServerSide{
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg("UdpConnection: " + e.Message, 2);
 			}
+				
+			ShutDown();
 		}
 		#endregion
 
@@ -111,13 +117,7 @@ namespace ServerSide{
 			
 		private void ReceivingTCP(){
 			IdSync();
-
-			MsgSegment h = new MsgSegment(MsgAttr.misc);
-			MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect, clientId.ToString());
-			NetworkMessage dyingMsg = new NetworkMessage(h, b);
-
-
-
+		
 			string recStr;
 			try{
 				while(isConnected){
@@ -127,7 +127,7 @@ namespace ServerSide{
 				}
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg(clientId + ": TcpConnection: " + e.Message, 2);
-				ReceiveQueue.SyncEnqueMsg(dyingMsg);
+
 			}
 				
 			ShutDown();
@@ -146,36 +146,43 @@ namespace ServerSide{
 		}
 		#endregion
 
-		public void ShutDown(){			
-			if(isConnected){//Synchronization
-				ConsoleMsgQueue.EnqueMsg(clientId + ": ShutDown.", 2);
-				isConnected = false;
+		public void ShutDown(){
+			lock(shutDownLock){
+				if(isConnected){//Synchronization
+					ConsoleMsgQueue.EnqueMsg(clientId + ": ShutDown.", 2);
+					isConnected = false;
 
-				try{
-					streamWriter.Close();
-					streamReader.Close();
-				}catch(Exception e){
-					ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
+					try{
+						streamWriter.Close();
+						streamReader.Close();
+					}catch(Exception e){
+						ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
+					}
+
+					try{
+						socketUDP.Shutdown(SocketShutdown.Both);
+					}catch(Exception e){
+						ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
+					}finally{
+						socketUDP.Close();
+					}
+
+
+					try{
+						socketTCP.Shutdown(SocketShutdown.Both);
+					}catch(Exception e){
+						ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
+					}finally{
+						socketTCP.Close();
+					}
+
+					ClientManager.CloseClient(clientId);
+
+					MsgSegment h = new MsgSegment(MsgAttr.misc);
+					MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect, clientId.ToString());
+
+					ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
 				}
-
-				try{
-					socketUDP.Shutdown(SocketShutdown.Both);
-				}catch(Exception e){
-					ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
-				}finally{
-					socketUDP.Close();
-				}
-
-
-				try{
-					socketTCP.Shutdown(SocketShutdown.Both);
-				}catch(Exception e){
-					ConsoleMsgQueue.EnqueMsg(clientId + ": " + e.Message, 2);
-				}finally{
-					socketTCP.Close();
-				}
-
-				ClientManager.CloseClient(clientId);
 			}
 		}
 	}

@@ -81,6 +81,19 @@ public class InputModule : MonoBehaviour {
 		isBlocked[idx_] = true;
 	}
 
+	public void BlockSkillAll(){
+		for(int loop = 0; loop < 3; loop++){
+			if(imgCoolDownRoutine[loop] != null)
+				StopCoroutine(imgCoolDownRoutine[loop]);
+			imgCoolDown[loop].fillAmount = 1;
+			isBlocked[loop] = true;
+		}
+	}
+
+	public void ResumeInput(){
+
+	}
+
 	public void ResumeSkill(int idx_, float t_total){
 		imgCoolDownRoutine[idx_] = StartCoroutine(ImgCoolDownRoutine(idx_, t_total));
 		isBlocked[idx_] = false;

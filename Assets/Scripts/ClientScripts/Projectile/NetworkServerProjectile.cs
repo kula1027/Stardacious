@@ -14,13 +14,9 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	}
 
 	public override void OnRequested (){
-		ReturnObject(10f);
+		ReturnObject(9f);
 	}
-
-	public void ForceReturnObject(){
-		ReturnObject();
-	}
-
+		
 	private IEnumerator FlyingRoutine(){
 		while(true){
 			transform.position += transform.right * flyingSpeed * Time.deltaTime;
@@ -29,27 +25,42 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 		}
 	}
 
+	public override void OnRecv (MsgSegment[] bodies){
+		switch(bodies[0].Attribute){
+		case MsgAttr.destroy:
+			ReturnObject();
+			break;
+		}
+	}
+
 	#region IHitter implementation
 	public void OnHitSomebody (Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 
 		if(hbt){
-			if(hbt.tag.Equals("Player") == true){
+			if(hbt.transform.parent.GetComponent<CharacterCtrl>() == true){
+				NotifyDestroy();
 				hbt.OnHit(hitObject);
-				ReturnObject();
+				ReturnObject();	
 			}
-		}else{
-			ReturnObject();
 		}
 	}
 	#endregion
 
-	public override void OnReturned (){
+	public void NotifyDestroy(){
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.Projectile.server);
 		MsgSegment[] b = {
 			new MsgSegment(MsgAttr.destroy, GetOpIndex())
 		};
 		NetworkMessage nmDestroy = new NetworkMessage(h, b);
 		Network_Client.SendTcp(nmDestroy);
+	}
+
+	public GameObject tempPfHit;
+
+	public override void OnReturned (){
+		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
+		goHit.transform.position = transform.position + transform.right * 1.5f;
+		goHit.GetComponent<HitEffect>().Yellow();
 	}
 }

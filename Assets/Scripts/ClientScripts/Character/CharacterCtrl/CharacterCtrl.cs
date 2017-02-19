@@ -12,6 +12,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private NetworkMessage nmGround;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
+	private NetworkMessage nmDead;
+	private NetworkMessage nmRevive;
 
 	protected MsgSegment commonHeader;
 	protected NetworkMessage nmAttack;
@@ -75,6 +77,19 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			commonHeader, 
 			new MsgSegment(MsgAttr.Character.skill)
 		);
+		nmDead = new NetworkMessage(
+			commonHeader, 
+			new MsgSegment(MsgAttr.Character.dead)
+		);
+
+		MsgSegment[] bodyRevive ={ 
+			new MsgSegment(MsgAttr.Character.revive),
+			new MsgSegment()
+		};
+		nmRevive = new NetworkMessage(
+			commonHeader, 
+			bodyRevive
+		);
 		
 		transform.position = new Vector3(5, 4.5f, 0);
 
@@ -84,6 +99,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		StartCoroutine(FixedUpdateMovement());
 
 		transform.position = new Vector3(-4.7f, 12f, 0f);
+
+		characterGraphicCtrl.Jump();
 	}
 
 	protected void NotifyAppearence(){
@@ -99,7 +116,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected ControlDirection currentDir = ControlDirection.Left;
 	protected Vector3 moveDir;
 	public virtual void OnMovementInput(Vector3 vec3_){
-		if(canControl == false)return;
+		if(canControl == false || IsDead == true)return;
 
 		float inputAngle = Vector3.Angle(Vector3.right, vec3_);
 		bool movablebByInput = true;
@@ -178,8 +195,12 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		}
 	}
 		
-	public virtual void Jump(){				
-		if (isGround && controlFlags.jump && canControl) {
+	public virtual void Jump(){		
+		if(canControl == false || IsDead == true){
+			return;
+		}
+
+		if (isGround && controlFlags.jump) {
 			rgd2d.AddForce (Vector2.up * jumpPower);
 		}
 	}
@@ -191,7 +212,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 				colGroundChecker.enabled = true;
 			}
 
-			if (isGround != prevGrounded){
+			if (isGround != prevGrounded && IsDead == false){
 				if (isGround) {
 					characterGraphicCtrl.Grounded ();
 					OnGrounded();
@@ -213,36 +234,49 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected virtual void OnGrounded(){
 	}
 
-	public virtual void InputStartAttack(){
-		if(canControl == false)return;
+	public virtual bool InputStartAttack(){
+		if(IsDead == true || canControl == false || controlFlags.attack == false){
+			return false;
+		}else{
+			characterGraphicCtrl.StartNormalAttack ();	
 
-		characterGraphicCtrl.StartNormalAttack ();	
+			return true;
+		}
 	}
 
-	public virtual void InputStopAttack(){
+	public virtual bool InputStopAttack(){
+		if(IsDead == true)
+			return false;
+
 		characterGraphicCtrl.StopNormalAttack ();
 		nmAttack.Body[0].Content = NetworkMessage.sFalse;
 		Network_Client.SendTcp(nmAttack);
+
+		return true;
 	}
 
-	public virtual void UseSkill(int idx_){
-		if(canControl == false)return;
+	public virtual bool UseSkill(int idx_){
+		if(canControl == false || IsDead == true){
+			return false;
+		}else{
+			switch (idx_) {
+			case 0:
+				nmSkill.Body[0].Content = "0";
+				Network_Client.SendTcp(nmSkill);
+				break;
 
-		switch (idx_) {
-		case 0:
-			nmSkill.Body[0].Content = "0";
-			Network_Client.SendTcp(nmSkill);
-			break;
+			case 1:
+				nmSkill.Body[0].Content = "1";
+				Network_Client.SendTcp(nmSkill);
+				break;
 
-		case 1:
-			nmSkill.Body[0].Content = "1";
-			Network_Client.SendTcp(nmSkill);
-			break;
+			case 2:
+				nmSkill.Body[0].Content = "2";
+				Network_Client.SendTcp(nmSkill);
+				break;
+			}
 
-		case 2:
-			nmSkill.Body[0].Content = "2";
-			Network_Client.SendTcp(nmSkill);
-			break;
+			return true;
 		}
 	}
 
@@ -338,7 +372,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			yield return new WaitForFixedUpdate();
 		}
 
-
 		characterGraphicCtrl.ResumeAnimation();
 		hbt.enabled = true;
 		canControl = true;
@@ -351,38 +384,45 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public override void OnDie (){
+		hbt.gameObject.SetActive(false);
+
+		moveDir = Vector3.zero;
+
+		Network_Client.SendTcp(nmDead);
+
 		IsDead = true;
-		ConsoleMsgQueue.EnqueMsg("DEAD!");
 		RespawnPanel.instance.DieCount = dieCount;
 		RespawnPanel.instance.Show ();
 		characterGraphicCtrl.Die();
 
 		StartCoroutine (CharacterRespawn());
 		//respawn at respawn Point of current stage.
-
-		//ConsoleSystem.Show();
 	}
 
 	private IEnumerator CharacterRespawn(){
-		int stageIdx = 0; // 현재 stage number
-		float timeAcc = 0;
+		yield return new WaitForSeconds(defaultRespawnTime + (float)dieCount);
+			
+		OnRevive();
 
-		while (true) {
-			timeAcc += Time.deltaTime;
+		yield return new WaitForSeconds(2f);
 
-			if (timeAcc > defaultRespawnTime + (float)dieCount) {
-				this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[0].position;
-				this.CurrentHp = 20;
-				RespawnPanel.instance.Hide ();
-				dieCount++;
-				IsDead = false;
-				break;
-			}
-
-			yield return null;
-		}
+		hbt.gameObject.SetActive(true);
 	}
 
+	protected virtual void OnRevive(){
+		int stageIdx = 0; // 현재 stage number
+
+		characterGraphicCtrl.Initialize();
+		this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[0].position;
+		nmRevive.Body[1] = new MsgSegment(transform.position);
+		Network_Client.SendTcp(nmRevive);
+		this.CurrentHp = 20;
+
+		dieCount++;
+		IsDead = false;
+
+		RespawnPanel.instance.Hide ();
+	}
 	#endregion
 }
 
