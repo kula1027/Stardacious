@@ -1,0 +1,131 @@
+
+pEsper.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+armLU
+  rotate: false
+  xy: 828, 484
+  size: 184, 167
+  orig: 184, 167
+  offset: 0, 0
+  index: -1
+armRD
+  rotate: false
+  xy: 467, 17
+  size: 536, 235
+  orig: 536, 235
+  offset: 0, 0
+  index: -1
+armRU
+  rotate: true
+  xy: 828, 653
+  size: 313, 187
+  orig: 313, 187
+  offset: 0, 0
+  index: -1
+legRD
+  rotate: true
+  xy: 2, 2
+  size: 335, 463
+  orig: 335, 463
+  offset: 0, 0
+  index: -1
+mufL
+  rotate: false
+  xy: 562, 254
+  size: 264, 712
+  orig: 264, 712
+  offset: 0, 0
+  index: -1
+mufR
+  rotate: false
+  xy: 2, 339
+  size: 558, 627
+  orig: 558, 627
+  offset: 0, 0
+  index: -1
+sideR
+  rotate: false
+  xy: 828, 322
+  size: 178, 160
+  orig: 178, 160
+  offset: 0, 0
+  index: -1
+
+pEsper2.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+armLD
+  rotate: false
+  xy: 663, 552
+  size: 264, 196
+  orig: 264, 196
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 663, 750
+  size: 262, 225
+  orig: 262, 225
+  offset: 0, 0
+  index: -1
+chest
+  rotate: true
+  xy: 282, 66
+  size: 265, 215
+  orig: 265, 215
+  offset: 0, 0
+  index: -1
+eye
+  rotate: false
+  xy: 342, 358
+  size: 140, 119
+  orig: 140, 119
+  offset: 0, 0
+  index: -1
+hood
+  rotate: false
+  xy: 383, 646
+  size: 278, 329
+  orig: 278, 329
+  offset: 0, 0
+  index: -1
+hoodold
+  rotate: false
+  xy: 2, 2
+  size: 278, 329
+  orig: 278, 329
+  offset: 0, 0
+  index: -1
+legL
+  rotate: false
+  xy: 2, 333
+  size: 338, 300
+  orig: 338, 300
+  offset: 0, 0
+  index: -1
+legRU
+  rotate: false
+  xy: 2, 635
+  size: 379, 340
+  orig: 379, 340
+  offset: 0, 0
+  index: -1
+mask
+  rotate: false
+  xy: 342, 479
+  size: 145, 154
+  orig: 145, 154
+  offset: 0, 0
+  index: -1
+sideL
+  rotate: true
+  xy: 927, 811
+  size: 164, 93
+  orig: 164, 93
+  offset: 0, 0
+  index: -1

@@ -91,7 +91,7 @@ public class StartSceneManager : MonoBehaviour {
 
 		case MsgAttr.Misc.letsgo:
 			popUp.ShowPopUp("로딩 중 ...", false, true);
-			SceneManager.LoadSceneAsync("scJH");
+			SceneManager.LoadSceneAsync("scInGame");
 			break;
 		}
 	}

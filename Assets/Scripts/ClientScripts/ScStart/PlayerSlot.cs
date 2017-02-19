@@ -7,7 +7,7 @@ public class PlayerSlot : MonoBehaviour {
 	public ButtonControl btnReady;
 	public ButtonControl btnSelect;
 
-	public Image imggg;
+	public Transform trChar;
 	public Text txtNickName;
 	public TextControl txtState;
 
@@ -34,12 +34,19 @@ public class PlayerSlot : MonoBehaviour {
 		}
 	}		
 
-	public void SetCharacter(Sprite tempSprite){
-		if(tempSprite == null){
-			imggg.enabled = false;
-		}else{
-			imggg.enabled = true;
-			imggg.sprite = tempSprite;
+	public void SetCharacter(GameObject goChar_){
+		if (goChar_ != null) {
+			if (trChar.childCount > 0) {
+				int cCount = trChar.childCount;
+				for (int loop = 0; loop < cCount; loop++) {
+					Destroy (trChar.GetChild (0).gameObject);
+				}
+			}
+
+			GameObject goCh = Instantiate (goChar_);
+			goCh.transform.SetParent (trChar);
+			goCh.transform.localScale = new Vector3 (70, 70, 1);
+			goCh.transform.localPosition = new Vector3 (0, 0, -10);
 		}
 	}
 }
