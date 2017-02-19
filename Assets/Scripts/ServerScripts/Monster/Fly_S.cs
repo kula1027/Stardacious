@@ -7,7 +7,7 @@ namespace ServerSide{
 		private Vector3[] inRangeCharaterPos;
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
-		private bool isJump = false;
+		//private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
 		private int flyAttkRange = 40;
@@ -57,7 +57,7 @@ namespace ServerSide{
 				// check every character's position first
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
-					if (ServerCharacterManager.instance.GetCharacter (i) != null) {
+					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
 						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= flyAgroRange) {
 							isAgroed = true;
 							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
@@ -73,7 +73,7 @@ namespace ServerSide{
 				}
 
 				// main AIpart
-				if (notMoveMonster && isInRanged){
+				if (NotMoveMonster && isInRanged){
 					// nothing
 
 				} else if (isAgroed && !isInRanged) {
@@ -98,8 +98,6 @@ namespace ServerSide{
 		private IEnumerator FlyApproach(Vector3 closestCharacterPos_){
 			// 몬스터가 근접하는 코드 
 			int beHaviorFactor = Random.Range (0,10);
-
-			isJump = false;
 			isStop = false;
 
 			if (beHaviorFactor < 1) {

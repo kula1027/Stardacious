@@ -7,10 +7,11 @@ namespace ServerSide{
 		}
 
 		void OnTriggerEnter2D(Collider2D col){
-			/*if (col.transform.parent.GetComponent<ServerMonster>()) {
-				Debug.Log ("dead?");
-				//ServerMonster.instance.OnDie ();
-			}*/
+			if (col.transform.parent.GetComponent<ServerMonster>()) {
+				if(col.transform.parent.GetComponent<ServerMonster> ().IsDead == false)
+					// 아직 안죽은 애들에게만 ondie 를 키자!
+					col.transform.parent.GetComponent<ServerMonster> ().OnDie ();
+			}
 		}
 	}
 }

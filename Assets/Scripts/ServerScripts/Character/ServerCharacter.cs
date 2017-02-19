@@ -28,6 +28,7 @@ namespace ServerSide{
 			nmDefault = new NetworkMessage(commonHeader);
 
 			CurrentHp = 250;
+			IsDead = false;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
@@ -91,6 +92,9 @@ namespace ServerSide{
 
 		public override void OnDie (){
 			//Build Dead Msg
+			Debug.Log("i'mdead");
+			this.IsDead = true;
+
 			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId);
 			MsgSegment msgBody = new MsgSegment(MsgAttr.dead);
 			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);

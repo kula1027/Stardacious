@@ -5,7 +5,7 @@ namespace ServerSide{
 	public class StageControl : MonoBehaviour {
 		public BoxCollider2D colPlayerChecker;
 
-		private int isPlayerExist;
+		private int isPlayerExist = 0;
 		public int IsPlayerExist{
 			set{ this.isPlayerExist = value; }
 		}
@@ -16,7 +16,7 @@ namespace ServerSide{
 			isPlayerExist++;
 		}
 		public void IsPlayerExistMinus(){
-			isPlayerExist++;
+			isPlayerExist--;
 		}
 
 		private ServerStageManager masterStage;
@@ -41,31 +41,41 @@ namespace ServerSide{
 		}
 
 		public void StartWave(){
-			SpawnWaveMonster (0);
+			currentWaveCount = 0;
+			SpawnWaveMonster (0);	// 0 번째 wave 부터 시작
 		}
 
-		public void SpawnWaveMonster(int idx){
+		public void SpawnWaveMonster(int idx_){
 			if (currentWaveCount < currentWaveNumber) {
 				// 현재 wave가 남아잇다.
-				currentMonsterCount = waves [idx].childCount;
+				currentMonsterCount = waves [idx_].childCount;
 
 				if (currentMonsterCount > 0) {
 					GameObject mGo;
 					GameObject pf;
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						switch(waves[idx].GetChild(loop).name){
+						switch(waves[idx_].GetChild(loop).name){
 						case "spider":
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [idx_].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().Ready ();
+							break;
+
+						case "spidernotmove":
+							pf = ServerStageManager.instance.pfSpider;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [idx_].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().NotMoveMonster = true;
 							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
 
 						case "walker":
 							pf = ServerStageManager.instance.pfWalker;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [idx_].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
@@ -73,7 +83,7 @@ namespace ServerSide{
 						case "fly":
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx].GetChild (loop).position;
+							mGo.transform.position = waves [idx_].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
 							break;
@@ -90,7 +100,7 @@ namespace ServerSide{
 		}
 
 		public void WaveMonsterDead(){
-			// wave 가 다 죽으면
+			// 한마리의 몬스터가 죽으면 콜됨
 			this.currentMonsterCount--;
 
 			if (currentMonsterCount <= 0) {

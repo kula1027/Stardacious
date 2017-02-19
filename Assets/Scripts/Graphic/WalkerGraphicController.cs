@@ -4,7 +4,7 @@ using System.Collections;
 public class WalkerGraphicController : MonsterGraphicCtrl {
 
 	void Awake(){
-		animator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
+		animator = transform.FindChild ("Offset").GetComponent<Animator> ();
 		unitParts = GetComponentsInChildren<SpriteRenderer>();
 	}
 
@@ -25,7 +25,9 @@ public class WalkerGraphicController : MonsterGraphicCtrl {
 	}
 
 	public override void Attack (){
+		Debug.Log ("Before");
 		animator.Play ("Attack");
+		Debug.Log ("After");
 	}
 
 	public override void Walk (){

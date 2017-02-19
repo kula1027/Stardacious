@@ -12,6 +12,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private NetworkMessage nmGround;
 	private NetworkMessage nmPos;
 	private NetworkMessage nmDir;
+	private NetworkMessage nmDie;
+	private NetworkMessage nmRespawn;
 
 	protected MsgSegment commonHeader;
 	protected NetworkMessage nmAttack;
@@ -30,6 +32,11 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public ControlFlags controlFlags;
 
 	protected bool canControl = true;
+
+	protected Vector3 respawnPoint;
+	public Vector3 RespawnPoint{
+		set{ this.respawnPoint = value; }
+	}
 
 	#region chData
 	protected const float originalMoveSpeed = 0.15f;
@@ -352,6 +359,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public override void OnDie (){
 		IsDead = true;
+
 		ConsoleMsgQueue.EnqueMsg("DEAD!");
 		RespawnPanel.instance.DieCount = dieCount;
 		RespawnPanel.instance.Show ();
@@ -364,14 +372,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	private IEnumerator CharacterRespawn(){
-		int stageIdx = 0; // 현재 stage number
+		//int stageIdx = 0; // 현재 stage number
 		float timeAcc = 0;
 
 		while (true) {
 			timeAcc += Time.deltaTime;
 
 			if (timeAcc > defaultRespawnTime + (float)dieCount) {
-				this.transform.position = ClientStageManager.instance.stages [stageIdx].stageRespawnPoint[0].position;
+				this.transform.position = respawnPoint;
 				this.CurrentHp = 20;
 				RespawnPanel.instance.Hide ();
 				dieCount++;
