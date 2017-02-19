@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
+		public static ServerMonster instance;
 		public BoxCollider2D colGroundChecker;
 
 		private StageControl masterWave;
@@ -31,6 +32,7 @@ namespace ServerSide{
 
 		void Awake(){
 			rgd2d = GetComponent<Rigidbody2D>();
+			instance = this;
 		}
 
 		public override void OnRequested (){

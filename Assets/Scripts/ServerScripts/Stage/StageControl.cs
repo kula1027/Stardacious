@@ -45,7 +45,7 @@ namespace ServerSide{
 
 				if (currentMonsterCount > 0) {
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						GameObject mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Fly_S"));
+						GameObject mGo = ServerStageManager.instance.MonsterPooler.RequestObject ((GameObject)Resources.Load ("Monster/Spider_S"));
 						mGo.transform.position = waves [idx].GetChild (loop).position;
 						mGo.GetComponent<ServerMonster> ().Ready ();
 						mGo.GetComponent<ServerMonster> ().MasterWave = this;
