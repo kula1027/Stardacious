@@ -19,10 +19,32 @@ public class EQEffecter : MonoBehaviour {
 	}*/
 
 	void Awake(){
-		StartCoroutine (SpectrumRoutine ());
+		StartRoutine ();
 	}
 
+	void OnEnable(){
+		StartRoutine ();
+	}
+
+	void OnDisable(){
+		isEqPlaying = false;
+	}
+
+	Coroutine spectrumRoutine = null;
+	private void StartRoutine(){
+		if (!isEqPlaying) {
+			spectrumRoutine = StartCoroutine (SpectrumRoutine ());
+		}
+	}
+	private void StopRoutine(){
+		isEqPlaying = false;
+		if (spectrumRoutine != null) {
+			StopCoroutine (spectrumRoutine);
+		}
+	}
+	private bool isEqPlaying = false;
 	IEnumerator SpectrumRoutine(){
+		isEqPlaying = true;
 		float[] spectrum = new float[1024]; 
 		while (true) {
 			AudioListener.GetSpectrumData (spectrum, 0, FFTWindow.Hamming);

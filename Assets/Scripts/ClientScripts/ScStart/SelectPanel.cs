@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SelectPanel : HidableUI {
+public class SelectPanel : MonoBehaviour {
 	public Transform panelHeavy;
 	public Transform panelDoctor;
 	public Transform panelEsper;
@@ -16,14 +16,12 @@ public class SelectPanel : HidableUI {
 		
 	}
 
-	public override void Show (){
+	public void OnShow (){
 		if(PlayerData.chosenCharacter == ChIdx.NotInitialized){
 			ShowInfo((int)ChIdx.Heavy);
 		}else{
 			ShowInfo((int)PlayerData.chosenCharacter);
 		}
-
-		base.Show ();
 	}
 
 	public void ShowInfo(int chIdx_){

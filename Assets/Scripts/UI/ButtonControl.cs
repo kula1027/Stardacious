@@ -3,18 +3,18 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class ButtonControl : MonoBehaviour {
-	private Button uiBtn;
+	private SdButton uiBtn;
 	private Image[] images;
 
 	void Awake(){
-		uiBtn = GetComponent<Button>();
+		uiBtn = GetComponent<SdButton>();
 		images = GetComponentsInChildren<Image>();
 	}
 		
 	public void SetInteractable(bool interactable){
 		StopAllCoroutines();
 
-		uiBtn.interactable = interactable;
+		uiBtn.enabled = interactable;
 
 		Color c;
 		if(interactable){

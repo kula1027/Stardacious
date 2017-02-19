@@ -5,29 +5,33 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Text.RegularExpressions;
 
+public enum IntroAnimationName{Active0, Active1, Deactive0, Deactive1, Exit, GoJoin, BackJoin, GoReady, BackReady, GoSelect, BackSelect, Tail}
 public class StartSceneManager : MonoBehaviour {
+
+	#region StartScene
 	public static StartSceneManager instance;
 
 	public InputField inputIp;
 	public InputField inputName;
 
-	public Text txtConfigState;
-
-	public HidableUI joinPanel;
 	public ReadyPanel readyPanel;
-	public HidableUI selCharPanel;
+	public SelectPanel selCharPanel;
 
 	public HidablePopUp popUp;
 
 	private bool isReady;
 
+	private Animator introAnimator;
+	private IntroAnimationName nextActive;
+
 	void Awake(){	
 		instance = this;
 		isReady = false;
+		introAnimator = GetComponent<Animator> ();
+		AnimationInit ();
 	}
 
 	void Start(){
-		joinPanel.Show();
 		KingGodClient.instance.OnEnterStartScene();
 	}
 
@@ -36,18 +40,14 @@ public class StartSceneManager : MonoBehaviour {
 
 		case MsgAttr.Misc.failConnect:
 			popUp.ShowPopUp("서버 접속에 실패했습니다.", true, false);
-			txtConfigState.text = "Stardacious";
 			break;
 
 		case MsgAttr.Misc.disconnect:
 			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
 			popUp.ShowPopUp("서버와 연결이 끊겼습니다.", true, false);
 
-			readyPanel.Hide();
-			selCharPanel.Hide();
-			joinPanel.Show();
+			//TODO: 돌아가기
 
-			txtConfigState.text = "Stardacious";
 			break;
 
 		case MsgAttr.Setup.reqId:
@@ -108,7 +108,6 @@ public class StartSceneManager : MonoBehaviour {
 	}
 
 	public void OnNetworkSetupDone(){
-		joinPanel.Hide();	
 		popUp.Hide();
 
 		readyPanel.SetSlotCharacter(Network_Client.NetworkId, (int)ChIdx.NotInitialized);
@@ -120,10 +119,43 @@ public class StartSceneManager : MonoBehaviour {
 		);
 		Network_Client.SendTcp(nmHello);
 
-		readyPanel.Show();
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.GoReady));
+		readyPanel.Init ();
 	}
 
-	public void OnBtnJoinClick(){
+	public void SelectCharacter(){
+
+	}		
+	#endregion
+
+
+
+	#region OnClickListener
+	public void OnClickIntroStart(){
+		nextActive = IntroAnimationName.Active1;
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.Deactive0));
+	}
+
+	public void OnClickCredit(){
+
+	}
+
+	public void OnClickIntroExit(){
+		nextActive = IntroAnimationName.Exit;
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.Deactive0));
+	}
+
+	public void OnClick1Back(){
+		nextActive = IntroAnimationName.Active0;
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.Deactive1));
+	}
+	public void OnClick1Official(){
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.GoJoin));
+	}
+	public void OnClick1Custom(){
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.GoJoin));
+	}
+	public void OnClickJoin(){
 		isReady = false;
 		popUp.ShowPopUp("접속 중 ...", false, true);
 		PlayerData.Reset();
@@ -145,24 +177,23 @@ public class StartSceneManager : MonoBehaviour {
 		}
 
 		KingGodClient.instance.BeginNetworking();//네트워크 연결이 성공적으로 끝나면 OnNetworkSetupDone을 콜한다
-		txtConfigState.text = "Connecting...";
+	}
+	public void OnClickBackReady(){
+		Network_Client.ShutDown();
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackReady));
+	}
+	public void OnClickBackToMain(){
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackJoin));
 	}
 
-	public void OnBtnExitClick(){
-		//Quit App
+	public void OnClickGoSelect(){
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.GoSelect));
+		selCharPanel.OnShow ();
 	}
-
-	public void OnBtnSelCharacterClick(){
-		selCharPanel.Show();
-		readyPanel.Hide();
+	public void OnClickBackSelect(){
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackSelect));
 	}
-
-	public void OnBtnSelBackClick(){
-		selCharPanel.Hide();
-		readyPanel.Show();
-	}
-
-	public void OnBtnReadyClick(){
+	public void OnClickReady(){
 		//SceneManager.LoadSceneAsync("scIngame");
 
 		isReady = !isReady;
@@ -174,16 +205,43 @@ public class StartSceneManager : MonoBehaviour {
 		);
 		Network_Client.SendTcp(nmReady);
 	}
+	#endregion
 
-	public void OnBtnReadyBackClick(){
-		Network_Client.ShutDown();
-		txtConfigState.text = "Stardacious";
-
-		joinPanel.Show();
-		readyPanel.Hide();
+	private AnimationClip[] animationClips;
+	private void AnimationInit(){
+		animationClips = new AnimationClip[(int)(IntroAnimationName.Tail)];
+		AnimationClip [] allClips = introAnimator.runtimeAnimatorController.animationClips;
+		for(int i = 0; i < animationClips.Length; i++){
+			string nameCache = "master" + ((IntroAnimationName)i).ToString();
+			for(int j = 0; j < allClips.Length;j++){
+				if(allClips[j].name == nameCache){
+					animationClips[i] = allClips[j];
+					break;
+				}
+			}
+		}
 	}
+	private IEnumerator AnimationPlayWithCallBack(IntroAnimationName animationName){
+		introAnimator.Play(animationName.ToString(),0,0);
 
-	public void SelectCharacter(){
+		yield return new WaitForSeconds(animationClips[(int)animationName].length);
 
-	}		
+		switch (animationName) {
+		case IntroAnimationName.Deactive0:
+		case IntroAnimationName.Deactive1:
+			NextAnimation ();
+			break;
+
+		case IntroAnimationName.Exit:
+			Application.Quit ();
+			break;
+		}
+	}
+	private Coroutine animationRoutine = null;
+	private void NextAnimation(){
+		if (animationRoutine != null) {
+			StopCoroutine (animationRoutine);
+		}
+		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (nextActive));
+	}
 }

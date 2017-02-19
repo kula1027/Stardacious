@@ -45,8 +45,18 @@ public class PlayerSlot : MonoBehaviour {
 
 			GameObject goCh = Instantiate (goChar_);
 			goCh.transform.SetParent (trChar);
-			goCh.transform.localScale = new Vector3 (70, 70, 1);
-			goCh.transform.localPosition = new Vector3 (0, 0, -10);
+			switch (goCh.name) {
+			case "LivingHeavy(Clone)":
+				break;
+			case "LivingDoctor(Clone)":
+				goCh.transform.localPosition = new Vector3 (0f, -3f, 0f);
+				break;
+			case "LivingEsper(Clone)":
+				goCh.transform.localPosition = new Vector3 (0f, -1.5f, 0f);
+				break;
+			}
+			//goCh.transform.localScale = new Vector3 (70, 70, 1);
+			//goCh.transform.localPosition = new Vector3 (0, 0, -10);
 		}
 	}
 }

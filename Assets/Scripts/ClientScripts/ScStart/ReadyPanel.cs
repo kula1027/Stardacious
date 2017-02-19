@@ -1,22 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ReadyPanel : HidableUI {
+public class ReadyPanel : MonoBehaviour {
 	public PlayerSlot[] playerSlot;
 
 	public GameObject pfHeavy;
 	public GameObject pfDoctor;
 	public GameObject pfEsper;
 
-	public override void Show (){
-		for(int loop = 0; loop < playerSlot.Length; loop++){
-			playerSlot[loop].OnShow();
+	public void Init(){
+		for (int i = 0; i < playerSlot.Length; i++) {
+			playerSlot [i].OnShow ();
 		}
-
-		base.Show ();
 	}
-
-
 
 	public void SetSlotCharacter(int idx_, int chIdx_){
 		GameObject pf = null;
