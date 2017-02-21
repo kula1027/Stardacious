@@ -4,6 +4,8 @@ using System.Collections;
 public class NetworkChaserBullet : PoolingObject {
 	public StardaciousObject targetObject;
 
+	public GameObject pfHit;
+
 	public void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
 		transform.right = bodies_[2].ConvertToV3();
@@ -64,5 +66,12 @@ public class NetworkChaserBullet : PoolingObject {
 			ReturnObject();
 			break;
 		}
+	}
+
+	public override void OnReturned (){
+		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
+		goHit.transform.position = transform.position;
+		goHit.transform.right = transform.right;
+		goHit.GetComponent<HitEffect>().BlueLaser();
 	}
 }

@@ -23,18 +23,19 @@ namespace ServerSide{
 		}
 
 		private GameObject[] goStage;
-		private Transform safeBar;
+		//private Transform safeBar;
 		private NetworkMessage nmStageClear;
+
+		public GameObject pfSpider;
+		public GameObject pfWalker;
+		public GameObject pfFly;
 
 		void Awake(){
 			instance = this;
 
-			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
-			MsgSegment b = new MsgSegment (MsgAttr.Stage.stgDoor, currentStage.ToString());
-			nmStageClear = new NetworkMessage (h, b);
 			// stage clear 시 보낼 패킷 캐싱
 
-			safeBar = GameObject.Find("SafeBar").transform;
+			//safeBar = GameObject.Find("SafeBar").transform;
 			monsterPooler = gameObject.AddComponent<ObjectPooler>();
 		}
 
@@ -47,12 +48,10 @@ namespace ServerSide{
 		}
 			
 		public void BeginStage(int idx){
-			
 			if(idx < stages.Length){
 				// 모든 stages 갯수를 안넘어가면
 				ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
 				stages [idx].StartWave(); // 일단 wave생성되게 함
-				stages [idx].MasterStage = this;
 			} else {
 				// all stage cleared
 				// send stage cleared message
@@ -71,8 +70,14 @@ namespace ServerSide{
 			}
 		}
 
-		public void CurrentStageEnd(){
+		public void CurrentStageEnd(){	
+			ConsoleMsgQueue.EnqueMsg("End Stage");
+
 			// stage 끝낫으니 다음거 문열라고 보냄
+			// 그때 그때 currentstage 를 보내줘야함
+			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
+			MsgSegment b = new MsgSegment (MsgAttr.Stage.stgDoor, currentStage.ToString());
+			nmStageClear = new NetworkMessage (h, b);
 			Network_Server.BroadCastTcp(nmStageClear);
 
 			StartCoroutine (PlayerCheckExistRoutine(currentStage));
@@ -81,10 +86,9 @@ namespace ServerSide{
 			BeginStage (currentStage);
 		}
 
-		protected IEnumerator PlayerCheckExistRoutine(int idx) {
+		protected IEnumerator PlayerCheckExistRoutine(int idx_) {
 			while(true){
-
-				if (stages[idx].GetIsPlayerExist() == false) {
+				if (stages[idx_].GetIsPlayerExist() == 0) {
 					// 캐릭터가 더이상 없으면 한번 더 작동 : 닫게됨
 					Network_Server.BroadCastTcp (nmStageClear);
 					break;

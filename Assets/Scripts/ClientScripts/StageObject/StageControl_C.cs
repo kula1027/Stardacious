@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class StageControl_C : MonoBehaviour {
-
-	public RespawnPoint[] stageRespawnPoint;
 	public ObjectActive[] objects;
 	// objects 0 : door
 
@@ -13,6 +11,9 @@ public class StageControl_C : MonoBehaviour {
 	public void OnRecv(MsgSegment[] bodies){
 		switch (bodies [0].Attribute) {
 		case MsgAttr.Stage.stgDoor:
+			if(objects.Length == 0){
+				break;
+			}
 			objects [0].Active ();
 			break;
 		}

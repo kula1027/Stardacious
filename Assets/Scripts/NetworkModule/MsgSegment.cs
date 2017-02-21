@@ -142,6 +142,8 @@ public class MsgAttr{
 	public const string character = "chr";
 	public class Character{
 		public const int iTargetAll = 9999;
+		public const string dead = "chardead";
+		public const string revive = "charrvv";
 		public const string controlDirection = "cdir";
 		public const string normalAttack = "nattk";
 		public const string grounded = "ground";

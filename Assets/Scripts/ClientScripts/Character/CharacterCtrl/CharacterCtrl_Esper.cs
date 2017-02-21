@@ -116,14 +116,16 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		StartCoroutine(AttackRoutine(hitterJumpAttack, jumpAttackTime));
 	}
-	public override void InputStartAttack (){
-		if(isRushing == false)return;
+	public override bool InputStartAttack (){
+		if(isRushing == false)return false;
 
-		base.InputStartAttack ();
+		return base.InputStartAttack ();
 	}
 
-	public override void InputStopAttack (){
+	public override bool InputStopAttack (){
 		characterGraphicCtrl.StopNormalAttack ();
+
+		return true;
 	}
 
 	public override void Jump (){
@@ -254,31 +256,37 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	#endregion
 
-	public override void UseSkill (int idx_){
-		if(canControl == false && isRushing == false)return;
+	public override bool UseSkill (int idx_){
+		if(isRushing == false){
+			return false;
+		}
 
-		base.UseSkill (idx_);
+		if(base.UseSkill (idx_)){
+			switch (idx_) {
+			case 0:			
+				SwiftRush(currentDirV3);
+				break;
 
-		switch (idx_) {
-		case 0:			
-			SwiftRush(currentDirV3);
-			break;
+			case 1:
+				SpaceDistortion();
+				moveDir = Vector3.zero;
+				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				break;
 
-		case 1:
-			SpaceDistortion();
-			moveDir = Vector3.zero;
-			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
-			break;
-
-		case 2:
-			if(recallTarget == -1){
-				FireRecallBullet();
-				InputModule.instance.BeginCoolDown(2, 1.2f);
-			}else{
-				Recall();
-				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+			case 2:
+				if(recallTarget == -1){
+					FireRecallBullet();
+					InputModule.instance.BeginCoolDown(2, 1.2f);
+				}else{
+					Recall();
+					InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+				}
+				break;
 			}
-			break;
+
+			return true;
+		}else{
+			return false;
 		}
 	}
 }

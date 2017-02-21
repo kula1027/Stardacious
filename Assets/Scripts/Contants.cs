@@ -1,6 +1,8 @@
 ﻿public enum MonsterType{
 	NotInitialized,
-	test
+	Spider,
+	Walker,
+	Fly
 }
 
 public enum ProjType{

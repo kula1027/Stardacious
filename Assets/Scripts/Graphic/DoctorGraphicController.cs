@@ -53,9 +53,12 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	public override void Initialize (){
 		if(master){
 			controlFlags = master.controlFlags;
-		}else{
-			controlFlags = new ControlFlags();
 		}
+		ReleaseAll ();
+		isFlying = false;
+		lowerAnimator.Play ("Idle");
+		upperAnimator.Play ("FrontIdle");
+		HairDeactive ();
 	}
 
 	public override void SetDirection (int direction){
@@ -171,6 +174,19 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void Die(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
+		booster.Stop ();
+		HairDeactive ();
+		currentInputDirection = ControlDirection.Middle;
+		recentAimDirection = ShootAnimationName.FrontShoot;
+		nextBulletType = DoctorBulletType.Normal;
+
+		isHovering = false;
+		isEnergyCharging = false;
+		isAttackAnimationPlaying = false;
+
 		upperAnimator.Play ("Die");
 		lowerAnimator.Play ("Die");
 	}
@@ -382,6 +398,13 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	private void ReleaseAttackDelay(){
 		controlFlags.attack = true;
 		controlFlags.aim = true;
+		controlFlags.run = true;
+	}
+	private void ReleaseAll(){
+		controlFlags.aim = true;
+		controlFlags.attack = true;
+		controlFlags.jump = true;
+		controlFlags.move = true;
 		controlFlags.run = true;
 	}
 	#endregion

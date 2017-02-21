@@ -23,14 +23,16 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 	}
 
 	void Start(){
+		characterGraphicCtrl.Initialize();
 		StartCoroutine(PositionRoutine());
 	}
 
 	Interpolater itpl;
-	public IEnumerator PositionRoutine(){		
+	protected IEnumerator PositionRoutine(){		
 		while(true){
-			if(itpl != null)
+			if(itpl != null){
 				transform.position = itpl.Interpolate();
+			}
 
 			yield return null;
 		}
@@ -85,6 +87,17 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		case MsgAttr.Character.skill:
 			int sIdx = int.Parse(bodies[0].Content);
 			UseSkill(sIdx);
+			break;
+
+		case MsgAttr.Character.dead:
+			IsDead = true;
+			characterGraphicCtrl.Die();
+			break;
+
+		case MsgAttr.Character.revive:
+			characterGraphicCtrl.Initialize();
+			itpl = new Interpolater(bodies[1].ConvertToV3());
+			IsDead = false;
 			break;
 
 		case MsgAttr.destroy:

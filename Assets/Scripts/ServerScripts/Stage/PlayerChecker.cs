@@ -7,24 +7,22 @@ namespace ServerSide{
 
 		void Awake(){
 			masterStage = GetComponentInParent<StageControl> ();
-			masterStage.IsPlayerExist = true;
 		}
 
 		void OnTriggerEnter2D(Collider2D col){
 			if (col.tag.Equals ("Player")) {
-				masterStage.IsPlayerExist = true;
+				masterStage.IsPlayerExistPlus();
 			}
 		}
 
 		void OnTriggerStay2D(Collider2D col){
 			if (col.tag.Equals ("Player")) {
-				masterStage.IsPlayerExist = true;
 			}
 		}
 
 		void OnTriggerExit2D(Collider2D col){
 			if (col.tag.Equals ("Player")) {
-				masterStage.IsPlayerExist = false;
+				masterStage.IsPlayerExistMinus ();
 			}
 		}
 }

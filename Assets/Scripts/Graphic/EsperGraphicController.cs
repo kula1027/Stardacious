@@ -46,6 +46,8 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		}else{
 			controlFlags = new ControlFlags();
 		}
+		isFlying = false;
+		singleAnimator.Play ("Idle");
 	}
 	public override void SetDirection (ControlDirection direction){
 		currentInputDirection = direction;
@@ -161,6 +163,14 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void Die(){
+		nextAttackMotion = 0;
+		currentInputDirection = ControlDirection.Middle;
+
+		isPsying = false;
+
+		isAttackAnimationPlaying = false;
+		canJumpAttack = true;
+		MufflerDeactive();
 		singleAnimator.Play ("Die");
 	}
 
@@ -264,30 +274,29 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 
 	#region ControlFlag
 	private void SetAttackDelay(){
-		if(master){
-			controlFlags.move = false;
-		}
+		controlFlags.move = false;
 	}
 	private void ReleaseAttackDelay(){
-		if(master){
-			controlFlags.move = true;
-		}
+		controlFlags.move = true;
 	}
 	private void SetSkillDelay(){
-		if(master){
-			controlFlags.move = false;
-			controlFlags.attack = false;
-			controlFlags.aim = false;
-			controlFlags.run = false;
-		}
+		controlFlags.move = false;
+		controlFlags.attack = false;
+		controlFlags.aim = false;
+		controlFlags.run = false;
 	}
 	private void ReleaseSkillDelay(){
-		if(master){
-			controlFlags.move = true;
-			controlFlags.attack = true;
-			controlFlags.aim = true;
-			controlFlags.run = true;
-		}
+		controlFlags.move = true;
+		controlFlags.attack = true;
+		controlFlags.aim = true;
+		controlFlags.run = true;
+	}
+	private void ReleaseAll(){
+		controlFlags.move = true;
+		controlFlags.attack = true;
+		controlFlags.aim = true;
+		controlFlags.run = true;
+		controlFlags.jump = true;
 	}
 	#endregion
 

@@ -8,6 +8,8 @@ using System.IO;
 using System.Net;
 
 public class Network_Client {
+	private static System.Object shutDownLock = new object();
+
 	public static string serverAddress = "127.0.0.1";
 	public static int portTCP = 11900;
 
@@ -125,6 +127,8 @@ public class Network_Client {
 		}catch(Exception e){
 			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message, 2);
 		}
+
+		ShutDown();
 	}
 
 	#endregion
@@ -169,9 +173,6 @@ public class Network_Client {
 			}
 		}catch(Exception e){
 			ConsoleMsgQueue.EnqueMsg("ReceivingTCP: " + e.Message, 2);
-			MsgSegment h = new MsgSegment(MsgAttr.misc);
-			MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect);
-			ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
 		}
 
 		ShutDown();
@@ -179,22 +180,28 @@ public class Network_Client {
 	#endregion
 
 	public static void ShutDown(){
-		if(isConnected){
-			isConnected = false;
+		lock(shutDownLock){
+			if(isConnected){
+				isConnected = false;
 
-			streamReader.Close();
-			streamWriter.Close();
-			
-			try{
-				tcpClient.Close();
-			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
-			}
-			
-			try{
-				socketUdp.Close();
-			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				streamReader.Close();
+				streamWriter.Close();
+				
+				try{
+					tcpClient.Close();
+				}catch(Exception e){
+					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				}
+				
+				try{
+					socketUdp.Close();
+				}catch(Exception e){
+					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				}
+
+				MsgSegment h = new MsgSegment(MsgAttr.misc);
+				MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect);
+				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
 			}
 		}
 	}

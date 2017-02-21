@@ -3,7 +3,9 @@ using System.Collections;
 
 public class RespawnPoint : MonoBehaviour {
 
-	public Vector3 GetRespawnPoint(){
-		return this.transform.position;
+	void OnTriggerEnter2D(Collider2D col){
+		if (col.transform.parent.GetComponent<CharacterCtrl>()) {
+			col.transform.parent.GetComponent<CharacterCtrl>().RespawnPoint = this.transform.position;
+		}
 	}
 }

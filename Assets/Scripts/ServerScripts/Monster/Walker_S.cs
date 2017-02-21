@@ -7,12 +7,20 @@ namespace ServerSide{
 		private Vector3[] inRangeCharaterPos;
 		private Vector3 closestCharacterPos;					/* will used to calculate distance between monster with chracter */
 		private bool isStop = false;
-		private bool isJump = false;
+		//private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
-		private int walkerAttkRange = 40;
+		private int walkerAttkRange = 10;
 		private int walkerAgroRange = 50;
 		private float walkerAppearTime = 3;
+
+
+		protected new void Awake(){
+			base.Awake ();
+
+			MonsterDefaultSpeed = new Vector3 (4,0,0);
+			objType = (int)MonsterType.Walker;
+		}
 
 		public override void OnRequested (){
 			base.OnRequested();
@@ -46,7 +54,7 @@ namespace ServerSide{
 				// check every character's position first
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
-					if (ServerCharacterManager.instance.GetCharacter (i) != null) {
+					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
 						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= walkerAgroRange) {
 							isAgroed = true;
 							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
@@ -62,7 +70,7 @@ namespace ServerSide{
 				}
 
 				// main AIpart
-				if (notMoveMonster && isInRanged){
+				if (NotMoveMonster && isInRanged){
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
 					yield return StartCoroutine (WalkerNotMove (closestCharacterPos));
 
@@ -89,19 +97,11 @@ namespace ServerSide{
 		private IEnumerator WalkerApproach(Vector3 closestCharacterPos_){
 			// 몬스터가 근접하는 코드 
 			int beHaviorFactor = Random.Range (0,10);
-
-			isJump = false;
 			isStop = false;
 
-			if (beHaviorFactor < 2 && isJump == false) {
-				// jump. 2/10
-				isJump = true;
-				MonsterJump ();
-
-			} else if (beHaviorFactor == 2) {
-				// short stop. 1/10
+			if (beHaviorFactor < 3) {
+				// short stop. 3/10
 				isStop = true;
-
 			}
 
 			if (!isStop) {
