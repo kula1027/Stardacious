@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
-
 Shader "Hidden/Internal-SpriteDepthNormalsTexture" {
 
 // Use this shader to render a DepthNormals texture for a camera with correct sprite normals (using camera.RenderWithShader)
@@ -212,7 +210,7 @@ struct appdata {
     float4 vertex : POSITION;
     float3 normal : NORMAL;
     fixed4 color : COLOR;
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+	UNITY_INSTANCE_ID
 };
 v2f vert( appdata v ) {
 	v2f o;
