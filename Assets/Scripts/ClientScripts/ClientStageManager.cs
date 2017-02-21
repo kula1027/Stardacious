@@ -6,6 +6,9 @@ public class ClientStageManager : MonoBehaviour {
 
 	public StageControl_C[] stages;
 
+	public RespawnPoint[] resPoint;
+	private int resPointIdx=0;
+
 	private int currentStage = 0;
 	public int CurrentStage{
 		get{return currentStage;}
@@ -21,6 +24,16 @@ public class ClientStageManager : MonoBehaviour {
 	void Awake(){
 		instance = this;
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
+
+		/*****  respawn point setting  *****/
+		for (int i = 0; i < resPoint.Length; i++) {
+			resPoint [i].gameObject.SetActive (false);
+		}
+		resPointIdx = 0;
+		resPoint [0].gameObject.SetActive (true);
+		////////////////////////////////////
+
+
 	}
 
 	void Start(){
@@ -91,5 +104,14 @@ public class ClientStageManager : MonoBehaviour {
 
 		objMon.transform.position = startPos_;
 		objMon.GetComponent<PoolingObject> ().Ready ();
+	}
+
+	public void ResPointActive(){
+		// 현재걸 set deactive
+		resPoint [resPointIdx].gameObject.SetActive (false);
+
+		// 다음걸 set active
+		resPointIdx++;
+		resPoint [resPointIdx].gameObject.SetActive (true);
 	}
 }

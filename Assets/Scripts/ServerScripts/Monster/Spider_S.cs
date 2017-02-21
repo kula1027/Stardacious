@@ -10,7 +10,7 @@ namespace ServerSide{
 		private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
-		private int spiderAttkRange = 10;
+		private int spiderAttkRange = 20;
 		private int spiderAgroRange = 50;
 		private float spiderAppearTime = 3;
 

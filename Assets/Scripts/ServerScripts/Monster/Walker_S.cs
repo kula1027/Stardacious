@@ -10,7 +10,7 @@ namespace ServerSide{
 		//private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
-		private int walkerAttkRange = 10;
+		private int walkerAttkRange = 30;
 		private int walkerAgroRange = 50;
 		private float walkerAppearTime = 3;
 
