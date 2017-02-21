@@ -21,11 +21,6 @@ public class BindBullet : FlyingProjectile {
 	}
 
 	protected override void Boom (){
-		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
-		MsgSegment[] b = {
-			new MsgSegment(MsgAttr.destroy)
-		};
-		NetworkMessage nmDestroy = new NetworkMessage(h, b);
-		Network_Client.SendTcp(nmDestroy);
+		
 	}
 }

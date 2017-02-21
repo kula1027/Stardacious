@@ -12,11 +12,14 @@ public class ClientMasterManager : MonoBehaviour {
 	public GameObject pfDoctor;
 	public GameObject pfEsper;
 
+	public GameObject pfAudio;
+
 	public bool friendlyFire = false;
 
 	void Awake(){
 		instance = this;
 
+		PoolingAudioSource.pfAudioSource = pfAudio;
 		KingGodClient.instance.OnEnterPlayScene();
 	}
 

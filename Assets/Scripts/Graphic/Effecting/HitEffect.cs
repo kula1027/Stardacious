@@ -11,7 +11,7 @@ public class HitEffect : PoolingObject {
 
 	public override void OnRequested (){
 		Init ();
-		ReturnObject(10f);
+		ReturnObject(3f);
 	}
 
 	public void Init(){

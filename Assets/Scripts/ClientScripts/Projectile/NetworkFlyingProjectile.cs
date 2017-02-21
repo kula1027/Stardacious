@@ -13,6 +13,7 @@ public class NetworkFlyingProjectile : PoolingObject {
 	}
 
 	public override void OnReturned (){
+		StopAllCoroutines();
 	}
 
 	public override void OnRequested (){

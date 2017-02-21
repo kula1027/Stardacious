@@ -13,7 +13,7 @@ public class ObjectPooler : MonoBehaviour {
 		PoolList mPool = GetManagingPool(go_.name);
 
 		GameObject rObj = mPool.RequestObject(go_);
-		rObj.GetComponent<IRecvPoolable>().SetPooler(this);
+		rObj.GetComponent<IObjectPoolable>().SetPooler(this);
 
 		return rObj;
 	}

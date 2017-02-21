@@ -28,7 +28,7 @@ public class GuidanceDevice : FlyingProjectile {
 
 	public override void OnRequested (){
 		isAttached = false;
-		rotateRoutine = StartCoroutine(RotatehRoutine());
+		rotateRoutine = StartCoroutine(RotateRoutine());
 		ReturnObject(1.5f);
 	}
 
@@ -92,7 +92,7 @@ public class GuidanceDevice : FlyingProjectile {
 		}
 	}
 
-	private IEnumerator RotatehRoutine(){
+	private IEnumerator RotateRoutine(){
 		while(true){
 			trRenderer.Rotate(new Vector3(0, 0, Time.deltaTime * 1200f));
 

@@ -192,7 +192,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		rgd2d.gravityScale = 1;
 		isRushing = true;
 		gcEsper.RushBack();
-		nmSkill.Body[0].Content = "1";
+		nmSkill.Body[0].Content = "0";
 		Network_Client.SendTcp(nmSkill);
 	}
 	#endregion

@@ -8,6 +8,8 @@ public class ChaserBullet : PoolingObject, IHitter {
 	public GuidanceDevice targetDevice;
 	public GameObject pfHit;
 
+	public AudioClip audioFire;
+
 	void Awake(){
 		objType = (int)ProjType.ChaserBullet;
 		hitObject = new HitObject(15);
@@ -46,10 +48,15 @@ public class ChaserBullet : PoolingObject, IHitter {
 				ReturnObject(1.5f);
 				StartCoroutine(FlyingRoutine());	
 			}else{
-				ReturnObject(10);
+				ReturnObject(10f);
 				StartCoroutine(ChasingRoutine());
 			}
 		}
+
+		GameObject goAudio = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(PoolingAudioSource.pfAudioSource);
+		goAudio.transform.position = transform.position;
+		goAudio.GetComponent<AudioSource>().clip = audioFire;
+		goAudio.GetComponent<AudioSource>().Play();
 	}
 
 	private IEnumerator ChasingRoutine(){
@@ -100,18 +107,26 @@ public class ChaserBullet : PoolingObject, IHitter {
 
 	#endregion
 
-	public override void OnReturned (){
+	private void Boom(){
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
 		goHit.transform.position = transform.position;
 		goHit.transform.right = transform.right;
 		goHit.GetComponent<HitEffect>().BlueLaser();
+	}
 
+	private void NotifyDestroy(){
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
 		MsgSegment[] b = {
 			new MsgSegment(MsgAttr.destroy)
 		};
 		NetworkMessage nmDestroy = new NetworkMessage(h, b);
 		Network_Client.SendTcp(nmDestroy);
+	}
+
+	public override void OnReturned (){
+		Boom();
+
+		NotifyDestroy();
 
 		StopAllCoroutines();
 	}

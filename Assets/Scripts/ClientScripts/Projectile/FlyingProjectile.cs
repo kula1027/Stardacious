@@ -42,14 +42,30 @@ public class FlyingProjectile : PoolingObject, IHitter {
 				return;
 			}else{
 				hbt.OnHit(hitObject);
-				Boom();
-				ReturnObject(2f);
+				ReturnObject();
 			}
 		}else{
 			ReturnObject();
 		}
 	}
 	#endregion
+
+	protected void NotifyDestroy(){
+		MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex().ToString());
+		MsgSegment[] b = {
+			new MsgSegment(MsgAttr.destroy)
+		};
+		NetworkMessage nmDestroy = new NetworkMessage(h, b);
+		Network_Client.SendTcp(nmDestroy);
+	}
+
+	public override void OnReturned (){
+		Boom();
+
+		NotifyDestroy();
+
+		StopAllCoroutines();
+	}
 
 	protected virtual void Boom(){
 

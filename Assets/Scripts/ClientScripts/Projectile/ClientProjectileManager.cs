@@ -15,7 +15,7 @@ public class ClientProjectileManager : MonoBehaviour {
 	public GameObject pfGuidanceDevice;
 	public GameObject pfBindBullet;
 	public GameObject pfEnergyBall;
-
+	public GameObject pfRecallBullet;
 
 	//Effect
 	public GameObject pfIceEffect;
@@ -109,6 +109,11 @@ public class ClientProjectileManager : MonoBehaviour {
 		case ProjType.BindBullet:
 			proj = pooler_.RequestObjectAt(pfBindBullet, projIdx_);
 			proj.GetComponent<NetworkBindBullet>().Initiate(bodies);
+			break;
+
+		case ProjType.RecallBullet:
+			proj = pooler_.RequestObjectAt(pfRecallBullet, projIdx_);
+			proj.GetComponent<NetworkRecallBullet>().Initiate(bodies);
 			break;
 
 		//MonsterSpider
