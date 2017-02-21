@@ -55,9 +55,12 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	public override void Initialize (){
 		if(master){
 			controlFlags = master.controlFlags;
-		}else{
-			controlFlags = new ControlFlags();
 		}
+		ReleaseAll();
+		isFlying = false;
+		recentAimDirection = ShootAnimationName.FrontShoot;
+		lowerAnimator.Play("Idle");
+		upperAnimator.Play("FrontIdle");
 	}
 
 	public override void SetDirection(int direction){
@@ -168,6 +171,19 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void Die(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
+		cartridge.Stop ();
+		isSwapDelay = false;
+		isAttackAnimationPlaying = false;
+		isMiniGunMode = false;
+		recentIsMiniGun = false;
+		miniEffectAnimator.Play("Idle");
+		currentInputDirection = ControlDirection.Middle;
+		recentAimDirection = ShootAnimationName.FrontShoot;
+		lowerState = HeavyLowerState.Idle;
+
 		upperAnimator.Play ("Die");
 		lowerAnimator.Play ("Die");
 	}

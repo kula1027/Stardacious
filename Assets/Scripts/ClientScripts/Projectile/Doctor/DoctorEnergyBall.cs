@@ -12,6 +12,8 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 
 	private EnergyBallGraphic gcBall;
 
+	public bool isFlying;
+
 	void Awake(){
 		gcBall = GetComponent<EnergyBallGraphic>();
 		col2d = GetComponentInChildren<CircleCollider2D>();
@@ -32,6 +34,7 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 	public override void OnRequested (){		
 		StartCoroutine (gcBall.BallGrowing());
 		col2d.enabled = false;
+		isFlying = false;
 	}
 
 	private Vector3 movingDir;
@@ -71,6 +74,8 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 
 	private IEnumerator DelayThrow(Vector3 dirThrow_){
 		yield return new WaitForSeconds(0.6f);
+
+		isFlying = true;
 
 		movingDir = dirThrow_;
 		StartCoroutine(HitRoutine());
@@ -131,6 +136,11 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 				gcBall.LighteningEffecting (col.transform.position + new Vector3 (0, 1.5f, 0) + (Vector3)Random.insideUnitCircle);
 			}
 		}
+	}
+
+	public void CancelObject(){
+		ReturnObject(1f);
+		gcBall.Boom ();
 	}
 
 	public override void OnReturned (){

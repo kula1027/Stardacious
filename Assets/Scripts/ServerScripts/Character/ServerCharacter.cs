@@ -26,9 +26,6 @@ namespace ServerSide{
 			nmHit = new NetworkMessage(commonHeader, new MsgSegment(MsgAttr.hit));
 
 			nmDefault = new NetworkMessage(commonHeader);
-
-			CurrentHp = 250;
-			IsDead = false;
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
@@ -52,6 +49,18 @@ namespace ServerSide{
 			case MsgAttr.freeze:
 				nmDefault.Body = bodies;
 				Network_Server.BroadCastTcp(nmDefault);
+				break;
+
+			case MsgAttr.Character.dead:
+				IsDead = true;
+				nmDefault.Body = bodies;
+				Network_Server.BroadCastTcp(nmDefault, networkId);
+				break;
+
+			case MsgAttr.Character.revive:
+				IsDead = false;
+				nmDefault.Body = bodies;
+				Network_Server.BroadCastTcp(nmDefault, networkId);
 				break;
 
 				default:

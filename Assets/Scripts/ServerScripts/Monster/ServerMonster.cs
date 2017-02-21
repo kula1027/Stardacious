@@ -40,6 +40,7 @@ namespace ServerSide{
 		public override void OnRequested (){
 			IsDead = false;
 			canControl = true;
+			CurrentHp = maxHp;
 		}
 			
 		public override void Ready(){

@@ -30,10 +30,14 @@ namespace ServerSide {
 		public void OnRecv(NetworkMessage networkMessage){
 			if(networkMessage.Header.Content.Equals(MsgAttr.Projectile.server)){
 				int objId = int.Parse(networkMessage.Body[0].Content);
-				serverProjPool.GetObject(objId).OnRecv(networkMessage.Body);
+				IRecvPoolable poolObj = serverProjPool.GetObject(objId);
+				if(poolObj != null){
+					poolObj.OnRecv(networkMessage.Body);
+				}
+			}else{
+				int sender = int.Parse(networkMessage.Adress.Attribute);
+				Network_Server.BroadCastTcp(networkMessage, sender);
 			}
-			int sender = int.Parse(networkMessage.Adress.Attribute);
-			Network_Server.BroadCastTcp(networkMessage, sender);
 
 			/*
 			switch(networkMessage.Header.Content){

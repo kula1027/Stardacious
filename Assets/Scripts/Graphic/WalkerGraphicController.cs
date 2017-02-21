@@ -25,9 +25,7 @@ public class WalkerGraphicController : MonsterGraphicCtrl {
 	}
 
 	public override void Attack (){
-		Debug.Log ("Before");
 		animator.Play ("Attack");
-		Debug.Log ("After");
 	}
 
 	public override void Walk (){

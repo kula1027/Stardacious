@@ -47,6 +47,7 @@ public class ClientProjectileManager : MonoBehaviour {
 		int projIdx;
 
 		ObjectPooler projPooler = GetProjPool(ownerId);
+
 		switch(networkMessage.Header.Content){
 		case MsgAttr.create:
 			projIdx = int.Parse(networkMessage.Body[0].Content);

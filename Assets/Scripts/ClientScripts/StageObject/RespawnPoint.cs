@@ -6,6 +6,7 @@ public class RespawnPoint : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.transform.parent.GetComponent<CharacterCtrl>()) {
 			col.transform.parent.GetComponent<CharacterCtrl>().RespawnPoint = this.transform.position;
+			ClientStageManager.instance.ResPointActive ();
 		}
 	}
 }

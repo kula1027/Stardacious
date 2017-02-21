@@ -43,7 +43,7 @@ public class CameraControl : MonoBehaviour {
 				if(difY < 0){
 					camPosY = groundHeight + 10f;
 				}else{
-					camPosY = targetTr.position.y -difY * 0.6f + 10f;
+					camPosY = targetTr.position.y -difY * 0.7f + 10f;
 				}
 
 				transform.position = Vector3.Lerp(

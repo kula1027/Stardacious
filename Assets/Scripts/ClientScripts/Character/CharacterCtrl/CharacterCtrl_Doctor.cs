@@ -44,6 +44,10 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private bool isHovering = false;
 	private bool hasHovered = false;
 	public override void Jump (){		
+		if(canControl == false || IsDead == true){
+			return;
+		}
+
 		moveSpeed = originalMoveSpeed;
 
 		if(controlFlags.jump && canControl){
@@ -100,17 +104,25 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		canBoostJump = true;
 		isHovering = false;
 		hasHovered = false;
+
+		if(isShootingNormal){
+			moveSpeed = originalMoveSpeed * 0.5f;
+		}
 	}
 
 	#region EnergyGun
 	private Transform trGunMuzzle;
+	private bool isShootingNormal = false;
 
 	private void PrepareEnergyGun(){
 		trGunMuzzle = gcDoctor.muzzle;
 	}
 
 	public void OnShootNormal(){	
-		moveSpeed = originalMoveSpeed * 0.5f;
+		if(isGround)
+			moveSpeed = originalMoveSpeed * 0.5f;
+
+		isShootingNormal = true;
 
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
@@ -135,6 +147,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 	public void OnEndShootNormal(){
 		moveSpeed = originalMoveSpeed;
+		isShootingNormal = false;
 	}
 
 	#endregion
@@ -275,29 +288,53 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		base.Freeze ();
 	}
 
+	public override void OnDie (){
+		base.OnDie ();
 
-	public override void UseSkill (int idx_){
-		if(canControl == false)return;
+		if(activeEnergyBall != null && activeEnergyBall.isFlying == false){
+			activeEnergyBall.CancelObject();
+		}			
 
-		base.UseSkill (idx_);
-		switch (idx_) {
-		case 0:			
-			gcDoctor.DeviceShot();
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
-			break;
+		rgd2d.gravityScale = 1;
+	}
 
-		case 1:
-			gcDoctor.BindShot();
-			InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
-			break;
+	protected override void OnRevive (){
+		base.OnRevive ();
+	
+		isChargingEnergy = false;
+		moveSpeed = originalMoveSpeed;
+		canBoostJump = true;
+		isHovering = false;
+		hasHovered = false;
 
-		case 2:
-			if(isChargingEnergy == false){
-				ChargeEnergyBall();
-			}else{
-				ThrowEnegyBall();
+		isShootingNormal = false;
+	}
+
+	public override bool UseSkill (int idx_){		
+		if(base.UseSkill (idx_)){
+			switch (idx_) {
+			case 0:			
+				gcDoctor.DeviceShot();
+				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+				break;
+
+			case 1:
+				gcDoctor.BindShot();
+				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				break;
+
+			case 2:
+				if(isChargingEnergy == false){
+					ChargeEnergyBall();
+				}else{
+					ThrowEnegyBall();
+				}
+				break;
 			}
-			break;
+
+			return true;
+		}else{
+			return false;
 		}
 	}
 }

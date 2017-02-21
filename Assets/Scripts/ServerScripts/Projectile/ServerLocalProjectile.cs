@@ -9,6 +9,10 @@ namespace ServerSide{
 			objType = (int)ProjType.SpiderBullet;
 		}
 
+		public override void OnRequested (){
+			ReturnObject(10f);
+		}
+
 		#region PoolingObject implementation
 		public override void Ready (){
 			MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
@@ -30,6 +34,15 @@ namespace ServerSide{
 				ReturnObject();
 				break;
 			}
+		}
+
+		public override void OnReturned (){
+			MsgSegment h = new MsgSegment(MsgAttr.projectile, GetOpIndex());
+			MsgSegment[] b = {
+				new MsgSegment(MsgAttr.destroy, GetOpIndex())
+			};
+			NetworkMessage nmDestroy = new NetworkMessage(h, b);
+			Network_Server.BroadCastTcp(nmDestroy);
 		}
 	}
 }

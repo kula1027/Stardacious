@@ -19,16 +19,10 @@ namespace ServerSide{
 			isPlayerExist--;
 		}
 
-		private ServerStageManager masterStage;
-		public ServerStageManager MasterStage{
-			set{ masterStage = value; }
-		}
-
-
 		private Transform[] waves;
 		private int currentMonsterCount = 0;
-		private int currentWaveNumber = 0;		// wave 갯수가 몇개?
-		private int currentWaveCount = 0;		// 지금은 몇번 째 wave?
+		private int waveCountTotal = 0;		// wave 갯수가 몇개?
+		private int currentWaveIdx = 0;		// 지금은 몇번 째 wave?
 
 		void Awake(){
 			Transform objWave = transform.FindChild ("Waves");
@@ -37,65 +31,59 @@ namespace ServerSide{
 				waves [loop] = objWave.transform.GetChild (loop);
 			}
 
-			currentWaveNumber = objWave.transform.childCount;
+			waveCountTotal = objWave.transform.childCount;
 		}
 
 		public void StartWave(){
-			currentWaveCount = 0;
-			SpawnWaveMonster (0);	// 0 번째 wave 부터 시작
+			currentWaveIdx = 0;
+			SpawnWaveMonster ();	// 0 번째 wave 부터 시작
 		}
 
-		public void SpawnWaveMonster(int idx_){
-			if (currentWaveCount < currentWaveNumber) {
+		public void SpawnWaveMonster(){			
+			if (currentWaveIdx < waveCountTotal) {
 				// 현재 wave가 남아잇다.
-				currentMonsterCount = waves [idx_].childCount;
+				currentMonsterCount = waves [currentWaveIdx].childCount;
 
 				if (currentMonsterCount > 0) {
 					GameObject mGo;
 					GameObject pf;
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
-						switch(waves[idx_].GetChild(loop).name){
-						case "spider":
+						string goName = waves[currentWaveIdx].GetChild(loop).name;
+						if(goName.Contains("spider")){
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx_].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
-
-						case "spidernotmove":
+						}else if(goName.Contains("spdnm")){
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx_].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().NotMoveMonster = true;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
-
-						case "walker":
+						}else if(goName.Contains("walker")){
 							pf = ServerStageManager.instance.pfWalker;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx_].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
-
-						case "fly":
+						}else if(goName.Contains("fly")){
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [idx_].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().Ready ();
-							break;
 						}
+
 					}
 				} else {
+					
 				}
-
 			} else {
 				// stageend();
 				// script end;
-				masterStage.CurrentStageEnd();
+				ServerStageManager.instance.CurrentStageEnd();
 			}
 		}
 
@@ -104,8 +92,8 @@ namespace ServerSide{
 			this.currentMonsterCount--;
 
 			if (currentMonsterCount <= 0) {
-				currentWaveCount++;
-				SpawnWaveMonster(currentWaveCount);
+				currentWaveIdx++;
+				SpawnWaveMonster();
 			}
 		}
 	}

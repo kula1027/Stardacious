@@ -53,8 +53,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	public override void Initialize (){
 		if(master){
 			controlFlags = master.controlFlags;
-		}else{
-			controlFlags = new ControlFlags();
 		}
 	}
 

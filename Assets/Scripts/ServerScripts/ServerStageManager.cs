@@ -23,7 +23,7 @@ namespace ServerSide{
 		}
 
 		private GameObject[] goStage;
-		//private Transform safeBar;
+
 		private NetworkMessage nmStageClear;
 
 		public GameObject pfSpider;
@@ -34,6 +34,12 @@ namespace ServerSide{
 			instance = this;
 
 			// stage clear 시 보낼 패킷 캐싱
+			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
+			MsgSegment[] b = {
+				new MsgSegment(MsgAttr.Stage.stgDoor, currentStage.ToString()),
+				new MsgSegment("0", NetworkMessage.sTrue)
+			};
+			nmStageClear = new NetworkMessage (h, b);
 
 			//safeBar = GameObject.Find("SafeBar").transform;
 			monsterPooler = gameObject.AddComponent<ObjectPooler>();
@@ -48,12 +54,10 @@ namespace ServerSide{
 		}
 			
 		public void BeginStage(int idx){
-			
 			if(idx < stages.Length){
 				// 모든 stages 갯수를 안넘어가면
 				ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
-				stages [idx].StartWave(); // 일단 wave생성되게 함
-				stages [idx].MasterStage = this;
+				StartCoroutine (PlayerCheckEnterRoutine (idx));
 			} else {
 				// all stage cleared
 				// send stage cleared message
@@ -72,26 +76,56 @@ namespace ServerSide{
 			}
 		}
 
-		public void CurrentStageEnd(){
+		public void CurrentStageEnd(){	
+			ConsoleMsgQueue.EnqueMsg("End Stage");
+
 			// stage 끝낫으니 다음거 문열라고 보냄
 			// 그때 그때 currentstage 를 보내줘야함
-			MsgSegment h = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgObject);
-			MsgSegment b = new MsgSegment (MsgAttr.Stage.stgDoor, currentStage.ToString());
-			nmStageClear = new NetworkMessage (h, b);
+			nmStageClear.Body [0].Content = currentStage.ToString ();
+			nmStageClear.Body[1].Attribute = "0";
+			nmStageClear.Body[1].Content = NetworkMessage.sTrue;
 			Network_Server.BroadCastTcp(nmStageClear);
-
+			// 플레이어 다 나갈때 까지 대기
 			StartCoroutine (PlayerCheckExistRoutine(currentStage));
-
-			currentStage++;
-			BeginStage (currentStage);
 		}
 
 		protected IEnumerator PlayerCheckExistRoutine(int idx_) {
 			while(true){
-
 				if (stages[idx_].GetIsPlayerExist() == 0) {
 					// 캐릭터가 더이상 없으면 한번 더 작동 : 닫게됨
+					nmStageClear.Body[1].Attribute = "0";
+					nmStageClear.Body[1].Content = NetworkMessage.sFalse;
 					Network_Server.BroadCastTcp (nmStageClear);
+
+					// 이곳에서 다음 스테이지의 시작을 알림
+					yield return new WaitForSeconds(5f);
+					// 문이 닫힐때까지 대기
+
+					currentStage++;
+					BeginStage (currentStage);		// 다음 시작
+					break;
+				}
+
+				yield return null;
+			}
+		}
+
+		protected IEnumerator PlayerCheckEnterRoutine(int idx_){
+			// 일단 열라고 시킴
+			nmStageClear.Body [0].Content = currentStage.ToString ();
+			nmStageClear.Body[1].Attribute = "1";
+			nmStageClear.Body[1].Content = NetworkMessage.sTrue;
+			Network_Server.BroadCastTcp (nmStageClear);
+
+			int currentCharCount = ServerCharacterManager.instance.currentCharacterCount;
+			// 도중에 누군가 나갈때를 대비. 변수에다가 미리 저장
+
+			while(true){
+				if (stages[idx_].GetIsPlayerExist() == currentCharCount) {
+					// 캐릭터가 전부 들어오면 닫음
+					nmStageClear.Body[1].Content = NetworkMessage.sFalse;
+					Network_Server.BroadCastTcp (nmStageClear);
+					stages [idx_].StartWave(); // wave생성되게 함
 					break;
 				}
 
