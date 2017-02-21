@@ -47,6 +47,7 @@ public class PlayerSlot : MonoBehaviour {
 			goCh.transform.SetParent (trChar);
 			switch (goCh.name) {
 			case "LivingHeavy(Clone)":
+				goCh.transform.localPosition = new Vector3 (0f, -2f, 0f);
 				break;
 			case "LivingDoctor(Clone)":
 				goCh.transform.localPosition = new Vector3 (0f, -3f, 0f);
