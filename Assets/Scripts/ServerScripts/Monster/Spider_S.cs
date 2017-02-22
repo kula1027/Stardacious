@@ -13,6 +13,7 @@ namespace ServerSide{
 		private int spiderAttkRange = 20;
 		private int spiderAgroRange = 50;
 		private float spiderAppearTime = 3;
+		private float spiderAttackDelay = 0.5f;
 
 		protected new void Awake(){
 			base.Awake ();
@@ -54,17 +55,20 @@ namespace ServerSide{
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
 					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
 						// servercharacter 가 존재하고 죽지 않앗을 때
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAgroRange) {
+						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+						Vector3 myPos = this.transform.position;
+
+						if (Vector3.Distance (myPos, charPos) <= spiderAgroRange) {
 							// if character is in agro range..
 							isAgroed = true;
-							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							currentCharacterPos [curruentPlayers] = charPos;
 							curruentPlayers++;
 						}
 
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= spiderAttkRange) {
+						if (Vector3.Distance (myPos, charPos) <= spiderAttkRange) {
 							// if character is in attack range..
 							isInRanged = true;
-							inRangeCharaterPos [inRangePlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							inRangeCharaterPos [inRangePlayers] = charPos;
 							inRangePlayers++;
 						}
 					}
@@ -129,14 +133,14 @@ namespace ServerSide{
 			if (beHaviorFactor < 2) {
 				yield return StartCoroutine (MonsterBackStep (closestCharacterPos_));
 			} else {
-				yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+				yield return StartCoroutine (FireProjectile (closestCharacterPos_, spiderAttackDelay));
 			}
 		}
 
 		private IEnumerator SpiderNotMove(Vector3 closestCharacterPos_){
 			// 아얘 안움직이는 놈일때
 
-			yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+			yield return StartCoroutine (FireProjectile (closestCharacterPos_, spiderAttackDelay));
 		}
 	}
 }

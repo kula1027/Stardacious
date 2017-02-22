@@ -6,8 +6,7 @@ public class ClientStageManager : MonoBehaviour {
 
 	public StageControl_C[] stages;
 
-	public RespawnPoint[] resPoint;
-	private int resPointIdx=0;
+	//public RespawnPoint[] resPoint;
 
 	private int currentStage = 0;
 	public int CurrentStage{
@@ -26,11 +25,13 @@ public class ClientStageManager : MonoBehaviour {
 		monsterPooler = gameObject.AddComponent<ObjectPooler>();
 
 		/*****  respawn point setting  *****/
+		/*
 		for (int i = 0; i < resPoint.Length; i++) {
 			resPoint [i].gameObject.SetActive (false);
 		}
 		resPointIdx = 0;
 		resPoint [0].gameObject.SetActive (true);
+		*/
 		////////////////////////////////////
 
 
@@ -45,21 +46,6 @@ public class ClientStageManager : MonoBehaviour {
 	public ClientStageManager SetMaster(){
 		return this;
 	}
-		
-	private void LoadStage(int idx){
-		if(idx < 1){
-			Debug.Log("Stage Idx less than 0");
-			return;
-		}
-
-		goStage[idx] = Instantiate(goStage[idx]);
-		currentStage = idx;
-	}
-
-	public void MoveStage(int stgIdx){
-		currentStage = stgIdx;
-		LoadStage(currentStage);
-	}
 
 	public void OnRecv(NetworkMessage networkMessage){
 		
@@ -73,6 +59,11 @@ public class ClientStageManager : MonoBehaviour {
 
 		case MsgAttr.Stage.stgObject:
 			stages [int.Parse(networkMessage.Body[0].Content)].OnRecv(networkMessage.Body);
+			break;
+
+		case MsgAttr.Stage.stgNumber:
+			currentStage = int.Parse (networkMessage.Body[0].Content);
+			CharacterCtrl.instance.SetRespawnPoint(stages [currentStage].GetResPoint (0));
 			break;
 
 		default:
@@ -106,6 +97,7 @@ public class ClientStageManager : MonoBehaviour {
 		objMon.GetComponent<PoolingObject> ().Ready ();
 	}
 
+	/*
 	public void ResPointActive(){
 		// 현재걸 set deactive
 		resPoint [resPointIdx].gameObject.SetActive (false);
@@ -113,5 +105,5 @@ public class ClientStageManager : MonoBehaviour {
 		// 다음걸 set active
 		resPointIdx++;
 		resPoint [resPointIdx].gameObject.SetActive (true);
-	}
+	}*/
 }

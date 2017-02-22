@@ -6,6 +6,15 @@ public class StageControl_C : MonoBehaviour {
 	// objects 0 : right door
 	// objects 1 : left door
 
+
+	/// <summary>
+	/// 리스폰 포인트 관리
+	/// </summary>
+	public Transform[] resPoints;
+	public Vector3 GetResPoint(int idx_){
+		return resPoints [idx_].transform.position;
+	}
+
 	void Awake(){
 	}
 
@@ -24,6 +33,10 @@ public class StageControl_C : MonoBehaviour {
 			else if (bodies [1].Content.Equals (NetworkMessage.sFalse)) {
 				objects [int.Parse(bodies[1].Attribute)].DeActive ();
 			}
+			break;
+
+		default:
+			//default
 			break;
 		}
 	}
