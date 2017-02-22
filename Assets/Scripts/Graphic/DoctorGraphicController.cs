@@ -322,7 +322,7 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			}
 		}
 	}
-	protected void SetLowerAnim(ControlDirection direction){
+	protected virtual void SetLowerAnim(ControlDirection direction){
 		if (!isFlying && !isEnergyCharging) {//공중 상황 예외 처리
 
 			if (isAttackAnimationPlaying) {	//공격중 걸음
@@ -362,7 +362,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 					break;
 				}
 			}
-
 		}
 	}
 

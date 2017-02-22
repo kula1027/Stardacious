@@ -12,6 +12,7 @@ public class DoctorNetGraphicController : DoctorGraphicController {
 
 		isAttackAnimationPlaying = true;
 		SetGunShootAnim (currentInputDirection);
+		SetLowerAnim (currentInputDirection);
 	}
 
 	public override void EndShootMotion(){		//일반 공격뿐 아니라 냉각탄, 유도탄도 포함
@@ -58,6 +59,49 @@ public class DoctorNetGraphicController : DoctorGraphicController {
 						upperAnimator.Play ("UpIdle");
 						break;
 					}
+					break;
+				}
+			}
+		}
+	}
+
+	protected override void SetLowerAnim(ControlDirection direction){
+		if (!isFlying && !isEnergyCharging) {//공중 상황 예외 처리
+
+			if (isAttackAnimationPlaying) {	//공격중 걸음
+				switch (direction) {
+				case ControlDirection.Left:
+				case ControlDirection.LeftDown:
+				case ControlDirection.LeftUp:
+				case ControlDirection.Right:
+				case ControlDirection.RightDown:
+				case ControlDirection.RightUp:			//이동중
+					//lowerState = DoctorLowerState.Walk;
+					HairDeactive ();
+					lowerAnimator.Play ("Walk", 0, lowerAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime);
+					break;
+				default:			//정지
+					//lowerState = DoctorLowerState.Idle;
+					HairDeactive ();
+					lowerAnimator.Play ("Idle", 0, lowerAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime);
+					break;
+				}
+			} else {
+				switch (direction) {
+				case ControlDirection.Left:
+				case ControlDirection.LeftDown:
+				case ControlDirection.LeftUp:
+				case ControlDirection.Right:
+				case ControlDirection.RightDown:
+				case ControlDirection.RightUp:			//이동중
+					//lowerState = DoctorLowerState.Run;
+					HairActive ();
+					lowerAnimator.Play ("Run", 0, lowerAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime);
+					break;
+				default:			//정지
+					//lowerState = DoctorLowerState.Idle;
+					HairDeactive ();
+					lowerAnimator.Play ("Idle", 0, lowerAnimator.GetCurrentAnimatorStateInfo (0).normalizedTime);
 					break;
 				}
 			}

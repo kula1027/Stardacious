@@ -25,15 +25,15 @@ public class FlyGraphicController : MonsterGraphicCtrl {
 	}
 
 	public override void Attack (){
-		
+		animator.Play ("Attack");
 	}
 
 	public override void Walk (){
-		
+		animator.Play ("Idle");
 	}
 
 	public override void Idle (){
-		
+		animator.Play ("Idle");
 	}
 
 	public override void Die (){

@@ -72,6 +72,7 @@ public class ClientStageManager : MonoBehaviour {
 			break;
 
 		case MsgAttr.Stage.stgObject:
+			Debug.Log (int.Parse(networkMessage.Body[0].Content));
 			stages [int.Parse(networkMessage.Body[0].Content)].OnRecv(networkMessage.Body);
 			break;
 

@@ -22,7 +22,8 @@ public class ClientProjectileManager : MonoBehaviour {
 
 	//Monster
 	public GameObject pfSpiderBullet;
-
+	public GameObject pfFlyBullet;
+	public GameObject pfWalkerBullet;
 
 	void Awake(){
 		instance = this;
@@ -119,6 +120,14 @@ public class ClientProjectileManager : MonoBehaviour {
 		//MonsterSpider
 		case ProjType.SpiderBullet:
 			proj = pooler_.RequestObjectAt(pfSpiderBullet, projIdx_);
+			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
+			break;
+		case ProjType.FlyBullet:
+			proj = pooler_.RequestObjectAt(pfFlyBullet, projIdx_);
+			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
+			break;
+		case ProjType.WalkerBullet:
+			proj = pooler_.RequestObjectAt(pfWalkerBullet, projIdx_);
 			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
 			break;
 		}
