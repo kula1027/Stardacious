@@ -5,12 +5,16 @@ namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		public BoxCollider2D colGroundChecker;
 
+		private int monsterIdx;
+		public int MonsterIdx{
+			set{ monsterIdx = value; }
+		}
+		// 0 : spider | 1 : walker | 2 : fly
+
 		private StageControl masterWave;
 		public StageControl MasterWave{
 			set{ masterWave = value; }
 		}
-
-		public bool isGround;
 
 		private bool notMoveMonster = false;
 		public bool NotMoveMonster{
@@ -18,8 +22,11 @@ namespace ServerSide{
 			set{ this.notMoveMonster = value; }
 		}
 
+		public bool isGround;
+
 		protected bool isMoving = false;
 		protected bool currentDir = false; // false : 왼쪽 | true : 오른쪽
+		protected bool canControl = true;
 
 		private const float posSyncItv = 0.05f;
 		private NetworkMessage nmPos;			// for sync position
@@ -30,8 +37,6 @@ namespace ServerSide{
 		private NetworkMessage nmAttk;
 
 		protected Rigidbody2D rgd2d;
-
-		protected bool canControl = true;
 
 		protected void Awake(){
 			rgd2d = GetComponent<Rigidbody2D>();
@@ -44,7 +49,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 150; // for debug hp is 1
+			maxHp = 1; // for debug hp is 1
  			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -84,7 +89,14 @@ namespace ServerSide{
 				break;
 
 			case MsgAttr.addForce:
-				rgd2d.AddForce(bodies[0].ConvertToV2());
+				Vector2 forceDir = bodies [0].ConvertToV2 ();
+				rgd2d.AddForce (forceDir);
+
+				if (monsterIdx == 2) {
+					// fly는 힘받으면 반대쪽으로 감속.
+					rgd2d.AddForce (forceDir * -1f);
+				}
+				
 				break;
 			}
 		}
@@ -106,12 +118,24 @@ namespace ServerSide{
 					} else if (isMoving && isGround) {
 						// 땅에 떨졋는데 움직임
 						nmMoving.Body[0].Content = NetworkMessage.sTrue;
+
+						if (this.monsterIdx == 1) {
+							// walker의 경우 : 공중모션 없음
+							nmMoving.Body [0].Content = NetworkMessage.sFalse;
+						}
+							
 						Network_Server.BroadCastTcp(nmMoving);
 
 					} else {
 						// 그외
 						colGroundChecker.enabled = false;
 						nmGround.Body[0].Content = NetworkMessage.sFalse;
+
+						if (this.monsterIdx == 1) {
+							// walker의 경우 : 공중모션 없음
+							nmMoving.Body [0].Content = NetworkMessage.sTrue;
+						}
+
 						Network_Server.BroadCastTcp(nmGround);
 					}
 				}
@@ -141,7 +165,7 @@ namespace ServerSide{
 			}
 		}
 
-		private void NotifyAppearence(){
+		public void NotifyAppearence(){
 			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
 			MsgSegment[] b = {
 				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
@@ -184,6 +208,8 @@ namespace ServerSide{
 		protected virtual void SetGravityOn(){
 		}
 		protected virtual void SetGravityOff(){
+		}
+		protected virtual void AddReverseForce(Vector2 forceDir_){
 		}
 
 		protected IEnumerator MonsterFreeze() {
@@ -350,17 +376,17 @@ namespace ServerSide{
 			return returnCharacterPos;
 		}
 
-		protected IEnumerator FireProjectile(Vector3 closestCharacterPos_){
+		protected IEnumerator FireProjectile(Vector3 closestCharacterPos_, float attkDelay_){
 			float timeAcc = 0;
 
 			nmAttk.Body [0].Content = NetworkMessage.sTrue;
 			Network_Server.BroadCastTcp (nmAttk);
 
 			while (true) {
-				// 공격 anim 선딜레이 0.5sec
+				// 공격 anim 선딜레이
 				timeAcc += Time.deltaTime;
 
-				if (timeAcc > 0.5f)
+				if (timeAcc > attkDelay_)
 					break;
 				
 				yield return null;
@@ -371,7 +397,17 @@ namespace ServerSide{
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
 					               ServerProjectileManager.instance.pfLocalProj
 				               );
-				go.transform.position = transform.position + Vector3.up * 2f;
+				if (monsterIdx == 0)
+					go.transform.position = transform.position + Vector3.up * 2f;
+				else if (monsterIdx == 1) {
+					if(currentDir == false)
+						go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
+					if(currentDir == true)
+						go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
+				}
+				else if(monsterIdx == 2)
+					go.transform.position = transform.position + Vector3.up * 2f;
+
 				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
 				//right : 투사체 진행방향 결정
 

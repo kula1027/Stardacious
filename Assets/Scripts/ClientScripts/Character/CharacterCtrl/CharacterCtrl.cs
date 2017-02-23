@@ -5,6 +5,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
 	private int dieCount = 0;
+	private bool isAwaked = true;	// 방금 생성됨
 	private float defaultRespawnTime = 5f;
 
 	public BoxCollider2D colGroundChecker;
@@ -35,9 +36,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	protected bool canControl = true;
 
 	protected Vector3 respawnPoint;
-	public Vector3 RespawnPoint{
-		set{ this.respawnPoint = value; }
-	}
 
 	#region chData
 	protected const float originalMoveSpeed = 0.15f;
@@ -53,6 +51,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hbt = GetComponentInChildren<HitBoxTrigger>();
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
+		isAwaked = true;
 		CurrentHp = 20;
 	}
 
@@ -114,7 +113,12 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		MsgSegment bAppear = new MsgSegment(((int)chrIdx).ToString());
 		NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
+		MsgSegment hStgNum = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgNumber);
+		MsgSegment bStgNum = new MsgSegment ();
+		NetworkMessage nmStgNumber = new NetworkMessage (hStgNum, bStgNum);
+
 		Network_Client.SendTcp(nmAppear);
+		Network_Client.SendTcp(nmStgNumber);
 	}
 
 	private ControlDirection prevCtrlDir = ControlDirection.Middle;
@@ -432,6 +436,19 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 		RespawnPanel.instance.Hide ();
 	}
+
+	public void SetRespawnPoint(Vector3 respawnPoint_){
+		Debug.Log ("responchange!");
+		this.respawnPoint = respawnPoint_;
+
+		if (isAwaked == true) {
+			transform.position = respawnPoint;
+			isAwaked = false;
+		} else {
+			//nothing
+		}
+	}
+
 	#endregion
 }
 

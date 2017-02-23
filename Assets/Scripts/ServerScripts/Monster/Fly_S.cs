@@ -13,6 +13,7 @@ namespace ServerSide{
 		private int flyAttkRange = 40;
 		private int flyAgroRange = 50;
 		private float walkerAppearTime = 3;
+		private float flyAttackDelay = 0.5f;
 
 		protected new void Awake(){
 			base.Awake ();
@@ -58,15 +59,18 @@ namespace ServerSide{
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
 					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= flyAgroRange) {
+						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+						Vector3 myPos = this.transform.position;
+
+						if (Vector3.Distance (myPos, charPos) <= flyAgroRange) {
 							isAgroed = true;
-							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							currentCharacterPos [curruentPlayers] = charPos;
 							curruentPlayers++;
 						}
 
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= flyAttkRange) {
+						if (Vector3.Distance (myPos, charPos) <= flyAttkRange) {
 							isInRanged = true;
-							inRangeCharaterPos [inRangePlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							inRangeCharaterPos [inRangePlayers] = charPos;
 							inRangePlayers++;
 						}
 					}
@@ -113,7 +117,7 @@ namespace ServerSide{
 		private IEnumerator FlyInRange(Vector3 closestCharacterPos_){
 			// 몬스터가 근접햇을때
 
-			yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+			yield return StartCoroutine (FireProjectile (closestCharacterPos_, flyAttackDelay));
 			yield return StartCoroutine (AirMonsterApproach (closestCharacterPos_));
 		}
 
@@ -122,6 +126,8 @@ namespace ServerSide{
 		}
 		protected override void SetGravityOff(){
 			this.GetComponent<Rigidbody2D> ().gravityScale = 0;
+		}
+		protected override void AddReverseForce(Vector2 forceDir_){
 		}
 	}
 }
