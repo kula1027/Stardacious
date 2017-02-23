@@ -71,6 +71,14 @@ namespace ServerSide{
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().MonsterIdx = 1;
 							mGo.GetComponent<ServerMonster> ().Ready ();
+						}else if(goName.Contains("wkrnm")){
+							pf = ServerStageManager.instance.pfWalker;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							mGo.GetComponent<ServerMonster> ().MasterWave = this;
+							mGo.GetComponent<ServerMonster> ().MonsterIdx = 1;
+							mGo.GetComponent<ServerMonster> ().NotMoveMonster = true;
+							mGo.GetComponent<ServerMonster> ().Ready ();
 						}else if(goName.Contains("fly")){
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
