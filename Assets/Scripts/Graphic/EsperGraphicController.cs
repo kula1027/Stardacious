@@ -23,7 +23,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	private bool isPsying = false;
 	protected bool isFlying = false;
 	protected bool isAttackAnimationPlaying = false;
-	private bool isAttackButtonPressing = false;
+	protected bool isAttackButtonPressing = false;
 	private bool canJumpAttack = true;
 
 	protected Animator singleAnimator;

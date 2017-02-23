@@ -68,7 +68,7 @@ public class ClientMasterManager : MonoBehaviour {
 
 		case MsgAttr.Misc.disconnect:
 			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
-			SceneManager.LoadScene("scStart");
+			SceneManager.LoadScene("scAwake");
 			break;
 		}
 	}

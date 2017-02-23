@@ -71,4 +71,10 @@ public class ReadyPanel : MonoBehaviour {
 			slotSelf.txtState.Glow();
 		}
 	}
+
+	public void NowSelecting(bool isSelecting){
+		for (int i = 0; i < playerSlot.Length; i++) {
+			playerSlot [i].NowSelecting (isSelecting);
+		}
+	}
 }

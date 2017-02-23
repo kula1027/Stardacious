@@ -91,7 +91,7 @@ public class StartSceneManager : MonoBehaviour {
 
 		case MsgAttr.Misc.letsgo:
 			popUp.ShowPopUp("로딩 중 ...", false, true);
-			SceneManager.LoadSceneAsync("scIngame");
+			SceneManager.LoadSceneAsync("scJH");
 			break;
 		}
 	}
@@ -193,6 +193,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 	public void OnClickBackSelect(){
 		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackSelect));
+		selCharPanel.EndShow ();
 	}
 	public void OnClickReady(){
 		//SceneManager.LoadSceneAsync("scIngame");

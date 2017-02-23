@@ -35,6 +35,14 @@ public class HitEffect : PoolingObject {
 	}
 
 	public void GreenSlash(){
-		effectAnimator.Play ("Slash");
+		if (Random.Range (0, 1) == 0) {
+			effectAnimator.Play ("Slash");
+		} else {
+			effectAnimator.Play ("Green");
+		}
+	}
+
+	public void Red(){
+		effectAnimator.Play ("Spark");
 	}
 }

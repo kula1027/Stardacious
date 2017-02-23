@@ -10,9 +10,11 @@ namespace ServerSide{
 		//private bool isJump = false;
 		private bool isAgroed;
 		private bool isInRanged;
-		private int walkerAttkRange = 30;
-		private int walkerAgroRange = 50;
+		private int walkerAttkRange = 70;
+		private int walkerAgroRange = 80;
+		private int walkerCloseRange = 10;
 		private float walkerAppearTime = 3;
+		private float walkerAttackDelay = 1f;
 
 
 		protected new void Awake(){
@@ -55,15 +57,23 @@ namespace ServerSide{
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
 					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= walkerAgroRange) {
+						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+						Vector3 myPos = this.transform.position;
+
+						if (Vector3.Distance (myPos, charPos) <= walkerCloseRange) {
+							// 너무 근접하면 타겟에서 제외.
+							break;
+						}
+
+						if (Vector3.Distance (myPos, charPos) <= walkerAgroRange) {
 							isAgroed = true;
-							currentCharacterPos [curruentPlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							currentCharacterPos [curruentPlayers] = charPos;
 							curruentPlayers++;
 						}
 
-						if (Vector3.Distance (this.transform.position, ServerCharacterManager.instance.GetCharacter (i).transform.position) <= walkerAttkRange) {
+						if (Vector3.Distance (myPos, charPos) <= walkerAttkRange) {
 							isInRanged = true;
-							inRangeCharaterPos [inRangePlayers] = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+							inRangeCharaterPos [inRangePlayers] = charPos;
 							inRangePlayers++;
 						}
 					}
@@ -117,14 +127,14 @@ namespace ServerSide{
 			if (beHaviorFactor < 2) {
 				yield return StartCoroutine (MonsterBackStep (closestCharacterPos_));
 			} else {
-				yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+				yield return StartCoroutine (FireProjectile (closestCharacterPos_, walkerAttackDelay));
 			}
 		}
 
 		private IEnumerator WalkerNotMove(Vector3 closestCharacterPos_){
 			// 아얘 안움직이는 놈일때
 
-			yield return StartCoroutine (FireProjectile (closestCharacterPos_));
+			yield return StartCoroutine (FireProjectile (closestCharacterPos_, walkerAttackDelay));
 		}
 	}
 }

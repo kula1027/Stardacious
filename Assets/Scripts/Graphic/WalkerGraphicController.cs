@@ -41,6 +41,6 @@ public class WalkerGraphicController : MonsterGraphicCtrl {
 	}
 
 	public void WakeUp(){
-		
+		animator.Play ("Awake");
 	}
 }

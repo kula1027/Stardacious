@@ -31,6 +31,8 @@ namespace ServerSide{
 			}
 			currentCharacterCount++;
 
+			// monsterapp
+
 			return character[idx_];
 		}
 
@@ -47,7 +49,7 @@ namespace ServerSide{
 		public void OnRecv(NetworkMessage networkMessage){			
 			if(networkMessage.Adress.Content.Equals(NetworkMessage.ServerId) == true){//서버를 향한 메시지일 경우			
 				switch(networkMessage.Header.Content){
-				case MsgAttr.create:					
+				case MsgAttr.create:
 					int sender = int.Parse(networkMessage.Adress.Attribute);
 					ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
 					ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);

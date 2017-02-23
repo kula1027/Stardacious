@@ -23,6 +23,10 @@ namespace ServerSide{
 			case MsgAttr.monster:
 				ServerStageManager.instance.OnRecv(networkMessage);
 				break;
+
+			case MsgAttr.stage:
+				ServerStageManager.instance.OnRecv(networkMessage);
+				break;
 			}
 		}
 	}

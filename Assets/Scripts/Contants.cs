@@ -13,6 +13,8 @@ public enum ProjType{
 	BindBullet,
 	EnergyBall,
 	SpiderBullet,
+	FlyBullet,
+	WalkerBullet,
 	EffectIce,
 	RecallBullet
 }

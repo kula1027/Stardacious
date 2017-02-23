@@ -25,6 +25,7 @@ namespace ServerSide{
 		private GameObject[] goStage;
 
 		private NetworkMessage nmStageClear;
+		private NetworkMessage nmStageNumber;
 
 		public GameObject pfSpider;
 		public GameObject pfWalker;
@@ -40,6 +41,11 @@ namespace ServerSide{
 				new MsgSegment("0", NetworkMessage.sTrue)
 			};
 			nmStageClear = new NetworkMessage (h, b);
+
+			nmStageNumber = new NetworkMessage (
+				new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgNumber),
+				new MsgSegment (MsgAttr.stage, currentStage.ToString())
+			);
 
 			//safeBar = GameObject.Find("SafeBar").transform;
 			monsterPooler = gameObject.AddComponent<ObjectPooler>();
@@ -66,7 +72,12 @@ namespace ServerSide{
 		}
 
 		public void OnRecv(NetworkMessage networkMsg){
-			switch(networkMsg.Header.Attribute){
+			switch(networkMsg.Header.Content){
+			case MsgAttr.Stage.stgNumber:
+				nmStageNumber.Body[0].Content = currentStage.ToString ();
+				Network_Server.BroadCastTcp (nmStageNumber);
+				break;
+
 			default:
 				int monsIdx = int.Parse(networkMsg.Header.Content);
 				IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
@@ -102,6 +113,8 @@ namespace ServerSide{
 					// 문이 닫힐때까지 대기
 
 					currentStage++;
+					nmStageNumber.Body[0].Content = currentStage.ToString ();
+					Network_Server.BroadCastTcp (nmStageNumber);
 					BeginStage (currentStage);		// 다음 시작
 					break;
 				}
