@@ -102,6 +102,7 @@ public class StartSceneManager : MonoBehaviour {
 				int chIdx = int.Parse(bodies[loop * 2 + 1].Content);
 				readyPanel.SetSlotCharacter(loop, chIdx);
 				readyPanel.SetSlotState(loop, (GameState)int.Parse(bodies[loop * 2 + 2].Attribute));
+				PlayerData.nickNameOthers[loop] = bodies[loop * 2 + 1].Attribute;
 				readyPanel.SetSlotNickName(loop, bodies[loop * 2 + 1].Attribute);
 			}
 		}

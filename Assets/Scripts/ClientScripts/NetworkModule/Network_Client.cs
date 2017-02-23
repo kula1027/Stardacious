@@ -128,7 +128,7 @@ public class Network_Client {
 			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message, 2);
 		}
 
-		ShutDown();
+		//ShutDown();
 	}
 
 	#endregion

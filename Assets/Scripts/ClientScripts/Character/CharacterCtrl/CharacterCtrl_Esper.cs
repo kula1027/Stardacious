@@ -24,7 +24,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		PrepareWeapons();
 
-		gcEsper = GetComponentInChildren<EsperGraphicController> ();
+		gcEsper = (EsperGraphicController)characterGraphicCtrl;
 		gcEsper.Initialize();
 
 		NotifyAppearence();

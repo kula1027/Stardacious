@@ -22,7 +22,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		skillCoolDown[1] = 6f;
 		skillCoolDown[2] = 4f;
 
-		gcDoctor = GetComponentInChildren<DoctorGraphicController> ();
+		gcDoctor = (DoctorGraphicController)characterGraphicCtrl;
 		gcDoctor.Initialize();
 
 		PrepareEnergyGun();

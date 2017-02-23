@@ -4,9 +4,7 @@ using System.Net.Sockets;
 using System;
 
 namespace ServerSide{
-	public static class ClientManager {		
-		public const int maxProjectileCount = 20;
-
+	public static class ClientManager {
 		private static TcpConnection[] arrayClient;
 		public static TcpConnection getClient(int idx){
 			return arrayClient[idx];
@@ -27,8 +25,7 @@ namespace ServerSide{
 			arrayClient = new TcpConnection[NetworkConst.maxPlayer];
 		}
 
-		public static bool AddClient(Socket welcomeSocket_){
-			
+		public static bool AddClient(Socket welcomeSocket_){			
 			int freeId = GetFreeId();
 
 			if(freeId == -1){

@@ -2,8 +2,11 @@
 using System.Collections;
 
 public class NetworkCharacter_Doctor : NetworkCharacter {
-	public DoctorGraphicController gcDoctor;
+	private DoctorGraphicController gcDoctor;
 
+	void Awake(){
+		gcDoctor = (DoctorGraphicController)characterGraphicCtrl;
+	}
 
 	private bool isChargingEnergy = false;
 	public override void UseSkill (int idx_){
