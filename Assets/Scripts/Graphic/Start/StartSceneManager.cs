@@ -192,6 +192,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 	public void OnClickBackSelect(){
 		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackSelect));
+		selCharPanel.EndShow ();
 	}
 	public void OnClickReady(){
 		//SceneManager.LoadSceneAsync("scIngame");

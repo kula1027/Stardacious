@@ -22,6 +22,7 @@ public class SelectPanel : MonoBehaviour {
 		}else{
 			ShowInfo((int)PlayerData.chosenCharacter);
 		}
+		readyPanel.NowSelecting (true);
 	}
 
 	public void ShowInfo(int chIdx_){
@@ -51,5 +52,9 @@ public class SelectPanel : MonoBehaviour {
 		NetworkMessage nmChar = new NetworkMessage(new MsgSegment(MsgAttr.misc));
 		nmChar.Body[0] = new MsgSegment(MsgAttr.character, chIdx_);
 		Network_Client.SendTcp(nmChar);
+	}
+
+	public void EndShow(){
+		readyPanel.NowSelecting (false);
 	}
 }
