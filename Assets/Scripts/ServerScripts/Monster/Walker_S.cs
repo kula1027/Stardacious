@@ -14,7 +14,8 @@ namespace ServerSide{
 		private int walkerAgroRange = 80;
 		private int walkerCloseRange = 10;
 		private float walkerAppearTime = 3;
-		private float walkerAttackDelay = 1f;
+		private float walkerAtkDelay = 1f;
+		private float walkerAtkAfterDelay = 1f;
 
 
 		protected new void Awake(){
@@ -59,11 +60,6 @@ namespace ServerSide{
 					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
 						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 						Vector3 myPos = this.transform.position;
-
-						if (Vector3.Distance (myPos, charPos) <= walkerCloseRange) {
-							// 너무 근접하면 타겟에서 제외.
-							break;
-						}
 
 						if (Vector3.Distance (myPos, charPos) <= walkerAgroRange) {
 							isAgroed = true;
@@ -127,14 +123,59 @@ namespace ServerSide{
 			if (beHaviorFactor < 2) {
 				yield return StartCoroutine (MonsterBackStep (closestCharacterPos_));
 			} else {
-				yield return StartCoroutine (FireProjectile (closestCharacterPos_, walkerAttackDelay));
+				yield return StartCoroutine (MonsterFireProjectile (closestCharacterPos_));
 			}
 		}
 
 		private IEnumerator WalkerNotMove(Vector3 closestCharacterPos_){
 			// 아얘 안움직이는 놈일때
 
-			yield return StartCoroutine (FireProjectile (closestCharacterPos_, walkerAttackDelay));
+			yield return StartCoroutine (MonsterFireProjectile (closestCharacterPos_));
+		}
+
+		protected override IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
+			float timeAcc = 0;
+
+			nmAttk.Body [0].Content = NetworkMessage.sTrue;
+			Network_Server.BroadCastTcp (nmAttk);
+
+			while (true) {	// 공격 anim 선딜레이
+				timeAcc += Time.deltaTime;
+				if (timeAcc > walkerAtkDelay)
+					break;
+				yield return null;
+			}
+
+
+			if (IsDead == false) { // 먼저 죽엇는지 확인하자
+				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
+					ServerProjectileManager.instance.pfLocalProj
+				);
+				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.WalkerBullet;
+
+				if (currentDir == false) {
+					go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
+
+				} else if (currentDir == true) {
+					go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
+				}
+
+				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+				//right : 투사체 진행방향 결정
+				go.GetComponent<ServerLocalProjectile> ().Ready ();
+
+				nmAttk.Body [0].Content = NetworkMessage.sFalse;
+				Network_Server.BroadCastTcp (nmAttk);
+
+
+				timeAcc = 0;
+				while (true) {	// 공격 anim 후딜레이
+					timeAcc += Time.deltaTime;
+					if (timeAcc > walkerAtkAfterDelay)
+						break;
+					yield return null;
+				}
+			}
 		}
 	}
 }

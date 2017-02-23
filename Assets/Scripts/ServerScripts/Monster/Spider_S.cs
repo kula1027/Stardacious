@@ -13,7 +13,9 @@ namespace ServerSide{
 		private int spiderAttkRange = 20;
 		private int spiderAgroRange = 50;
 		private float spiderAppearTime = 3;
-		private float spiderAttackDelay = 0.5f;
+		private float spiderAtkDelay = 0.5f;
+		private float spiderAtkAfterDelay = 1f;
+
 
 		protected new void Awake(){
 			base.Awake ();
@@ -133,14 +135,53 @@ namespace ServerSide{
 			if (beHaviorFactor < 2) {
 				yield return StartCoroutine (MonsterBackStep (closestCharacterPos_));
 			} else {
-				yield return StartCoroutine (FireProjectile (closestCharacterPos_, spiderAttackDelay));
+				yield return StartCoroutine (MonsterFireProjectile (closestCharacterPos_));
 			}
 		}
 
 		private IEnumerator SpiderNotMove(Vector3 closestCharacterPos_){
 			// 아얘 안움직이는 놈일때
 
-			yield return StartCoroutine (FireProjectile (closestCharacterPos_, spiderAttackDelay));
+			yield return StartCoroutine (MonsterFireProjectile (closestCharacterPos_));
+		}
+
+		protected override IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
+			float timeAcc = 0;
+
+			nmAttk.Body [0].Content = NetworkMessage.sTrue;
+			Network_Server.BroadCastTcp (nmAttk);
+
+			while (true) {	// 공격 anim 선딜레이
+				timeAcc += Time.deltaTime;
+				if (timeAcc > spiderAtkDelay)
+					break;
+				yield return null;
+			}
+
+
+			if (IsDead == false) { // 먼저 죽엇는지 확인하자
+				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
+					ServerProjectileManager.instance.pfLocalProj
+				);
+				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.SpiderBullet;
+
+				go.transform.position = transform.position + Vector3.up * 2f;
+				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+				//right : 투사체 진행방향 결정
+				go.GetComponent<ServerLocalProjectile> ().Ready ();
+
+				nmAttk.Body [0].Content = NetworkMessage.sFalse;
+				Network_Server.BroadCastTcp (nmAttk);
+
+
+				timeAcc = 0;
+				while (true) {	// 공격 anim 후딜레이
+					timeAcc += Time.deltaTime;
+					if (timeAcc > spiderAtkAfterDelay)
+						break;
+					yield return null;
+				}
+			}
 		}
 	}
 }
