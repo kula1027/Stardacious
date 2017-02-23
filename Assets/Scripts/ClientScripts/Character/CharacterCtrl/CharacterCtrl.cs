@@ -454,7 +454,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public void SetRespawnPoint(Vector3 respawnPoint_){
-		Debug.Log ("responchange!");
 		this.respawnPoint = respawnPoint_;
 
 		if (isAwaked == true) {
