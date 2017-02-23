@@ -37,7 +37,7 @@ public class FlyGraphicController : MonsterGraphicCtrl {
 	}
 
 	public override void Die (){
-
+		animator.Play ("Die");
 	}
 
 	public void WakeUp(){
