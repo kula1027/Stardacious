@@ -34,10 +34,14 @@ public class Fly_C : ClientMonster {
 	}
 
 	protected override void MonsterFreeze(){
+		base.MonsterFreeze();
+
 		gcFly.AnimationFreeze ();
 	}
 
 	protected override void MonsterFreezeEnd(){
+		base.MonsterFreezeEnd();
+
 		gcFly.AnimationResume ();
 	}
 }

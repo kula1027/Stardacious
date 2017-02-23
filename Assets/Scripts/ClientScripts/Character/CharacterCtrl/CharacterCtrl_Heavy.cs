@@ -123,9 +123,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	}
 
 	public void OnHitShotGun(Collider2D col){
-		float dis = Vector2.Distance(trGunMuzzle.position, col.transform.position);
-		if(dis < 1)dis = 1;
-		hit_ShotGun = new HitObject(15 + (int)(120 / dis));
+		int dis = (int)Vector2.Distance(trGunMuzzle.position, col.transform.position);
+		hit_ShotGun = new HitObject((220 - dis * 10));
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 		if(hbt)
 			hbt.OnHit(hit_ShotGun);
@@ -166,9 +165,10 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfMinigunBullet);
 			go.transform.position = trGunMuzzle.position;
 			go.transform.Translate(0, Random.Range(-0.3f, 0.3f), 0);
-			go.transform.right = trGunMuzzle.right;
+			Vector3 randY = new Vector3(Random.Range(-0.15f, 0.15f), Random.Range(-0.15f, 0.15f), 0);
+			go.transform.right = trGunMuzzle.right + randY;
 			if (currentDirV3.x < 0)
-				go.transform.right = new Vector3(-trGunMuzzle.right.x, trGunMuzzle.right.y, trGunMuzzle.right.z);
+				go.transform.right = new Vector3(-trGunMuzzle.right.x, trGunMuzzle.right.y, trGunMuzzle.right.z) + randY;
 
 			go.GetComponent<PoolingObject>().Ready();
 		}

@@ -15,8 +15,10 @@ public enum ProjType{
 	SpiderBullet,
 	FlyBullet,
 	WalkerBullet,
+	RecallBullet,
 	EffectIce,
-	RecallBullet
+	EffectPortalIn,
+	EffectPortalOut
 }
 
 public enum ChIdx{

@@ -19,7 +19,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		chrIdx = ChIdx.Esper;
 
 		skillCoolDown[0] = 0.4f;
-		skillCoolDown[1] = 5f;
+		skillCoolDown[1] = 2f;
 		skillCoolDown[2] = 2f;
 
 		PrepareWeapons();
@@ -58,7 +58,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 
 	#region DashAttack
-	private const int damagedash = 25;
+	private const int damagedash = 50;
 	private HitObject hoDash = new HitObject(damagedash);
 	private const float dashAttackTime = 0.2f;
 
@@ -84,7 +84,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region SlashAttack
-	private const int damageSlash = 40;
+	private const int damageSlash = 60;
 	private const float slashAttackTime = 0.05f;
 	private HitObject hoSlash = new HitObject(damageSlash);
 
@@ -143,7 +143,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	#region SwiftRush
 	private int rushCount = 0;
-	private const int damageRush = 60;
+	private const int damageRush = 80;
 	private HitObject hoRush = new HitObject(damageRush);
 	private bool isRushing = true;
 
@@ -156,7 +156,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		rushCount++;
 		if(rushCount > 2){
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 18);
+			InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 14);
 			rushCount = 0;
 		}else{
 			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
@@ -199,6 +199,12 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	#region Recall
 
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.L)){
+			Recall();
+		}
+	}
+
 	NetworkMessage nmRecall;
 	private int recallTarget = -1;
 	private void Recall(){
@@ -209,10 +215,28 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 			);
 			nmRecall.Adress.Content = recallTarget.ToString();
 			Network_Client.SendTcp(nmRecall);
+
+			CreatePortal();
 		}
 
 		recallTarget = -1;
 	}
+
+	private void CreatePortal(){
+		GameObject goPortalOut = ClientProjectileManager.instance.pfPortalOutEffect;
+		goPortalOut = (GameObject)Instantiate(goPortalOut);
+		goPortalOut.transform.position = transform.position + new Vector3(0, 2, 0);
+		goPortalOut.GetComponent<PortalEffect>().NotifyAppearence();
+
+		GameObject targetObj = ClientCharacterManager.instance.GetCharacter(recallTarget);
+		if(targetObj != null){
+			GameObject goPortalIn = ClientProjectileManager.instance.pfPortalInEffect;
+			goPortalIn = (GameObject)Instantiate(goPortalIn);
+			goPortalIn.transform.position = targetObj.transform.position + new Vector3(0, 2, 0);
+			goPortalIn.GetComponent<PortalEffect>().NotifyAppearence();
+		}
+	}
+
 	private void FireRecallBullet(){
 		GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfRecallBullet);
 		go.transform.position = transform.position + new Vector3(0, 2f, 0);
@@ -249,12 +273,18 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		gcEsper.PsyShield();
 		hitboxDistortion.gameObject.SetActive(true);
 
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(1f);
 
 		hitboxDistortion.gameObject.SetActive(false);
 	}
 
 	#endregion
+
+	public override void OnDie (){
+		base.OnDie ();
+
+		rushCount = 0;
+	}
 
 	public override bool UseSkill (int idx_){
 		if(isRushing == false){

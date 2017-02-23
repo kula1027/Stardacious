@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class CameraControl : MonoBehaviour {
+	public const int defaultCamSize = 13;
+
 	private Camera cam;
 	private Transform targetTr;
 	private const float camDepth = -30f;

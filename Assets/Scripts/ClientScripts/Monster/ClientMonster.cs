@@ -114,9 +114,11 @@ public class ClientMonster : PoolingObject, IHittable {
 		}
 	}
 	protected virtual void MonsterFreezeEnd(){
+		hTrigger.gameObject.SetActive(true);
 	}
 
 	protected virtual void MonsterFreeze(){
+		hTrigger.gameObject.SetActive(false);
 	}
 
 	public override void Freeze (){

@@ -6,7 +6,7 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	private HitObject hitObject = new HitObject(10);
 	protected Coroutine flyingRoutine;
 
-	public void Initiate(MsgSegment[] bodies_){
+	public virtual void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
 		transform.right = bodies_[2].ConvertToV3();
 
@@ -43,9 +43,17 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 				hbt.OnHit(hitObject);
 				ReturnObject();	
 			}
+		}else if(col.tag.Equals("Ground")){
+			ReturnObject();
 		}
 	}
 	#endregion
+
+	public void ForceReturn(){
+		NotifyDestroy();
+
+		ReturnObject();
+	}
 
 	public void NotifyDestroy(){
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.Projectile.server);
@@ -57,10 +65,13 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	}
 
 	public GameObject tempPfHit;
-
-	public override void OnReturned (){
+	protected virtual void Boom(){
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
 		goHit.transform.position = transform.position + transform.right * 1.5f;
 		goHit.GetComponent<HitEffect>().Yellow();
+	}
+		
+	public override void OnReturned (){
+		Boom();
 	}
 }

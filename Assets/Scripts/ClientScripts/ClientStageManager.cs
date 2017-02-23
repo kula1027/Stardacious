@@ -97,6 +97,10 @@ public class ClientStageManager : MonoBehaviour {
 		objMon.GetComponent<PoolingObject> ().Ready ();
 	}
 
+	public GameObject GetMonster(int idx_){
+		return monsterPooler.GetGameObject(idx_);
+	}
+
 	/*
 	public void ResPointActive(){
 		// 현재걸 set deactive
