@@ -19,7 +19,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		skillCoolDown[1] = 2f;
 		skillCoolDown[2] = 2f;
 
-		gcHeavy = GetComponentInChildren<HeavyGraphicController> ();
+		gcHeavy = (HeavyGraphicController)characterGraphicCtrl;
 		gcHeavy.Initialize();
 
 		PrepareShotGun();

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// 네트워크로 제어되는 다른 클라이언트들의 캐릭터 객체
@@ -10,6 +11,8 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		get{return networkId;}
 		set{networkId = value;}
 	}
+
+	public Transform trCanvas;
 
 	public CharacterGraphicCtrl characterGraphicCtrl;
 	public CharacterGraphicCtrl cgCtrl{
@@ -25,6 +28,11 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 	void Start(){
 		characterGraphicCtrl.Initialize();
 		StartCoroutine(PositionRoutine());
+		SetNickName();
+	}
+
+	private void SetNickName(){
+		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.nickNameOthers[networkId];
 	}
 
 	Interpolater itpl;
@@ -64,6 +72,7 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			int dirS = int.Parse(bodies[1].Content);
 			characterGraphicCtrl.SetDirection(dir);
 			transform.localScale = new Vector3(dirS, 1, 1);
+			trCanvas.localScale = new Vector3(dirS, 1, 1);
 			break;
 
 		case MsgAttr.Character.grounded:

@@ -2,7 +2,11 @@
 using System.Collections;
 
 public class NetworkCharacter_Heavy : NetworkCharacter {
-	public HeavyNetGraphicController gcHeavy;
+	private HeavyNetGraphicController gcHeavy;
+
+	void Awake(){
+		gcHeavy = (HeavyNetGraphicController)characterGraphicCtrl;
+	}
 
 	public override void UseSkill (int idx_){
 		switch(idx_){

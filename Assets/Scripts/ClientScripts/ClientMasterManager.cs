@@ -60,6 +60,12 @@ public class ClientMasterManager : MonoBehaviour {
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
 			break;
 
+		case MsgAttr.Misc.hello:
+			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
+				PlayerData.nickNameOthers[loop] = networkMessage.Body[loop * 2 + 1].Attribute;
+			}
+			break;
+
 		case MsgAttr.Misc.disconnect:
 			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
 			SceneManager.LoadScene("scAwake");

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
@@ -9,6 +10,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private float defaultRespawnTime = 5f;
 
 	public BoxCollider2D colGroundChecker;
+	public Transform trCanvas;
 
 	private NetworkMessage nmGround;
 	private NetworkMessage nmPos;
@@ -53,6 +55,14 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		instance = this;
 		isAwaked = true;
 		CurrentHp = 20;
+	}
+
+	void Start(){
+		SetNickName();
+	}
+
+	private void SetNickName(){
+		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.nickName;
 	}
 
 	public virtual void Initialize(){
@@ -174,11 +184,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			
 		if(vec3_.x > 0){
 			transform.localScale = new Vector3(-1, 1, 1);
+			trCanvas.localScale = new Vector3(-1, 1, 1);
 			if(movablebByInput && controlFlags.move)
 				moveDir = Vector3.right * moveSpeed;
 		}
 		if(vec3_.x < 0){
 			transform.localScale = new Vector3(1, 1, 1);
+			trCanvas.localScale = new Vector3(1, 1, 1);
 			if(movablebByInput && controlFlags.move)
 				moveDir = Vector3.left * moveSpeed;
 		}
@@ -224,16 +236,20 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 			if (isGround != prevGrounded && IsDead == false){
 				if (isGround) {
-					characterGraphicCtrl.Grounded ();
-					OnGrounded();
 					nmGround.Body[0].Content = NetworkMessage.sTrue;
+					Network_Client.SendTcp(nmGround);
+
+					OnGrounded();
+
+					characterGraphicCtrl.Grounded ();
 				} else {
 					colGroundChecker.enabled = false;
 
-					characterGraphicCtrl.Jump();
 					nmGround.Body[0].Content = NetworkMessage.sFalse;
+					Network_Client.SendTcp(nmGround);
+
+					characterGraphicCtrl.Jump();
 				}
-				Network_Client.SendTcp(nmGround);
 			}
 
 			prevGrounded = isGround;

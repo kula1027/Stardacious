@@ -29,7 +29,7 @@ public class ButtonControl : MonoBehaviour {
 	}
 
 	public void Glow(){
-		StartCoroutine(GlowRoutine());
+		//StartCoroutine(GlowRoutine());
 	}
 
 	private IEnumerator GlowRoutine(){

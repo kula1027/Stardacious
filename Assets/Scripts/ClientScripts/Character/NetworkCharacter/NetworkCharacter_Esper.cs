@@ -2,7 +2,11 @@
 using System.Collections;
 
 public class NetworkCharacter_Esper : NetworkCharacter {
-	public EsperNetGraphicController gcEsper;
+	private EsperNetGraphicController gcEsper;
+
+	void Awake(){
+		gcEsper = (EsperNetGraphicController)characterGraphicCtrl;
+	}
 
 	protected override void OnRecvNormalAttack (MsgSegment[] bodies_){
 		EsperAttackType eat = (EsperAttackType)(int.Parse(bodies_ [0].Content));
