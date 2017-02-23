@@ -151,6 +151,7 @@ namespace ServerSide{
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
 					ServerProjectileManager.instance.pfLocalProj
 				);
+				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.WalkerBullet;
 
 				if (currentDir == false) {
 					go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;

@@ -40,7 +40,7 @@ namespace ServerSide{
 			playerInfo[idx_] = new PlayerInfo();
 			if(currentPlayerCount < 1){
 				Network_Server.ShutDown();
-				SceneManager.LoadScene("scJHServer");
+				SceneManager.LoadScene("scServer");
 				ConsoleMsgQueue.EnqueMsg("0 Players Left, Reset Server");
 			}
 		}

@@ -163,6 +163,7 @@ namespace ServerSide{
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
 					ServerProjectileManager.instance.pfLocalProj
 				);
+				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.SpiderBullet;
 
 				go.transform.position = transform.position + Vector3.up * 2f;
 				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
