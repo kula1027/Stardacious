@@ -54,7 +54,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
 		isAwaked = true;
-		CurrentHp = 20;
+		CurrentHp = 1;
 	}
 
 	void Start(){
@@ -446,7 +446,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		this.transform.position = respawnPoint;
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
-		this.CurrentHp = 20;
+		this.CurrentHp = 1;
 
 		IsDead = false;
 
@@ -455,13 +455,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	public void SetRespawnPoint(Vector3 respawnPoint_){
 		this.respawnPoint = respawnPoint_;
-
-		if (isAwaked == true) {
-			transform.position = respawnPoint;
-			isAwaked = false;
-		} else {
-			//nothing
-		}
 	}
 
 	#endregion

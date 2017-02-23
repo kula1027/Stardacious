@@ -9,10 +9,13 @@ namespace ServerSide {
 		private ObjectPooler[] clientProjPool = new ObjectPooler[3];
 
 		public GameObject pfHeavyMine;
-		public GameObject pfLocalProj;
 		public GameObject pfFlyingProj;
 		public GameObject pfChaserBullet;
 		public GameObject pfGuidanceDevice;
+
+		public GameObject pfSpiderBullet;
+		public GameObject pfWalkerBullet;
+		public GameObject pfFlyBullet;
 
 		void Awake () {
 			instance = this;

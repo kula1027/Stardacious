@@ -149,7 +149,7 @@ namespace ServerSide{
 
 			if (IsDead == false) { // 먼저 죽엇는지 확인하자
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
-					ServerProjectileManager.instance.pfLocalProj
+					ServerProjectileManager.instance.pfWalkerBullet
 				);
 				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.WalkerBullet;
 

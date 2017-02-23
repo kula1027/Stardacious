@@ -4,9 +4,10 @@ using System.Collections;
 namespace ServerSide{
 	public class ServerLocalProjectile : PoolingObject {
 		private NetworkMessage nmAppear;
+		public ProjType projType;
 
 		void Awake(){
-			objType = (int)ProjType.SpiderBullet;
+			objType = (int)projType;
 		}
 
 		public override void OnRequested (){
