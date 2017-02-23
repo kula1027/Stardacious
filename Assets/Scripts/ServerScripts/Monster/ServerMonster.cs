@@ -235,7 +235,6 @@ namespace ServerSide{
 
 			while (true) {
 				timeAcc += Time.deltaTime;
-
 				if (timeAcc > monAppearTime)
 					break;
 

@@ -12,7 +12,7 @@ namespace ServerSide{
 		private bool isInRanged;
 		private int spiderAttkRange = 20;
 		private int spiderAgroRange = 50;
-		private float spiderAppearTime = 3;
+		private float spiderAppearTime = 3.5f;
 		private float spiderAtkDelay = 0.5f;
 		private float spiderAtkAfterDelay = 1f;
 
@@ -99,8 +99,8 @@ namespace ServerSide{
 					// nothing
 				}
 
-				yield return new WaitForSeconds((Random.Range(0.8f, 1.3f)));
-				// 0.8~1.3 초 사이 랜덤으로 
+				yield return new WaitForSeconds((Random.Range(3f, 4f)));
+				// 3~4초 대기
 			}
 		}
 
@@ -146,20 +146,17 @@ namespace ServerSide{
 		}
 
 		protected override IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
-			float timeAcc = 0;
 
 			nmAttk.Body [0].Content = NetworkMessage.sTrue;
 			Network_Server.BroadCastTcp (nmAttk);
 
-			while (true) {	// 공격 anim 선딜레이
-				timeAcc += Time.deltaTime;
-				if (timeAcc > spiderAtkDelay)
-					break;
-				yield return null;
-			}
+			yield return new WaitForSeconds (spiderAtkDelay);
 
 
-			if (IsDead == false) { // 먼저 죽엇는지 확인하자
+			if (!canControl) {
+				nmAttk.Body [0].Content = NetworkMessage.sFalse;
+				Network_Server.BroadCastTcp (nmAttk);
+			}else if (IsDead == false) { // 먼저 죽엇는지 확인하자
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
 					ServerProjectileManager.instance.pfSpiderBullet
 				);
@@ -170,17 +167,10 @@ namespace ServerSide{
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 
+				yield return new WaitForSeconds (spiderAtkAfterDelay);
+
 				nmAttk.Body [0].Content = NetworkMessage.sFalse;
 				Network_Server.BroadCastTcp (nmAttk);
-
-
-				timeAcc = 0;
-				while (true) {	// 공격 anim 후딜레이
-					timeAcc += Time.deltaTime;
-					if (timeAcc > spiderAtkAfterDelay)
-						break;
-					yield return null;
-				}
 			}
 		}
 	}

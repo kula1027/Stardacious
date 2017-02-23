@@ -7,14 +7,18 @@ public class ButtonControl : MonoBehaviour {
 	private Image[] images;
 
 	void Awake(){
-		uiBtn = GetComponent<SdButton>();
-		images = GetComponentsInChildren<Image>();
+		uiBtn = GetComponent<SdButton> ();
+		images = GetComponentsInChildren<Image> ();
 	}
 		
 	public void SetInteractable(bool interactable){
 		StopAllCoroutines();
 
-		uiBtn.enabled = interactable;
+		if (interactable) {
+			transform.localScale = new Vector3 (1, 1, 1);	
+		} else {
+			transform.localScale = new Vector3 (0, 0, 0);
+		}
 
 		Color c;
 		if(interactable){
@@ -29,7 +33,7 @@ public class ButtonControl : MonoBehaviour {
 	}
 
 	public void Glow(){
-		//StartCoroutine(GlowRoutine());
+		StartCoroutine(GlowRoutine());
 	}
 
 	private IEnumerator GlowRoutine(){

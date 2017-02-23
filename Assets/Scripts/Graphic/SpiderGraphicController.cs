@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SpiderGraphicController : MonsterGraphicCtrl {
 
+	public MonsterSummon summonEffect;
+
 	void Awake(){
 		animator = transform.FindChild ("Offset").FindChild ("Pivot").GetComponent<Animator> ();
 		unitParts = GetComponentsInChildren<SpriteRenderer>();
@@ -43,4 +45,35 @@ public class SpiderGraphicController : MonsterGraphicCtrl {
 	public void WakeUp(){
 		animator.Play ("Awake");
 	}
+
+	public void Summon(){
+		FadeIn ();
+		summonEffect.Effecting ();
+	}
+
+	#region Fade
+	private void FadeIn(){
+		StartCoroutine (FadeInRoutine ());
+	}
+
+	IEnumerator FadeInRoutine(){
+		float alpha = 0;
+		for (int i = 0; i < unitParts.Length; i++) {
+			unitParts [i].color = new Color (0, 0, 0, alpha);
+		}
+
+		yield return new WaitForSeconds (0.5f);
+
+		while (true) {
+			alpha += Time.deltaTime;
+			for (int i = 0; i < unitParts.Length; i++) {
+				unitParts [i].color = new Color (0, 0, 0, alpha);
+			}
+			if (alpha >=  1) {
+				break;
+			}
+			yield return null;
+		}
+	}
+	#endregion
 }

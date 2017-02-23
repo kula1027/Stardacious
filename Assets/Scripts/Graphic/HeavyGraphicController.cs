@@ -133,20 +133,43 @@ public class HeavyGraphicController : CharacterGraphicCtrl {
 
 	private bool cartridgeIsPlayed = false;
 	public override void FreezeAnimation(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
 		lowerAnimator.enabled = false;
 		upperAnimator.enabled = false;
 		miniEffectAnimator.enabled = false;
 		if (cartridgeIsPlayed = cartridge.isPlaying) {
 			cartridge.Stop ();
 		}
+
+		if (isSwapDelay) {
+			recentIsMiniGun = false;
+			isMiniGunMode = false;
+			isSwapDelay = false;
+		}
 	}
 
 	public override void ResumeAnimation(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine);
+		}
 		lowerAnimator.enabled = true;
 		upperAnimator.enabled = true;
 		miniEffectAnimator.enabled = true;
 		if (cartridgeIsPlayed) {
 			cartridge.Play ();
+		}
+
+		isAttackAnimationPlaying = false;
+
+		if (isMiniGunMode) {
+			SetUpperAnim (currentInputDirection);
+			SetLowerAnim (currentInputDirection);
+		} else {
+			if (isAttackButtonPressing) {
+				SetShotGunShoot ();
+			}
 		}
 	}
 

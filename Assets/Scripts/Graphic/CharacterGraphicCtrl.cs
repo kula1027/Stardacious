@@ -33,9 +33,9 @@ public abstract class CharacterGraphicCtrl : MonoBehaviour {
 	IEnumerator TwinkleColorAnimation(){
 		isTwinkling = true;
 
-		float colorR = 0.5f;
+		float colorR = colorRMax;
 		while (true) {
-			colorR -= Time.deltaTime * 5;
+			colorR -= Time.deltaTime * deltaR;
 			for (int i = 0; i < unitParts.Length; i++) {
 				unitParts [i].color = new Color (colorR, 0, 0, 1);
 			}
@@ -47,5 +47,8 @@ public abstract class CharacterGraphicCtrl : MonoBehaviour {
 
 		isTwinkling = false;
 	}
+
+	protected const float colorRMax = 1f;
+	protected const float deltaR = 10f;
 	#endregion
 }

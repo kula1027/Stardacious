@@ -115,18 +115,41 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void FreezeAnimation(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine );
+		}
 		lowerAnimator.enabled = false;
 		upperAnimator.enabled = false;
-		hair.timeScale = 0;
+		HairStop ();
 		if(isHovering){
 			EndHover ();
 		}
+
+		nextBulletType = DoctorBulletType.Normal;
+		isEnergyCharging = false;
+		isAttackAnimationPlaying = false;
 	}
 
 	public override void ResumeAnimation(){
+		if (shootAnimationRoutine != null) {
+			StopCoroutine (shootAnimationRoutine );
+		}
 		lowerAnimator.enabled = true;
 		upperAnimator.enabled = true;
-		hair.timeScale = 1;
+		HairResume ();
+
+		nextBulletType = DoctorBulletType.Normal;
+		isEnergyCharging = false;
+		isAttackAnimationPlaying = false;
+
+		SetLowerAnim (currentInputDirection);
+		if (isAttackButtonPressing) {
+			if (isAttackButtonPressing) {
+				SetGunShoot ();
+			}
+		} else {
+			SetUpperAnim (currentInputDirection);
+		}
 	}
 
 	public override void StartNormalAttack (){
@@ -165,12 +188,6 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 
 	public void EndAndShootEnergyCharge(){
 		upperAnimator.Play ("EnergyShoot");
-	}
-
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.A)) {
-			Twinkle ();
-		}
 	}
 
 	public override void Die(){
@@ -371,6 +388,12 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	protected void HairDeactive(){
 		hair.AnimationName = "animation";
 	}
+	protected void HairStop(){
+		hair.timeScale = 0;
+	}
+	protected void HairResume(){
+		hair.timeScale = 1;
+	}
 	#endregion
 
 	#region ControlFlag
@@ -449,9 +472,9 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 	IEnumerator DoctorTwinkleColorAnimation(){
 		isTwinkling = true;
 
-		float colorR = 0.5f;
+		float colorR = colorRMax;
 		while (true) {
-			colorR -= Time.deltaTime * 5;
+			colorR -= Time.deltaTime * deltaR;
 			if (colorR < 0) {
 				colorR = 0;
 			}

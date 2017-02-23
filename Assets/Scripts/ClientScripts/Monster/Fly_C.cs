@@ -16,13 +16,14 @@ public class Fly_C : ClientMonster {
 		// 일어난 뒤 1sec > 애니메이션 재생 > 1sec > 무적판정 끝
 		// wakeup animation 재생 중 바로 죽을때 애니메이션이 씹히는 이슈 때문
 
-		yield return new WaitForSeconds(1);
+		/*yield return new WaitForSeconds(1);
 
 		gcFly.WakeUp ();
 
-		yield return new WaitForSeconds (1);
+		yield return new WaitForSeconds (1);*/
 
 		hTrigger.gameObject.SetActive (true);
+		yield break;
 	}
 
 	public override void OnDie (){

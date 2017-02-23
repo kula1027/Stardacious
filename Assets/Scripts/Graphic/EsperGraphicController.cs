@@ -104,11 +104,34 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void FreezeAnimation (){
+		afterImage.Stop ();
+		rushEffect.SetActive (false);
+
 		singleAnimator.enabled = false;
+
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
+		isPsying = false;
+		nextAttackMotion = 0;
+		isAttackAnimationPlaying = false;
+
+		MufflerStop ();
 	}
 
 	public override void ResumeAnimation (){
+		if (attackAnimationRoutine != null) {
+			StopCoroutine (attackAnimationRoutine);
+		}
+		isPsying = false;
+		nextAttackMotion = 0;
+		isAttackAnimationPlaying = false;
+
 		singleAnimator.enabled = true;
+
+		MufflerResume ();
+
+		SetSingleAnim (currentInputDirection);
 	}
 
 	public void Rush(){
@@ -163,6 +186,11 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public override void Die(){
+		//
+		afterImage.Stop ();
+		rushEffect.SetActive (false);
+		//
+
 		nextAttackMotion = 0;
 		currentInputDirection = ControlDirection.Middle;
 
@@ -269,6 +297,14 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	protected void MufflerDeactive(){
 		mufflerL.AnimationName = "idle";
 		mufflerR.AnimationName = "idle";
+	}
+	protected void MufflerStop(){
+		mufflerL.timeScale = 0;
+		mufflerR.timeScale = 0;
+	}
+	protected void MufflerResume(){
+		mufflerL.timeScale = 1f;
+		mufflerR.timeScale = 0.9f;
 	}
 	#endregion
 

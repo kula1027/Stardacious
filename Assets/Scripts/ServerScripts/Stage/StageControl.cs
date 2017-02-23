@@ -74,7 +74,7 @@ namespace ServerSide{
 						}else if(goName.Contains("fly")){
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position + new Vector3 (0, Fly_S.flyStartHeight, 0);
 							mGo.GetComponent<ServerMonster> ().MasterWave = this;
 							mGo.GetComponent<ServerMonster> ().MonsterIdx = 2;
 							mGo.GetComponent<ServerMonster> ().Ready ();

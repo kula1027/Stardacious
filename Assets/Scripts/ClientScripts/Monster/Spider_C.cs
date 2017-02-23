@@ -4,8 +4,6 @@ using System.Collections;
 public class Spider_C : ClientMonster {
 	public SpiderGraphicController gcSpider;
 
-	//private 
-
 	public override void OnRequested (){
 		base.OnRequested();
 
@@ -13,10 +11,13 @@ public class Spider_C : ClientMonster {
 	}
 
 	private IEnumerator WakeUpRoutine(){
+		// 소환 이펙트 1초간 보여줌
 		// 일어난 뒤 1sec > 애니메이션 재생 > 1sec > 무적판정 끝
 		// wakeup animation 재생 중 바로 죽을때 애니메이션이 씹히는 이슈 때문
 
-		yield return new WaitForSeconds(1);
+		gcSpider.Summon ();
+
+		yield return new WaitForSeconds(2);
 
 		gcSpider.WakeUp ();
 

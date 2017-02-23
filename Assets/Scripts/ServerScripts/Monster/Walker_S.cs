@@ -14,7 +14,7 @@ namespace ServerSide{
 		private int walkerAgroRange = 80;
 		private int walkerCloseRange = 10;
 		private float walkerAppearTime = 3;
-		private float walkerAtkDelay = 1f;
+		private float walkerAtkDelay = 1.7f;
 		private float walkerAtkAfterDelay = 1f;
 
 
@@ -95,8 +95,8 @@ namespace ServerSide{
 					// nothing
 				}
 
-				yield return new WaitForSeconds((Random.Range(0.8f, 1.3f)));
-				// 0.8~1.3 초 사이 랜덤으로 
+				yield return new WaitForSeconds((Random.Range(4f, 5f)));
+				// 4~5초 대기
 			}
 		}
 
@@ -134,18 +134,11 @@ namespace ServerSide{
 		}
 
 		protected override IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
-			float timeAcc = 0;
 
 			nmAttk.Body [0].Content = NetworkMessage.sTrue;
 			Network_Server.BroadCastTcp (nmAttk);
 
-			while (true) {	// 공격 anim 선딜레이
-				timeAcc += Time.deltaTime;
-				if (timeAcc > walkerAtkDelay)
-					break;
-				yield return null;
-			}
-
+			yield return new WaitForSeconds (walkerAtkDelay);
 
 			if (IsDead == false) { // 먼저 죽엇는지 확인하자
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
@@ -164,17 +157,30 @@ namespace ServerSide{
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 
+				yield return new WaitForSeconds (0.5f);
+			}
+
+			if (IsDead == false) { // 먼저 죽엇는지 확인하자
+				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
+					ServerProjectileManager.instance.pfWalkerBullet
+				);
+				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.WalkerBullet;
+
+				if (currentDir == false) {
+					go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
+
+				} else if (currentDir == true) {
+					go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
+				}
+
+				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+				//right : 투사체 진행방향 결정
+				go.GetComponent<ServerLocalProjectile> ().Ready ();
+
+				yield return new WaitForSeconds (walkerAtkAfterDelay);
+
 				nmAttk.Body [0].Content = NetworkMessage.sFalse;
 				Network_Server.BroadCastTcp (nmAttk);
-
-
-				timeAcc = 0;
-				while (true) {	// 공격 anim 후딜레이
-					timeAcc += Time.deltaTime;
-					if (timeAcc > walkerAtkAfterDelay)
-						break;
-					yield return null;
-				}
 			}
 		}
 	}

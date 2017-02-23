@@ -194,6 +194,7 @@ public class StartSceneManager : MonoBehaviour {
 	public void OnClickBackSelect(){
 		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackSelect));
 		selCharPanel.EndShow ();
+		readyPanel.playerSlot [Network_Client.NetworkId].OnShow ();
 	}
 	public void OnClickReady(){
 		//SceneManager.LoadSceneAsync("scIngame");

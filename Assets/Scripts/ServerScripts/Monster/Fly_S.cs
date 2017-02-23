@@ -12,8 +12,9 @@ namespace ServerSide{
 		private bool isInRanged;
 		private int flyAttkRange = 40;
 		private int flyAgroRange = 50;
-		private float walkerAppearTime = 3;
-		private float flyAtkDelay = 1f;
+		public const float flyAppearTime = 3;
+		public const float flyStartHeight = 30;
+		private float flyAtkDelay = 1.5f;
 		private float flyAtkAfterDelay = 1f;
 
 		protected new void Awake(){
@@ -32,8 +33,22 @@ namespace ServerSide{
 			StartCoroutine(FlyMainAI());
 		}
 
+		private IEnumerator FlyAppearance(float appearTime){
+			//화면 밖에서 내려오는 연출
+			float speed = flyStartHeight / appearTime;
+			float timer = 0;
+			while (true) {
+				timer += Time.deltaTime;
+				transform.Translate (0, -Time.deltaTime * speed, 0);
+				if (timer > appearTime) {
+					break;
+				}
+				yield return null;
+			}
+		}
+
 		private IEnumerator FlyMainAI(){
-			yield return StartCoroutine (MonsterAppearence(walkerAppearTime));
+			yield return StartCoroutine (FlyAppearance(flyAppearTime));
 			// 생성되는 애니메이션을 위해 n초 대기
 
 
@@ -95,8 +110,8 @@ namespace ServerSide{
 					// nothing
 				}
 
-				yield return new WaitForSeconds((Random.Range(0.8f, 1.3f)));
-				// 0.8~1.3 초 사이 랜덤으로 
+				yield return new WaitForSeconds((Random.Range(2f, 5f)));
+				// 2~5초 대기
 			}
 		}
 
@@ -132,41 +147,31 @@ namespace ServerSide{
 		}
 
 		protected override IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
-			float timeAcc = 0;
 
 			nmAttk.Body [0].Content = NetworkMessage.sTrue;
 			Network_Server.BroadCastTcp (nmAttk);
 
-			while (true) {	// 공격 anim 선딜레이
-				timeAcc += Time.deltaTime;
-				if (timeAcc > flyAtkDelay)
-					break;
-				yield return null;
-			}
+			yield return new WaitForSeconds (flyAtkDelay);
 
-
-			if (IsDead == false) { // 먼저 죽엇는지 확인하자
+			if (!canControl) {
+				nmAttk.Body [0].Content = NetworkMessage.sFalse;
+				Network_Server.BroadCastTcp (nmAttk);
+			}else if (IsDead == false) { // 먼저 죽엇는지 확인하자
 				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
 					ServerProjectileManager.instance.pfFlyBullet
 				);
 				go.GetComponent<ServerLocalProjectile> ().ObjType = (int)ProjType.FlyBullet;
 
-				go.transform.position = transform.position + Vector3.up * 2f;
+				go.transform.position = transform.position;
 				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 
+
+				yield return new WaitForSeconds (flyAtkAfterDelay);
+
 				nmAttk.Body [0].Content = NetworkMessage.sFalse;
 				Network_Server.BroadCastTcp (nmAttk);
-
-
-				timeAcc = 0;
-				while (true) {	// 공격 anim 후딜레이
-					timeAcc += Time.deltaTime;
-					if (timeAcc > flyAtkAfterDelay)
-						break;
-					yield return null;
-				}
 			}
 		}
 	}
