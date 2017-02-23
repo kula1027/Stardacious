@@ -91,4 +91,20 @@ public class PoolList : MonoBehaviour{
 			return null;
 		}
 	}
+
+	public GameObject GetGameObject(int idx_){
+		int localIdx = idx_;
+		if(poolId > 0){
+			localIdx = idx_ % poolId;
+		}
+
+		if(localIdx >= totalObjCount)
+			return null;
+
+		if(transform.GetChild(localIdx).gameObject.activeSelf){
+			return transform.GetChild(localIdx).gameObject;
+		}else{
+			return null;
+		}
+	}
 }

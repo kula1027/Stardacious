@@ -19,7 +19,7 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 
 	public override void OnRequested (){
 		ReturnObject(2.5f);
-		rotateRoutine = StartCoroutine(RotatehRoutine());
+		rotateRoutine = StartCoroutine(RotateRoutine());
 	}
 
 	public override void OnRecv (MsgSegment[] bodies){
@@ -42,16 +42,16 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	private IEnumerator AttachRoutine(){
 		if(rotateRoutine != null){
 			StopCoroutine(rotateRoutine);
-		}
+		}			
 
-		while(true){
+		while(targetObj != null){
 			transform.position = targetObj.transform.position + localPos;
 
 			yield return null;
 		}
 	}
 
-	private IEnumerator RotatehRoutine(){
+	private IEnumerator RotateRoutine(){
 		while(true){
 			trRenderer.Rotate(new Vector3(0, 0, Time.deltaTime * 1200f));
 
@@ -65,9 +65,8 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 		if(targetInfo.Attribute.Equals(MsgAttr.character)){
 			return ClientCharacterManager.instance.GetCharacter(targetId);
 		}
-		if(targetInfo.Attribute.Equals(MsgAttr.monster)){
-			Debug.Log("Monster Attach");
-			//ClientStageManager.instance.get
+		if(targetInfo.Attribute.Equals(MsgAttr.monster)){			
+			return ClientStageManager.instance.GetMonster(targetId);
 		}
 
 		return null;

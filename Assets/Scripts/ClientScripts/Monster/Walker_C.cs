@@ -34,10 +34,14 @@ public class Walker_C : ClientMonster {
 	}
 
 	protected override void MonsterFreeze(){
+		base.MonsterFreeze();
+
 		gcWalker.AnimationFreeze ();
 	}
 
 	protected override void MonsterFreezeEnd(){
+		base.MonsterFreezeEnd();
+
 		gcWalker.AnimationResume ();
 	}
 }

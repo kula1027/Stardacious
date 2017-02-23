@@ -35,10 +35,14 @@ public class Spider_C : ClientMonster {
 	}
 
 	protected override void MonsterFreeze(){
+		base.MonsterFreeze();
+
 		gcSpider.AnimationFreeze ();
 	}
 
 	protected override void MonsterFreezeEnd(){
+		base.MonsterFreezeEnd();
+
 		gcSpider.AnimationResume ();
 	}
 }

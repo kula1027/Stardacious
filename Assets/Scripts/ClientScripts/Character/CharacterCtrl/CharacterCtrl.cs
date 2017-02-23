@@ -54,7 +54,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
 		isAwaked = true;
-		CurrentHp = 1;
+		CurrentHp = 9999999;
 	}
 
 	void Start(){
@@ -328,14 +328,36 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			break;
 
 		case MsgAttr.Character.summon:
-			transform.position = bodies[0].ConvertToV3();
-			NetworkMessage nmDpos = new NetworkMessage(
-				new MsgSegment(MsgAttr.character, Network_Client.NetworkId),
-				new MsgSegment(MsgAttr.directPosition, transform.position)
-			);
-			Network_Client.SendTcp(nmDpos);
+			StartCoroutine(SummonRoutine(bodies[0].ConvertToV3()));
 			break;
 		}
+	}
+
+	protected virtual void StopStopStop(){
+		moveDir = Vector3.zero;
+	}
+
+	private IEnumerator SummonRoutine(Vector3 summonPos){
+		StopStopStop();
+
+		rgd2d.isKinematic = true;
+
+		hbt.gameObject.SetActive(false);
+		characterGraphicCtrl.FreezeAnimation();
+
+		yield return new WaitForSeconds(0.8f);
+
+		rgd2d.isKinematic = false;
+
+		hbt.gameObject.SetActive(true);
+		characterGraphicCtrl.ResumeAnimation();
+
+		transform.position = summonPos;
+		NetworkMessage nmDpos = new NetworkMessage(
+			new MsgSegment(MsgAttr.character, Network_Client.NetworkId),
+			new MsgSegment(MsgAttr.directPosition, transform.position)
+		);
+		Network_Client.SendTcp(nmDpos);
 	}
 
 	protected void StartSendPos(){
@@ -371,6 +393,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	GameObject effectIce;
 	public override void Freeze (){
 		characterGraphicCtrl.StopNormalAttack ();
+		moveDir = Vector3.zero;
 
 		ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool();
 		effectIce = localPool.RequestObject(ClientProjectileManager.instance.pfIceEffect);
@@ -380,11 +403,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		canControl = false;
 		StartCoroutine(FreezeRoutine());		
 	}
+		
+
 
 	private IEnumerator FreezeRoutine(){
 		float timeAcc = 0f;
 		moveSpeed = originalMoveSpeed;
-		hbt.enabled = false;
+		hbt.gameObject.SetActive(false);
 
 		while(true){
 			effectIce.transform.position = transform.position;
@@ -399,7 +424,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		}
 
 		characterGraphicCtrl.ResumeAnimation();
-		hbt.enabled = true;
+		hbt.gameObject.SetActive(true);
 		canControl = true;
 	}
 
@@ -425,7 +450,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		StartCoroutine (CharacterRespawn());
 		//respawn at respawn Point of current stage.
 
-		dieCount++;
+		//dieCount++;
 	}
 
 	private IEnumerator CharacterRespawn(){
@@ -446,7 +471,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		this.transform.position = respawnPoint;
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
-		this.CurrentHp = 1;
+		this.CurrentHp = 9999999;
 
 		IsDead = false;
 

@@ -11,6 +11,7 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 	private CircleCollider2D col2d;
 
 	private EnergyBallGraphic gcBall;
+	private NetworkMessage nmEnergyAttack;
 
 	public bool isFlying;
 
@@ -18,7 +19,16 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		gcBall = GetComponent<EnergyBallGraphic>();
 		col2d = GetComponentInChildren<CircleCollider2D>();
 		objType = (int)ProjType.EnergyBall;
-		hitObject = new HitObject(10);
+		hitObject = new HitObject(30);
+
+		MsgSegment[] bodyEnergyAttack = {
+			new MsgSegment(MsgAttr.Projectile.energyBallAttack),
+			new MsgSegment(Vector3.zero)
+		};
+		nmEnergyAttack = new NetworkMessage(
+			new MsgSegment(MsgAttr.projectile, GetOpIndex()),
+			bodyEnergyAttack
+		);
 	}
 
 	public override void Ready (){
@@ -131,9 +141,11 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 
 		if(hbt){
-			if (hbt.tag.Equals ("Player") == false || ClientMasterManager.instance.friendlyFire) {				
+			if (hbt.tag.Equals ("Player") == false) {				
 				hbt.OnHit (hitObject);
 				gcBall.LighteningEffecting (col.transform.position + new Vector3 (0, 1.5f, 0) + (Vector3)Random.insideUnitCircle);
+				nmEnergyAttack.Body[1] = new MsgSegment(col.transform.position);
+				Network_Client.SendTcp(nmEnergyAttack);
 			}
 		}
 	}

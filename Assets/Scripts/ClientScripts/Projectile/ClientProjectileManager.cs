@@ -17,13 +17,15 @@ public class ClientProjectileManager : MonoBehaviour {
 	public GameObject pfEnergyBall;
 	public GameObject pfRecallBullet;
 
-	//Effect
-	public GameObject pfIceEffect;
-
 	//Monster
 	public GameObject pfSpiderBullet;
 	public GameObject pfFlyBullet;
 	public GameObject pfWalkerBullet;
+
+	//Effect
+	public GameObject pfIceEffect;
+	public GameObject pfPortalInEffect;
+	public GameObject pfPortalOutEffect;
 
 	void Awake(){
 		instance = this;
@@ -53,6 +55,18 @@ public class ClientProjectileManager : MonoBehaviour {
 		case MsgAttr.create:
 			projIdx = int.Parse(networkMessage.Body[0].Content);
 			CreateProjectile(projPooler, projIdx, networkMessage.Body);
+			break;
+
+		case MsgAttr.Projectile.effect:
+			ProjType pType = (ProjType)int.Parse(networkMessage.Body[0].Attribute);
+			if(pType == ProjType.EffectPortalIn){
+				GameObject goPortal = Instantiate(pfPortalInEffect);
+				goPortal.transform.position = networkMessage.Body[0].ConvertToV3();
+			}
+			if(pType == ProjType.EffectPortalOut){
+				GameObject goPortal = Instantiate(pfPortalOutEffect);
+				goPortal.transform.position = networkMessage.Body[0].ConvertToV3();
+			}
 			break;
 
 			default:

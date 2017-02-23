@@ -12,7 +12,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 
 	void Awake(){
 		objType = (int)ProjType.ChaserBullet;
-		hitObject = new HitObject(15);
+		hitObject = new HitObject(40);
 	}
 		
 	public override void Ready (){

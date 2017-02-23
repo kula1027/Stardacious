@@ -28,6 +28,12 @@ public class NetworkEnergyBall : PoolingObject {
 		case MsgAttr.Projectile.fire:
 			Fire(bodies);
 			break;
+
+		case MsgAttr.Projectile.energyBallAttack:
+			Vector3 targetPos = bodies[1].ConvertToV3();
+			targetPos += new Vector3 (0, 1.5f, 0) + (Vector3)Random.insideUnitCircle;
+			gcBall.LighteningEffecting(targetPos);
+			break;
 		}
 	}
 

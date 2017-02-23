@@ -160,8 +160,10 @@ public class MsgAttr{
 	public const string projectile = "proj";
 	public class Projectile{
 		public const string attach = "atch";
+		public const string energyBallAttack = "ebatk";
 		public const string fire = "fire";
 		public const string server = "svr";
+		public const string effect = "efft";
 	}
 
 

@@ -2,9 +2,8 @@
 using System.Collections;
 
 public class NetworkChaserBullet : PoolingObject {
-	public StardaciousObject targetObject;
-
 	public GameObject pfHit;
+	private GameObject targetObj;
 
 	public void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
@@ -16,17 +15,25 @@ public class NetworkChaserBullet : PoolingObject {
 			ReturnObject(2.5f);
 			StartCoroutine(FlyingRoutine());
 		}else{	
-			int targetId = int.Parse(targetInfo.Content);
-			if(strTarget.Equals(MsgAttr.character)){				
-				targetObject = ClientCharacterManager.instance.GetCharacter(targetId).GetComponent<StardaciousObject>();
-			}else if(strTarget.Equals(MsgAttr.monster)){
-
-			}else{
-				Debug.LogError("NetChaserBullet no target recv");
+			targetObj = FindTarget(bodies_[3]);
+			if(targetObj != null){
+				ReturnObject(11f);
+				StartCoroutine(ChasingRoutine());
 			}
-			ReturnObject(11f);
-			StartCoroutine(ChasingRoutine());
 		}
+	}
+
+	private GameObject FindTarget(MsgSegment targetInfo){
+		int targetId = int.Parse(targetInfo.Content);
+
+		if(targetInfo.Attribute.Equals(MsgAttr.character)){
+			return ClientCharacterManager.instance.GetCharacter(targetId);
+		}
+		if(targetInfo.Attribute.Equals(MsgAttr.monster)){			
+			return ClientStageManager.instance.GetMonster(targetId);
+		}
+
+		return null;
 	}
 
 	public override void OnRequested (){
@@ -46,12 +53,7 @@ public class NetworkChaserBullet : PoolingObject {
 		Vector3 targetPos;
 
 		while(true){
-			if(targetObject == null || targetObject.IsDead == true){
-				ReturnObject();
-				yield break;
-			}
-
-			targetPos = targetObject.transform.position + new Vector3(0, 2, 0);
+			targetPos = targetObj.transform.position + new Vector3(0, 2, 0);
 			targetDir = (targetPos - transform.position).normalized;
 			transform.right = Vector2.Lerp(transform.right, targetDir, Time.deltaTime * 10);
 			transform.position += transform.right * ChaserBullet.flyingSpeed * Time.deltaTime;

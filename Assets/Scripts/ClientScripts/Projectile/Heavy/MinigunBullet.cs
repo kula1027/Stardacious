@@ -6,7 +6,7 @@ public class MinigunBullet : FlyingProjectile {
 
 	void Awake(){
 		objType = (int)ProjType.MiniGunBullet;
-		hitObject = new HitObject(15);
+		hitObject = new HitObject(20);
 	}
 
 	public override void Ready (){

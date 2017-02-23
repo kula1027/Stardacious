@@ -26,7 +26,7 @@ public class PoolingAudioSource : MonoBehaviour, IObjectPoolable {
 	}
 
 	public void OnReturned (){
-		
+		StopAllCoroutines();
 	}
 
 	#endregion

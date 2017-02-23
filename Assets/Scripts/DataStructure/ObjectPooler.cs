@@ -38,6 +38,15 @@ public class ObjectPooler : MonoBehaviour {
 		}
 	}
 
+	public GameObject GetGameObject(int idx_){
+		int pId = idx_ / poolIdRange;
+		if(managingPool.Count > pId){
+			return managingPool[pId].GetGameObject(idx_ % poolIdRange);
+		}else{
+			return null;
+		}
+	}
+
 	public void ReturnObject(int idx_){
 		int pId = idx_ / poolIdRange;
 		managingPool[pId].ReturnObject(idx_ % poolIdRange);

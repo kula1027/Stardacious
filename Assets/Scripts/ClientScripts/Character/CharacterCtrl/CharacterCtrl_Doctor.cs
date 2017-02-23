@@ -272,6 +272,11 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 	#endregion
 
+	protected override void StopStopStop (){
+		base.StopStopStop ();
+
+	}
+
 	public override void Freeze (){
 		if(isHovering){
 			rgd2d.gravityScale = 1;
@@ -290,6 +295,9 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 	public override void OnDie (){
 		base.OnDie ();
+
+		InputModule.instance.ResumeSkill(0, skillCoolDown[0]);
+		InputModule.instance.ResumeSkill(1, skillCoolDown[1]);
 
 		if(activeEnergyBall != null && activeEnergyBall.isFlying == false){
 			activeEnergyBall.CancelObject();
