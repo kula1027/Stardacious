@@ -18,7 +18,7 @@ public class Walker_C : ClientMonster {
 
 		yield return new WaitForSeconds(1);
 		// walker는 wakeup 모션이 없다.
-		gcWalker.Idle ();
+		gcWalker.WakeUp ();
 
 		yield return new WaitForSeconds (1);
 
