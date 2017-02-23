@@ -34,7 +34,7 @@ namespace ServerSide{
 		private NetworkMessage nmGround;		// for ground check
 		private NetworkMessage nmMoving;
 		private NetworkMessage nmDir;
-		private NetworkMessage nmAttk;
+		protected NetworkMessage nmAttk;
 
 		protected Rigidbody2D rgd2d;
 
@@ -376,58 +376,8 @@ namespace ServerSide{
 			return returnCharacterPos;
 		}
 
-		protected IEnumerator FireProjectile(Vector3 closestCharacterPos_, float attkDelay_){
-			float timeAcc = 0;
-
-			nmAttk.Body [0].Content = NetworkMessage.sTrue;
-			Network_Server.BroadCastTcp (nmAttk);
-
-			while (true) {
-				// 공격 anim 선딜레이
-				timeAcc += Time.deltaTime;
-
-				if (timeAcc > attkDelay_)
-					break;
-				
-				yield return null;
-			}
-
-
-			if (IsDead == false) { // 먼저 죽엇는지 확인하자
-				GameObject go = ServerProjectileManager.instance.GetLocalProjPool ().RequestObject (
-					               ServerProjectileManager.instance.pfLocalProj
-				               );
-				if (monsterIdx == 0)
-					go.transform.position = transform.position + Vector3.up * 2f;
-				else if (monsterIdx == 1) {
-					if(currentDir == false)
-						go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
-					if(currentDir == true)
-						go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
-				}
-				else if(monsterIdx == 2)
-					go.transform.position = transform.position + Vector3.up * 2f;
-
-				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
-				//right : 투사체 진행방향 결정
-
-				go.GetComponent<ServerLocalProjectile> ().Ready ();
-
-				nmAttk.Body [0].Content = NetworkMessage.sFalse;
-				Network_Server.BroadCastTcp (nmAttk);
-			
-
-				timeAcc = 0;
-				while (true) {
-					// 공격 anim 후딜레이 0.5sec
-					timeAcc += Time.deltaTime;
-
-					if (timeAcc > 1f)
-						break;
-
-					yield return null;
-				}
-			}
+		protected virtual IEnumerator MonsterFireProjectile(Vector3 closestCharacterPos_){
+			yield return null;
 		}
 	}
 }
