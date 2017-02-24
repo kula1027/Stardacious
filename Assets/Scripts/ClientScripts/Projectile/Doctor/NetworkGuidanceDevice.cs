@@ -8,7 +8,6 @@ public class NetworkGuidanceDevice : NetworkFlyingProjectile {
 	private Coroutine rotateRoutine;
 	private Transform trRenderer;
 
-
 	void Awake(){
 		flyingSpeed = GuidanceDevice.deviceSpeed;
 		trRenderer = transform.FindChild("Renderer");

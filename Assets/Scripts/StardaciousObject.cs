@@ -23,4 +23,11 @@ public class StardaciousObject : MonoBehaviour {
 	public virtual void OnDie(){}
 	public virtual void AddForce(Vector2 dirForce_){}
 	public virtual void Freeze(){}
+
+	public void MakeSound(AudioClip audioClip_){
+		GameObject goAudio = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(PoolingAudioSource.pfAudioSource);
+		goAudio.transform.position = transform.position;
+		goAudio.GetComponent<AudioSource>().clip = audioClip_;
+		goAudio.GetComponent<AudioSource>().Play();
+	}
 }

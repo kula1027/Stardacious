@@ -6,11 +6,15 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	private HitObject hitObject = new HitObject(10);
 	protected Coroutine flyingRoutine;
 
+	public AudioClip audioFire;
+
 	public virtual void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
 		transform.right = bodies_[2].ConvertToV3();
 
 		flyingRoutine = StartCoroutine(FlyingRoutine());
+
+		MakeSound(audioFire);
 	}
 
 	public override void OnRequested (){

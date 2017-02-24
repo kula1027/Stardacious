@@ -3,12 +3,15 @@ using System.Collections;
 
 public class FlyingProjectile : PoolingObject, IHitter {
 	public GameObject pfHit;
+	public AudioClip audioFire;
 
 	protected float flyingSpeed = 20f;
 	protected HitObject hitObject;
 	protected Coroutine flyingRoutine;
 
 	public override void Ready (){
+		MakeSound(audioFire);
+
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
 		MsgSegment[] b = {
 			new MsgSegment(objType.ToString(), GetOpIndex().ToString()),

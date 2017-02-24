@@ -32,6 +32,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	private ControlDirection currentDirGun = ControlDirection.Left;
 	public override void OnMovementInput (Vector3 vec3_){
 		if(isMachineGunMode)return;
+
 		base.OnMovementInput(vec3_);
 
 		if(currentDir != ControlDirection.Middle && 
@@ -195,11 +196,11 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	#endregion
 
 	#region OverchargedShot
-	public GameObject overchageHitArea;
+	public GameObject overchargeHitArea;
 	private const float forceOvercharge = 1100f;
 
 	private void PrepareOverchargeShot(){
-		overchageHitArea.SetActive(false);
+		overchargeHitArea.SetActive(false);
 	}
 
 	private void OverchargedShot(){
@@ -255,14 +256,14 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	private const float overchargeHitStayTime = 0.02f;
 	private IEnumerator OverchageShotRoutine(){
-		overchageHitArea.transform.right = trGunMuzzle.right;
-		overchageHitArea.transform.position = trGunMuzzle.position;
+		overchargeHitArea.transform.right = trGunMuzzle.right;
+		overchargeHitArea.transform.position = trGunMuzzle.position;
 
-		overchageHitArea.SetActive(true);
+		overchargeHitArea.SetActive(true);
 
 		yield return new WaitForSeconds(overchargeHitStayTime);
 
-		overchageHitArea.SetActive(false);
+		overchargeHitArea.SetActive(false);
 	}
 
 	#endregion

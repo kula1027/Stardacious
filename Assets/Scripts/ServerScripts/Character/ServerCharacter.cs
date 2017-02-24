@@ -72,7 +72,10 @@ namespace ServerSide{
 
 		public void NotifyAppearence(){
 			MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
-			MsgSegment bAppear = new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString());
+			MsgSegment[] bAppear = {
+				new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString()),
+				new MsgSegment(transform.position)
+			};
 			NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
 			Network_Server.BroadCastTcp(nmAppear, networkId);

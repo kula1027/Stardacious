@@ -14,5 +14,7 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 
 		int forceCoff = int.Parse(bodies_[3].Attribute);
 		rgd2d.AddForce(transform.right * 1000);
+
+		MakeSound(audioFire);
 	}
 }

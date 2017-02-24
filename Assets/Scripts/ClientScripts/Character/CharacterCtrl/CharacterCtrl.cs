@@ -6,7 +6,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 	public bool isGround = false;
 	private int dieCount = 0;
-	private bool isAwaked = true;	// 방금 생성됨
 	private float defaultRespawnTime = 5f;
 
 	public BoxCollider2D colGroundChecker;
@@ -53,7 +52,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hbt = GetComponentInChildren<HitBoxTrigger>();
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
-		isAwaked = true;
 		CurrentHp = 9999999;
 	}
 
@@ -120,7 +118,10 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	protected void NotifyAppearence(){
 		MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
-		MsgSegment bAppear = new MsgSegment(((int)chrIdx).ToString());
+		MsgSegment[] bAppear = {
+			new MsgSegment(((int)chrIdx).ToString()),
+			new MsgSegment(transform.position)
+		};
 		NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
 		MsgSegment hStgNum = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgNumber);

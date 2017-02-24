@@ -18,10 +18,11 @@ namespace ServerSide{
 			return character[idx_];
 		}
 
-		public ServerCharacter CreateCharacter(int idx_, ChIdx chIdx_){
+		public ServerCharacter CreateCharacter(int idx_, ChIdx chIdx_, Vector3 initPos_){
 			character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
 			character[idx_].NetworkId = idx_;
 			character[idx_].ChrIdx = chIdx_;
+			character[idx_].transform.position = initPos_;
 			character[idx_].Initialize();
 
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
@@ -52,7 +53,8 @@ namespace ServerSide{
 				case MsgAttr.create:
 					int sender = int.Parse(networkMessage.Adress.Attribute);
 					ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
-					ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
+					Vector3 pos = networkMessage.Body[1].ConvertToV3();
+					CreateCharacter(sender, chrIdx, pos);
 					break;
 
 				default:

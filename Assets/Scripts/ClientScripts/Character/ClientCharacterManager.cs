@@ -36,7 +36,7 @@ public class ClientCharacterManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateNetCharacter(int idx_, int chIdx_){
+	private void CreateNetCharacter(int idx_, int chIdx_, Vector3 initPos_){
 		GameObject go = null;
 		switch((ChIdx)chIdx_){
 		case ChIdx.Doctor:
@@ -53,6 +53,7 @@ public class ClientCharacterManager : MonoBehaviour {
 		}
 
 		characters[idx_] = go.GetComponent<NetworkCharacter>();
+		characters[idx_].transform.position = initPos_;
 		characters[idx_].NetworkId = idx_;
 	}
 
@@ -62,7 +63,8 @@ public class ClientCharacterManager : MonoBehaviour {
 			int netId = int.Parse(networkMessage.Body[0].Attribute);
 			if(characters[netId] == null){
 				int chIdx = int.Parse(networkMessage.Body[0].Content);
-				CreateNetCharacter(netId, chIdx);
+				Vector3 pos = networkMessage.Body[1].ConvertToV3();
+				CreateNetCharacter(netId, chIdx, pos);
 			}
 			break;
 

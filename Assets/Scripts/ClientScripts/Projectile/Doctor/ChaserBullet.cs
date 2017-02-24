@@ -7,7 +7,6 @@ public class ChaserBullet : PoolingObject, IHitter {
 
 	public GuidanceDevice targetDevice;
 	public GameObject pfHit;
-
 	public AudioClip audioFire;
 
 	void Awake(){

@@ -5,6 +5,7 @@ public class HeavyMine : PoolingObject, IHitter {
 	public GameObject expArea;
 	public GameObject boomEffect;
 
+	public AudioClip audioFire;
 	private HoHeavyMine hitObject;
 
 	void Awake(){
@@ -18,6 +19,7 @@ public class HeavyMine : PoolingObject, IHitter {
 
 	public void Throw(Vector3 throwDir_){
 		GetComponent<Rigidbody2D>().AddForce(throwDir_);
+		MakeSound(audioFire);
 
 		MsgSegment h = new MsgSegment(MsgAttr.projectile, MsgAttr.create);
 		MsgSegment[] b = {

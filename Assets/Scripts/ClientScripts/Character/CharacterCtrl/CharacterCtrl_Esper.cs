@@ -13,6 +13,11 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public GameObject pfRecallBullet;
 
+	public AudioClip audioNormal;
+	public AudioClip audioDash;
+	public AudioClip audioRush;
+
+
 	public override void Initialize (){
 		base.Initialize ();
 
@@ -89,6 +94,9 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private HitObject hoSlash = new HitObject(damageSlash);
 
 	public void OnAttackSlash(int idx){
+		audioSource.clip = audioNormal;
+		audioSource.Play();
+
 		StartCoroutine(AttackRoutine(hitterSlash, slashAttackTime));
 		if (idx == 0) {
 			nmAttack.Body[0].Content = ((int)EsperAttackType.Slash0).ToString();
@@ -151,6 +159,8 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private const float dashTime = 0.33f;
 
 	private void SwiftRush(Vector3 dirRush){
+		MakeSound(audioRush);
+
 		dirRush.Normalize();	
 		StartCoroutine(SwiftRushRoutine(dirRush));
 
@@ -198,12 +208,6 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region Recall
-
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.L)){
-			Recall();
-		}
-	}
 
 	NetworkMessage nmRecall;
 	private int recallTarget = -1;
