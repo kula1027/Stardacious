@@ -54,7 +54,8 @@ public class ClientStageManager : MonoBehaviour {
 			int monsType = int.Parse (networkMessage.Body [0].Attribute);
 			int objIdx = int.Parse (networkMessage.Body [0].Content);
 			Vector3 startPos = networkMessage.Body [1].ConvertToV3 ();
-			CreateMonster(monsType, objIdx, startPos);
+			bool isSummonMonster = (int.Parse (networkMessage.Body [2].Attribute)) == 1 ? true : false;
+			CreateMonster (monsType, objIdx, startPos, isSummonMonster);
 			break;
 
 		case MsgAttr.Stage.stgObject:
@@ -75,13 +76,14 @@ public class ClientStageManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_){
+	private void CreateMonster(int monsType_, int monsIdx_, Vector3 startPos_, bool isSummonMonster_){
 		MonsterType mType = (MonsterType)monsType_;
 		GameObject objMon = null;
 
 		switch(mType){
 		case MonsterType.Spider:
 			objMon = monsterPooler.RequestObjectAt (pfSpider, monsIdx_);
+
 			break;
 
 		case MonsterType.Walker:
@@ -94,6 +96,7 @@ public class ClientStageManager : MonoBehaviour {
 		}
 
 		objMon.transform.position = startPos_;
+		objMon.GetComponent<ClientMonster> ().IsSummonMonster = isSummonMonster_;
 		objMon.GetComponent<PoolingObject> ().Ready ();
 	}
 

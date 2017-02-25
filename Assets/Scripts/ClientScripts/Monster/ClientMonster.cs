@@ -11,6 +11,12 @@ public class ClientMonster : PoolingObject, IHittable {
 	private AudioSource audioVoice;
 	public AudioClip audioDying;
 
+	private bool isSummonMonster = false;
+	public bool IsSummonMonster {
+		get{ return isSummonMonster; }
+		set{ this.isSummonMonster = value; }
+	}
+
 	void Awake(){
 		hTrigger = GetComponentInChildren<HitBoxTrigger>();
 		gcMons = GetComponentInChildren<MonsterGraphicCtrl>();

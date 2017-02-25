@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum MonsterAIType{Normal, NotMove, Rush}
+//일반AI, 안움직임, 대상 찾을때까지 전진
 namespace ServerSide{
 	public class ServerMonster : PoolingObject {
 		public BoxCollider2D colGroundChecker;
@@ -16,10 +18,16 @@ namespace ServerSide{
 			set{ masterWave = value; }
 		}
 
-		private bool notMoveMonster = false;
-		public bool NotMoveMonster{
-			get{ return notMoveMonster; }
-			set{ this.notMoveMonster = value; }
+		private MonsterAIType aiType = MonsterAIType.Normal;
+		public MonsterAIType AiType {
+			get {return aiType;}
+			set {aiType = value;}
+		}
+
+		private bool isSummonMonster = false;
+		public bool IsSummonMonster {
+			get{ return isSummonMonster; }
+			set{ this.isSummonMonster = value; }
 		}
 
 		public bool isGround;
@@ -168,8 +176,9 @@ namespace ServerSide{
 		public void NotifyAppearence(){
 			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
 			MsgSegment[] b = {
-				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
-				new MsgSegment(transform.position)
+				new MsgSegment (objType.ToString (), GetOpIndex ().ToString ()),
+				new MsgSegment (transform.position),
+				new MsgSegment (isSummonMonster ? 1 : 0)
 			};
 			NetworkMessage nmAppear = new NetworkMessage(h, b);
 
@@ -243,7 +252,7 @@ namespace ServerSide{
 		}
 
 		/******* Monster's behavior methods. it will used by AI *******/
-		private Vector3 monsterDefaultSpeed = new Vector3(7, 0, 0); // 기본속도 7
+		protected Vector3 monsterDefaultSpeed = new Vector3(7, 0, 0); // 기본속도 7
 		protected Vector3 MonsterDefaultSpeed {
 			set { monsterDefaultSpeed = value; }
 		}
