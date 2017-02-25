@@ -5,7 +5,7 @@ public class MinigunBullet : FlyingProjectile {
 
 	void Awake(){
 		objType = (int)ProjType.MiniGunBullet;
-		hitObject = new HitObject(20);
+		hitObject = new HitObject(CharacterConst.Heavy.damageMinigun);
 	}
 
 	protected override void Boom (){

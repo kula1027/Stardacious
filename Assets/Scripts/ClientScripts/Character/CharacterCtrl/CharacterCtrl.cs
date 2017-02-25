@@ -5,8 +5,6 @@ using UnityEngine.UI;
 public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 
-	public const float defaultRespawnTime = 10f;
-
 	public bool isGround = false;
 	private int dieCount = 0;
 	public int DieCount{
@@ -59,7 +57,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public float jumpPower;//controled by unity editor
 
 	protected ChIdx chrIdx;
-	protected float[] skillCoolDown = new float[3];
 	#endregion
 
 	void Awake(){		
@@ -79,7 +76,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public void GameOver(){
-		Debug.Log("GO");
 		gameOver = true;
 		canControl = false;
 		hbt.gameObject.SetActive(false);
@@ -460,6 +456,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 		moveDir = Vector3.zero;
 
+		nmDead.Body[0].Content = dieCount.ToString();
 		Network_Client.SendTcp(nmDead);
 
 		IsDead = true;
@@ -482,7 +479,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	private IEnumerator CharacterRespawn(){
 
-		yield return new WaitForSeconds(defaultRespawnTime + (float)dieCount);
+		yield return new WaitForSeconds(CharacterConst.GetRespawnTime(dieCount));
 			
 		OnRevive();
 

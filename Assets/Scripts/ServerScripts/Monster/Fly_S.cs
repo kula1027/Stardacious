@@ -21,6 +21,7 @@ namespace ServerSide{
 			base.Awake ();
 
 			objType = (int)MonsterType.Fly;
+			CurrentHp = MosnterConst.Fly.maxHp;
 		}
 
 		public override void OnRequested (){

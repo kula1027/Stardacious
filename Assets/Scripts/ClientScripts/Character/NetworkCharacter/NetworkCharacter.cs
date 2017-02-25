@@ -102,6 +102,7 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 			IsDead = true;
 			characterGraphicCtrl.Die();
 			UI_TextStatus.instance.ShowText(PlayerData.nickNameOthers[networkId] + "... 죽어버렸어...", ColorIdxStatus.Death);
+			UI_CharacterStatus.instance.SetDead(networkId, int.Parse(bodies[0].Content));
 			break;
 
 		case MsgAttr.Character.revive:

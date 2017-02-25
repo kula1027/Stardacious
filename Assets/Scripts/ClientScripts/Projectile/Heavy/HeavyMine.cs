@@ -9,7 +9,7 @@ public class HeavyMine : PoolingObject, IHitter {
 	private HoHeavyMine hitObject;
 
 	void Awake(){
-		hitObject = new HoHeavyMine(30);
+		hitObject = new HoHeavyMine(CharacterConst.Heavy.damageMine);
 		objType = (int)ProjType.HeavyMine;
 	}
 

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NetworkServerProjectile : PoolingObject, IHitter {
 	protected float flyingSpeed = 10f;
-	private HitObject hitObject = new HitObject(10);
+	private HitObject hitObject = new HitObject(MosnterConst.monsterBulletDamage);
 	protected Coroutine flyingRoutine;
 
 	public AudioClip audioFire;
@@ -77,5 +77,7 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 		
 	public override void OnReturned (){
 		Boom();
+
+		StopAllCoroutines();
 	}
 }

@@ -37,12 +37,13 @@ public class RespawnPanel : HidableUI {
 	private IEnumerator RespawnGage(){
 		float timeAcc = 0;
 
+		float dieTime =  CharacterConst.GetRespawnTime(dieCount);
+		thatImage.fillAmount = 1;
+
 		while (true) {
 			timeAcc += Time.deltaTime;
 
-			thatImage.fillAmount
-			= (CharacterCtrl.defaultRespawnTime + (float)dieCount - timeAcc) /
-				(CharacterCtrl.defaultRespawnTime + (float)dieCount);
+			thatImage.fillAmount -= Time.deltaTime / dieTime;
 
 			if (thatImage.fillAmount <= 0) {
 				thatImage.fillAmount = 1;

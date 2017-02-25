@@ -16,10 +16,6 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 		chrIdx = ChIdx.Heavy;
 
-		skillCoolDown[0] = 1f;
-		skillCoolDown[1] = 2f;
-		skillCoolDown[2] = 2f;
-
 		gcHeavy = (HeavyGraphicController)characterGraphicCtrl;
 		gcHeavy.Initialize();
 
@@ -126,7 +122,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	public void OnHitShotGun(Collider2D col){
 		int dis = (int)Vector2.Distance(trGunMuzzle.position, col.transform.position);
-		hit_ShotGun = new HitObject((220 - dis * 10));
+		hit_ShotGun = new HitObject((CharacterConst.Heavy.damageShotgun - dis * CharacterConst.Heavy.damageShotgunDistDec));
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 		if(hbt)
 			hbt.OnHit(hit_ShotGun);
@@ -159,10 +155,9 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		}
 	}
 
-	private const float machineGunFireRate = 0.1f;
 	private IEnumerator MachineGunRoutine(){
 		while(true){
-			yield return new WaitForSeconds(machineGunFireRate);
+			yield return new WaitForSeconds(CharacterConst.Heavy.rateMinigun);
 
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfMinigunBullet);
 			go.transform.position = trGunMuzzle.position;
@@ -249,7 +244,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	public void OnHitOverchargeShot(Collider2D col){
 		float dis = Vector2.Distance(trGunMuzzle.position, col.transform.position);
 		if(dis < 1)dis = 1;
-		hit_ShotGun = new HitObject(15 + (int)(120 / dis));
+		hit_ShotGun = new HitObject(CharacterConst.Heavy.damageOvercharge);
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
 		if(hbt)
 			hbt.OnHit(hit_ShotGun);
@@ -291,14 +286,14 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 			switch (idx_) {
 			case 0:
 				OverchargedShot();
-				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+				InputModule.instance.BeginCoolDown(0, CharacterConst.Heavy.coolDownSkill0);
 				break;
 
 			case 1:
 				if(mineDropped){		
 					dropMine.Detonate();
 					mineDropped = false;
-					InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+					InputModule.instance.BeginCoolDown(1, CharacterConst.Heavy.coolDownSkill1);
 				}else{
 					DropMine();
 					InputModule.instance.BeginCoolDown(1, 0.5f);
@@ -314,7 +309,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 					audioSource.Play();
 					moveDir = Vector3.zero;
 				}
-				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+				InputModule.instance.BeginCoolDown(2, CharacterConst.Heavy.coolDownSkill2);
 				break;
 			}
 

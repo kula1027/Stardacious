@@ -55,6 +55,7 @@ public class ClientCharacterManager : MonoBehaviour {
 		characters[idx_] = go.GetComponent<NetworkCharacter>();
 		characters[idx_].transform.position = initPos_;
 		characters[idx_].NetworkId = idx_;
+		UI_CharacterStatus.instance.ActivatePortrait(idx_, (ChIdx)chIdx_);
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){	

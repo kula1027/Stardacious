@@ -21,6 +21,8 @@ namespace ServerSide{
 			base.Awake ();
 
 			objType = (int)MonsterType.Spider;
+
+			CurrentHp = MosnterConst.Spider.maxHp;
 		}
 
 		public override void OnRequested (){
