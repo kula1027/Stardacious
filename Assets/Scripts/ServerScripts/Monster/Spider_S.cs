@@ -27,9 +27,15 @@ namespace ServerSide{
 
 		public override void OnRequested (){
 			base.OnRequested();
+		}
+
+		public override void MonGetUp(){
+			base.MonGetUp ();
 
 			StartCoroutine(AIPreprocess());
 		}
+
+
 
 		private IEnumerator AIPreprocess(){
 			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
