@@ -176,5 +176,7 @@ public class MsgAttr{
 		public const string grounded = "mground";
 		public const string moving = "mmov";
 		public const string direction = "mdir";
+		public const string mSleep = "msleep";
+		public const string mGetUp = "mgetup";
 	}
 }

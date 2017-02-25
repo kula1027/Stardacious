@@ -74,6 +74,15 @@ public class ClientMonster : PoolingObject, IHittable {
 			OnDie();
 			break;
 
+		case MsgAttr.Monster.mSleep:
+			MonsterSleep();
+			break;
+
+		case MsgAttr.Monster.mGetUp:
+			MonsterGetUp ();
+			break;
+			
+
 		case MsgAttr.Monster.grounded:
 			if (IsDead == false) {
 				if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
@@ -126,6 +135,11 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	protected virtual void MonsterFreeze(){
 		hTrigger.gameObject.SetActive(false);
+	}
+
+	protected virtual void MonsterSleep(){
+	}
+	protected virtual void MonsterGetUp(){
 	}
 
 	public override void Freeze (){

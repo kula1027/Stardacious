@@ -8,7 +8,17 @@ public class Walker_C : ClientMonster {
 
 	public override void OnRequested (){
 		base.OnRequested();
+	}
 
+	protected override void MonsterSleep(){
+		base.MonsterSleep ();
+		gcWalker.AnimationFreeze ();
+	}
+
+	protected override void MonsterGetUp(){
+		// 요기서부터 시작
+		base.MonsterGetUp ();
+		gcWalker.AnimationResume ();
 		StartCoroutine(WakeUpRoutine());
 	}
 
