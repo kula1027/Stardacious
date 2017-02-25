@@ -200,7 +200,9 @@ public class Network_Client {
 				}catch(Exception e){
 					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 				}finally{
-					socketUdp.Close();
+					if (socketUdp != null) {
+						socketUdp.Close ();
+					}
 				}
 
 				MsgSegment h = new MsgSegment(MsgAttr.misc);

@@ -112,7 +112,10 @@ namespace ServerSide{
 			}catch(Exception e){
 				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message);
 			}
+
 			udpRecvPort = ((IPEndPoint)socketUDP.LocalEndPoint).Port;
+
+			ConsoleMsgQueue.EnqueMsg (udpRecvPort + "asdasd");
 			ReceiveQueue.SyncEnqueMsg(
 				new NetworkMessage(
 					new MsgSegment(MsgAttr.misc, clientId),

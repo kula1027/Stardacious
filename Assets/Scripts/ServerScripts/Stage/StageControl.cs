@@ -68,6 +68,7 @@ namespace ServerSide{
 				for (int loop = 0; loop < tempCount; loop++) {
 					ServerMonster sm;
 					string goName = waves [currentWaveIdx].GetChild (loop).name;
+						Vector3 goPos = waves [currentWaveIdx].GetChild (loop).transform.position;
 
 					if (goName.Contains ("spider")) {
 						pf = ServerStageManager.instance.pfSpider;
@@ -184,6 +185,8 @@ namespace ServerSide{
 						sm.MasterWave = this;
 						sm.MonsterIdx = 2;
 						sm.WaveIdx = currentWaveIdx;
+						sm.FlightMaxHeight = goPos.y+5;
+						sm.FlightMinHeight = goPos.y;
 						waveMonsterArray [monsterCountIdx] = sm;
 
 						if (waves [currentWaveIdx].GetChild (loop).childCount > 0) {

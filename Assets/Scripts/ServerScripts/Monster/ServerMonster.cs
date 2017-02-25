@@ -42,6 +42,18 @@ namespace ServerSide{
 			set{ this.isSummonMonster = value; }
 		}
 
+		private float flightMaxHeight = 20;
+		public float FlightMaxHeight {
+			get {return flightMaxHeight;}
+			set {flightMaxHeight = value;}
+		}
+
+		private float flightMinHeight = 15;
+		public float FlightMinHeight {
+			get {return flightMinHeight;}
+			set {flightMinHeight = value;}
+		}
+
 		public bool isGround;
 
 		protected bool isMoving = false;
@@ -334,9 +346,9 @@ namespace ServerSide{
 
 
 			// 천장이랑 바닥 안넘어가게
-			if (this.transform.position.y > 20) {
+			if (this.transform.position.y > flightMaxHeight) {
 				tempSpeed.y *= ((float)Random.Range (-10, 0) / 10f);;
-			} else if(this.transform.position.y < 15){
+			} else if(this.transform.position.y < flightMinHeight){
 				tempSpeed.y *= ((float)Random.Range (0, 10) / 10f);
 			} else {
 				tempSpeed.y *= ((float)Random.Range (-10, 10) / 10f);
