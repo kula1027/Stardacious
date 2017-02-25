@@ -93,7 +93,7 @@ namespace ServerSide{
 				}
 
 				// main AIpart
-				if (NotMoveMonster && isInRanged){
+				if (AiType == MonsterAIType.NotMove && isInRanged){
 					// nothing
 
 				} else if (isAgroed && !isInRanged) {

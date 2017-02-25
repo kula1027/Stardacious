@@ -13,7 +13,7 @@ namespace ServerSide{
 		private int spiderAttkRange = 20;
 		private int spiderAgroRange = 50;
 		private float spiderAppearTime = 3.5f;
-		private float spiderAtkDelay = 0.5f;
+		private float spiderAtkDelay = 1f;
 		private float spiderAtkAfterDelay = 1f;
 
 
@@ -26,12 +26,81 @@ namespace ServerSide{
 		public override void OnRequested (){
 			base.OnRequested();
 
-			StartCoroutine(SpiderMainAI());
+			StartCoroutine(AIPreprocess());
+		}
+
+		private IEnumerator AIPreprocess(){
+			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
+			// 생성되는 애니메이션을 위해 n초 대기
+			switch(AiType){
+			case MonsterAIType.Normal:
+				break;
+			case MonsterAIType.NotMove:
+				break;
+			case MonsterAIType.Rush:
+				yield return StartCoroutine (SpiderRush ());
+				break;
+			}
+
+			yield return StartCoroutine (SpiderMainAI());
+		}
+
+		private IEnumerator SpiderRush(){	//대상 찾을때까지 전진
+			while(true){
+				currentCharacterPos = new Vector3[NetworkConst.maxPlayer];
+				int currentPlayers = 0;
+				for (int i = 0 ; i < NetworkConst.maxPlayer; i++) {
+					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
+						// servercharacter 가 존재하고 죽지 않앗을 때
+						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
+						Vector3 myPos = this.transform.position;
+
+						currentCharacterPos [currentPlayers] = charPos;
+						currentPlayers++;
+					}
+				}
+				if (currentPlayers == 0) {
+					yield return new WaitForSeconds (1f);
+					continue;
+				}
+				int randomTarget = Random.Range (0, currentPlayers);
+				closestCharacterPos = SetCharacterPos (currentCharacterPos, randomTarget, 0);
+				Vector3 targetPos = currentCharacterPos [randomTarget];
+
+				if (Vector3.Distance (transform.position, targetPos) <= 1) {
+					// if character is in agro range..
+					isAgroed = true;
+					isInRanged = true;
+					currentCharacterPos [randomTarget] = targetPos;
+					break;
+				}
+
+
+				isMoving = true; // set the ismoving flag
+				float timeAcc = 0; // 움직임 명령 시간잼
+
+				while (true) {
+					if (currentDir == true) {
+						// move to right
+						transform.position += monsterDefaultSpeed * Time.deltaTime;
+					} else if (currentDir == false) {
+						// move to left
+						transform.position -= monsterDefaultSpeed * Time.deltaTime;
+					}
+
+					timeAcc += Time.deltaTime;
+
+					if (timeAcc > 1.3f)
+						break;
+
+					yield return null;
+				}
+
+				isMoving = false; // now dont move
+			}
 		}
 
 		private IEnumerator SpiderMainAI(){
-			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
-			// 생성되는 애니메이션을 위해 n초 대기
 
 
 			/************ AI START ************/
@@ -77,11 +146,11 @@ namespace ServerSide{
 				}
 					
 				// main AIpart
-				if (NotMoveMonster && isInRanged) {
+				if (AiType == MonsterAIType.NotMove && isInRanged) {
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
 					yield return StartCoroutine (SpiderNotMove (closestCharacterPos));
 
-				} else if(NotMoveMonster) {
+				} else if(AiType == MonsterAIType.NotMove) {
 					//nothing
 
 				} else if (isAgroed && !isInRanged) {
@@ -140,7 +209,7 @@ namespace ServerSide{
 		}
 
 		private IEnumerator SpiderNotMove(Vector3 closestCharacterPos_){
-			// 아얘 안움직이는 놈일때
+			// 아예 안움직이는 놈일때
 
 			yield return StartCoroutine (MonsterFireProjectile (closestCharacterPos_));
 		}

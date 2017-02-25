@@ -7,13 +7,23 @@ public class MonsterSummon : MonoBehaviour {
 	public ParticleSystem glow;
 	public ParticleSystem dust;
 
-
 	void Awake(){
 		body.Stop ();
 		glow.Stop ();
 		dust.Stop ();
 	}
 
+	void OnEnable(){
+		body.Stop ();
+		glow.Stop ();
+		dust.Stop ();
+	}
+
+	void Update(){
+		if (Input.GetKeyDown (KeyCode.A)) {
+			Effecting ();
+		}
+	}
 	public void Effecting(){
 		StartCoroutine (ParticleRoutine ());
 	}
@@ -23,12 +33,10 @@ public class MonsterSummon : MonoBehaviour {
 		glow.Play ();
 		dust.Play ();
 
-		yield return new WaitForSeconds (1);
+		yield return new WaitForSeconds (2f);
 
 		body.Stop ();
 		glow.Stop ();
 		dust.Stop ();
-
-		yield return new WaitForSeconds (2);
 	}
 }

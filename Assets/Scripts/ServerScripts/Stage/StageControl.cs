@@ -47,39 +47,62 @@ namespace ServerSide{
 				if (currentMonsterCount > 0) {
 					GameObject mGo;
 					GameObject pf;
+					ServerMonster sm;
 					for (int loop = 0; loop < currentMonsterCount; loop++) {
 						string goName = waves[currentWaveIdx].GetChild(loop).name;
-						if(goName.Contains("spider")){
+						if (goName.Contains ("spider")) {
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterIdx = 0;
-							mGo.GetComponent<ServerMonster> ().Ready ();
-						}else if(goName.Contains("spdnm")){
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 0;
+							sm.Ready ();
+						} else if (goName.Contains ("spdnm")) {
 							pf = ServerStageManager.instance.pfSpider;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterIdx = 0;
-							mGo.GetComponent<ServerMonster> ().NotMoveMonster = true;
-							mGo.GetComponent<ServerMonster> ().Ready ();
-						}else if(goName.Contains("walker")){
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 0;
+							sm.AiType = MonsterAIType.NotMove;
+							sm.Ready ();
+						} else if (goName.Contains ("spdsm")) {
+							pf = ServerStageManager.instance.pfSpider;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 0;
+							sm.IsSummonMonster = true;
+							sm.Ready ();
+						} else if (goName.Contains ("spdrs")) {
+							pf = ServerStageManager.instance.pfSpider;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 0;
+							sm.AiType = MonsterAIType.Rush;
+							sm.IsSummonMonster = true;
+							sm.Ready ();
+						} else if (goName.Contains ("walker")) {
 							pf = ServerStageManager.instance.pfWalker;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
-							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterIdx = 1;
-							mGo.GetComponent<ServerMonster> ().Ready ();
-						}else if(goName.Contains("fly")){
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 1;
+							sm.Ready ();
+						} else if (goName.Contains ("fly")) {
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position + new Vector3 (0, Fly_S.flyStartHeight, 0);
-							mGo.GetComponent<ServerMonster> ().MasterWave = this;
-							mGo.GetComponent<ServerMonster> ().MonsterIdx = 2;
-							mGo.GetComponent<ServerMonster> ().Ready ();
+							sm = mGo.GetComponent<ServerMonster> ();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 2;
+							sm.Ready ();
 						}
-
 					}
 				} else {
 					

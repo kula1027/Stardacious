@@ -76,7 +76,7 @@ namespace ServerSide{
 				}
 
 				// main AIpart
-				if (NotMoveMonster && isInRanged){
+				if (AiType == MonsterAIType.NotMove && isInRanged){
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
 					yield return StartCoroutine (WalkerNotMove (closestCharacterPos));
 
