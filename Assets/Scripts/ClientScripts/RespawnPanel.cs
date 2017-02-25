@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class RespawnPanel : HidableUI {
 
 	public static RespawnPanel instance;
-	private float defaultRespawnTime = 5f;
 	private AudioSource audioSource;
 
 	public Image thatImage;
@@ -42,8 +41,8 @@ public class RespawnPanel : HidableUI {
 			timeAcc += Time.deltaTime;
 
 			thatImage.fillAmount
-			= (defaultRespawnTime + (float)dieCount - timeAcc) /
-			(defaultRespawnTime + (float)dieCount);
+			= (CharacterCtrl.defaultRespawnTime + (float)dieCount - timeAcc) /
+				(CharacterCtrl.defaultRespawnTime + (float)dieCount);
 
 			if (thatImage.fillAmount <= 0) {
 				thatImage.fillAmount = 1;

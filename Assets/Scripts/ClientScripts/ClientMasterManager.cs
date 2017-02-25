@@ -87,7 +87,7 @@ public class ClientMasterManager : MonoBehaviour {
 	}
 
 	public void LoadAwakeScene(){
-		SceneManager.LoadScene("scAwake");
+		SceneManager.LoadScene(SceneName.scNameAwake);
 	}
 
 	private void SendResultInfo(){		

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
 
-	private const float defaultRespawnTime = 10f;
+	public const float defaultRespawnTime = 10f;
 
 	public bool isGround = false;
 	private int dieCount = 0;
@@ -79,6 +79,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public void GameOver(){
+		Debug.Log("GO");
 		gameOver = true;
 		canControl = false;
 		hbt.gameObject.SetActive(false);
@@ -493,6 +494,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private bool gameOver = false;
 	protected virtual void OnRevive(){
 		if(gameOver)return;
+
 
 		characterGraphicCtrl.Initialize();
 		this.transform.position = respawnPoint;

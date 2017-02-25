@@ -42,7 +42,7 @@ namespace ServerSide{
 			playerInfo[idx_] = new PlayerInfo();
 			if(currentPlayerCount < 1){
 				Network_Server.ShutDown();
-				SceneManager.LoadScene("scServer");
+				SceneManager.LoadScene(SceneName.scNameServer);
 				ConsoleMsgQueue.EnqueMsg("0 Players Left, Reset Server");
 			}
 		}

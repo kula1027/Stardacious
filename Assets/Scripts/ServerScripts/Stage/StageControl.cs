@@ -94,7 +94,16 @@ namespace ServerSide{
 							sm.MasterWave = this;
 							sm.MonsterIdx = 1;
 							sm.Ready ();
-						} else if (goName.Contains ("fly")) {
+						}else if(goName.Contains("wkrnm")){
+							pf = ServerStageManager.instance.pfWalker;
+							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
+							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+							sm = mGo.GetComponent<ServerMonster>();
+							sm.MasterWave = this;
+							sm.MonsterIdx = 1;
+							sm.AiType = MonsterAIType.NotMove;
+							sm.Ready ();
+						}else if(goName.Contains("fly")){
 							pf = ServerStageManager.instance.pfFly;
 							mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
 							mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position + new Vector3 (0, Fly_S.flyStartHeight, 0);

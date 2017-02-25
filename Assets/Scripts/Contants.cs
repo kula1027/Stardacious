@@ -33,6 +33,12 @@ public static class NetworkConst{
 	public const float chPosSyncTime = 0.05f;
 	public const float projPosSyncTime = 0.1f;
 }
+
+public static class SceneName{
+	public const string scNameInGame = "scIngame";
+	public const string scNameAwake = "scAwake";
+	public const string scNameServer = "scServer";
+}
 	
 public enum GameState{
 	Waiting,
