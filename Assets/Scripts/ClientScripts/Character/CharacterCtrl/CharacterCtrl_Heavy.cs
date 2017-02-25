@@ -9,6 +9,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	public AudioClip audioShotgun;
 	public AudioClip audioOvercharge;
+	public AudioClip audioSwap;
 
 	public override void Initialize (){
 		base.Initialize ();
@@ -309,6 +310,8 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 				if(isMachineGunMode){
 					StopMachineGun();
 				}else{
+					audioSource.clip = audioSwap;
+					audioSource.Play();
 					moveDir = Vector3.zero;
 				}
 				InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);

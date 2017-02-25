@@ -34,10 +34,6 @@ public class InputMove : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDra
 			dir_ += Vector3.up;
 		}
 
-		if(Input.GetKeyDown(KeyCode.P)){
-			CharacterCtrl.instance.Freeze();
-		}
-
 		CharacterCtrl.instance.OnMovementInput(dir_);
 	}
 

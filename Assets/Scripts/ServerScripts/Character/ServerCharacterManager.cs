@@ -5,13 +5,14 @@ namespace ServerSide{
 	public class ServerCharacterManager : MonoBehaviour {
 		public static ServerCharacterManager instance;
 
-		private GameObject prefabServerCharacter;
+		public GameObject prefabServerCharacter;
 		private ServerCharacter[] character = new ServerCharacter[NetworkConst.maxPlayer];
 		public int currentCharacterCount = 0;
 
+		private int currentAliveCharacterCount = 0;
+
 		void Awake(){
 			instance = this;
-			prefabServerCharacter = (GameObject)Resources.Load("chTestServer");
 		}
 			
 		public ServerCharacter GetCharacter(int idx_){
@@ -31,10 +32,23 @@ namespace ServerSide{
 				}
 			}
 			currentCharacterCount++;
+			currentAliveCharacterCount++;
 
-			// monsterapp
+			ConsoleMsgQueue.EnqueMsg(character[idx_].NetworkId + " Joined, Current Player Count: " + currentCharacterCount);
 
 			return character[idx_];
+		}
+
+		public void OnCharacterDead(){
+			currentAliveCharacterCount--;
+
+			if(currentAliveCharacterCount < 1 && currentCharacterCount > 1){
+				ServerMasterManager.instance.OnAnnihilation();
+			}
+		}
+
+		public void OnCharacterAlive(){
+			currentAliveCharacterCount++;
 		}
 
 		public void RemoveCharacter(int idx_){

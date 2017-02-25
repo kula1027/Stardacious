@@ -148,12 +148,12 @@ namespace ServerSide{
 
 				if (currentDir == false) {
 					go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
+					go.transform.right = Vector3.left;
 
 				} else if (currentDir == true) {
 					go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
-				}
-
-				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+					go.transform.right = Vector3.right;
+				}					
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 

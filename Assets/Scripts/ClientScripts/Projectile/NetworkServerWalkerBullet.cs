@@ -13,7 +13,7 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 		transform.right = bodies_[2].ConvertToV3();
 
 		int forceCoff = int.Parse(bodies_[3].Attribute);
-		rgd2d.AddForce(transform.right * 1000);
+		rgd2d.AddForce((transform.right + new Vector3(0, 0.2f, 0)) * forceCoff);
 
 		MakeSound(audioFire);
 	}

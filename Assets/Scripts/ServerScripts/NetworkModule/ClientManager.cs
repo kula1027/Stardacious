@@ -5,8 +5,8 @@ using System;
 
 namespace ServerSide{
 	public static class ClientManager {
-		private static TcpConnection[] arrayClient;
-		public static TcpConnection getClient(int idx){
+		private static ClientConnection[] arrayClient;
+		public static ClientConnection getClient(int idx){
 			return arrayClient[idx];
 		}
 		private static Queue<int> freeQueue;
@@ -22,7 +22,7 @@ namespace ServerSide{
 				freeQueue.Enqueue(loop);
 			}
 
-			arrayClient = new TcpConnection[NetworkConst.maxPlayer];
+			arrayClient = new ClientConnection[NetworkConst.maxPlayer];
 		}
 
 		public static bool AddClient(Socket welcomeSocket_){			
@@ -34,7 +34,7 @@ namespace ServerSide{
 
 				return false;
 			}else{
-				arrayClient[freeId] = new TcpConnection(welcomeSocket_, freeId);
+				arrayClient[freeId] = new ClientConnection(welcomeSocket_, freeId);
 
 				return true;
 			}

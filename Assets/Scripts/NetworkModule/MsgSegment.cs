@@ -122,12 +122,15 @@ public class MsgAttr{
 
 	public const string misc = "misc";
 	public class Misc{
+		public const string udpPort = "port";
 		public const string exitClient = "exit";
 		public const string failConnect = "fcon";
 		public const string disconnect = "disc";
 		public const string hello = "hlo";
 		public const string ready = "rdy";
 		public const string letsgo = "begingame";
+		public const string gameOverAnnih = "gameover";
+		public const string result = "result";
 	}
 
 	public const string stage = "stg";

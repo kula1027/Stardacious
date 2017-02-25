@@ -11,6 +11,7 @@ public class Client_ConsoleParser : ConsoleParser {
 	private const string Send = "send";
 	private const string BroadCast = "broadcast";
 	private const string Disconnect = "disconnect";
+	private const string Die = "die";
 	private const string Connect = "con";
 	private const string RecvPort = "rport";
 	private const string SendPort = "sport";
@@ -30,14 +31,13 @@ public class Client_ConsoleParser : ConsoleParser {
 				Network_Client.ShutDown();
 				break;
 
-			case RecvPort:
-				Network_Client.portRecvUdp = int.Parse(splitCommand[1]);
-				ConsoleMsgQueue.EnqueMsg("Udp Recv Port Changed.");
-				break;
-
 			case SendPort:
 				Network_Client.portServerUDP = int.Parse(splitCommand[1]);
 				ConsoleMsgQueue.EnqueMsg("Udp Send Port Changed.");
+				break;
+
+			case Die:
+				CharacterCtrl.instance.OnDie();
 				break;
 			}
 		}catch(Exception e){

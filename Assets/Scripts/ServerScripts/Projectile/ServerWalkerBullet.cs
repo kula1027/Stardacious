@@ -16,7 +16,7 @@ namespace ServerSide {
 				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
 				new MsgSegment(transform.position),
 				new MsgSegment(MsgAttr.rotation, transform.right),
-				new MsgSegment(Random.Range(400, 600).ToString())
+				new MsgSegment(Random.Range(400, 1200).ToString())
 			};
 
 			nmAppear = new NetworkMessage(h, b);

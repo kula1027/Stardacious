@@ -14,6 +14,8 @@ namespace ServerSide{
 		public int currentPlayerCount = 0;
 		private int readyCount = 0;
 
+		private int gameOverResponseCount = 0;
+
 		void Awake(){
 			instance = this;
 			serverState = GameState.Waiting;
@@ -45,11 +47,55 @@ namespace ServerSide{
 			}
 		}
 
+
+		public void OnAnnihilation(){
+			NetworkMessage nmGameOver = new NetworkMessage(
+				new MsgSegment(MsgAttr.misc),
+				new MsgSegment(MsgAttr.Misc.gameOverAnnih)
+			);
+			Network_Server.BroadCastTcp(nmGameOver);
+		}
+
+		public void OnResponseGameOver(NetworkMessage networkMsg_){
+			gameOverResponseCount++;
+
+			int sender = int.Parse(networkMsg_.Adress.Attribute);
+			playerInfo[sender].resultInfo = networkMsg_.Body;
+
+			int currentCount = ServerCharacterManager.instance.currentCharacterCount;
+			if(gameOverResponseCount >= currentCount){
+				MsgSegment[] bodyResult = new MsgSegment[10];
+				bodyResult[0] = new MsgSegment(MsgAttr.Misc.result);
+				for(int loop = 0; loop < playerInfo.Length; loop++){
+					for(int loop2 = 1; loop2 < 4; loop2++){
+						if(playerInfo[loop].resultInfo != null){
+							bodyResult[playerInfo.Length * loop + loop2] = playerInfo[loop].resultInfo[loop2];
+						}else{
+							bodyResult[playerInfo.Length * loop + loop2] = new MsgSegment();
+						}
+					}
+				}
+
+				NetworkMessage resultMsg = new NetworkMessage(
+					new MsgSegment(MsgAttr.misc),
+					bodyResult
+				);
+
+				Network_Server.BroadCastTcp(resultMsg);
+			}
+		}
+
 		public void OnRecv(NetworkMessage networkMessage){
 			switch(networkMessage.Body[0].Attribute){
 			case MsgAttr.Misc.disconnect:
 				int exitIdx = int.Parse(networkMessage.Body[0].Content);
 				OnExitClient(exitIdx);
+				break;
+
+			case MsgAttr.Misc.udpPort:
+				int recver = int.Parse(networkMessage.Header.Content);
+				Network_Server.UniCast(networkMessage, recver);
+				ConsoleMsgQueue.EnqueMsg(recver + " Udp Recv Port Set");
 				break;
 
 			case MsgAttr.Misc.hello:
@@ -59,6 +105,10 @@ namespace ServerSide{
 				playerInfo[sender].nickName = networkMessage.Body[0].Content;
 				playerInfo[sender].isActive = true;
 				SendInfo(sender);
+				break;
+
+			case MsgAttr.Misc.result:
+				OnResponseGameOver(networkMessage);
 				break;
 
 			case MsgAttr.Misc.ready:
@@ -132,4 +182,5 @@ public class PlayerInfo{
 	public string nickName = "";
 	public int chosenCharacter = (int)ChIdx.NotInitialized;
 	public GameState gameState = GameState.Empty;
+	public MsgSegment[] resultInfo;
 }

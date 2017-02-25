@@ -176,6 +176,17 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp(nmAppear);
 		}
 
+		public void NotifyAppearence(int targetNetworkId_){
+			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
+			MsgSegment[] b = {
+				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
+			};
+			NetworkMessage nmAppear = new NetworkMessage(h, b);
+
+			Network_Server.UniCast(nmAppear, targetNetworkId_);
+		}
+
 		private IEnumerator SendPosRoutine(){
 			while(true){
 				nmPos.Body[0] = new MsgSegment(transform.position);

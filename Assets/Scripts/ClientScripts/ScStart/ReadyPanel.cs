@@ -66,7 +66,7 @@ public class ReadyPanel : MonoBehaviour {
 			slotSelf.txtState.SetText("Ready");
 		}else{
 			slotSelf.btnSelect.SetInteractable(!isReady_);
-			slotSelf.btnReady.Glow();
+			//slotSelf.btnReady.Glow();
 			slotSelf.txtState.SetText("Waiting...");
 			slotSelf.txtState.Glow();
 		}

@@ -10,6 +10,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	private AudioSource audioVoice;
 	public AudioClip audioDying;
+	public AudioClip audioHit;
 
 	void Awake(){
 		hTrigger = GetComponentInChildren<HitBoxTrigger>();
@@ -40,8 +41,8 @@ public class ClientMonster : PoolingObject, IHittable {
 		}
 	}
 
-	public override void OnHpChanged (int hpChange){
-		//Do Nothing
+	public override void OnHpChanged (int hpChange){		
+		CharacterCtrl.instance.DamageAccum -= hpChange;
 	}
 
 	public override void OnDie (){
@@ -167,6 +168,7 @@ public class ClientMonster : PoolingObject, IHittable {
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
+		MakeSound(audioHit);
 		gcMons.Twinkle();
 		hitObject_.Apply(this);
 

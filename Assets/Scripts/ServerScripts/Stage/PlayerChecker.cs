@@ -25,5 +25,5 @@ namespace ServerSide{
 				masterStage.IsPlayerExistMinus ();
 			}
 		}
-}
+	}
 }

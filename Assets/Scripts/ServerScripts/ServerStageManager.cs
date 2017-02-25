@@ -87,6 +87,14 @@ namespace ServerSide{
 			}
 		}
 
+		public void NotifyMonsters(int networkId_){
+			GameObject[] monsterAll = monsterPooler.GetActiveGameObjectsAll();
+
+			for(int loop = 0; loop < monsterAll.Length; loop++){
+				monsterAll[loop].GetComponent<ServerMonster>().NotifyAppearence(networkId_);
+			}
+		}
+
 		public void CurrentStageEnd(){	
 			ConsoleMsgQueue.EnqueMsg("End Stage");
 

@@ -66,7 +66,7 @@ public class Network_Client {
 					return;
 				}
 			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg(e.ToString());
+				ConsoleMsgQueue.EnqueMsg("Connect: " + e.ToString());
 			}
 		}
 			
@@ -78,24 +78,22 @@ public class Network_Client {
 	#region UDP
 	private static IPEndPoint epServer;
 	private static Thread threadReceive_UDP;
-	public static int portRecvUdp = 13904;
 	public static int portServerUDP = 12904;
 
 	private static Socket socketUdp;
 
-	public static void InitUdp(){
+	public static void InitUdp(int portServerUDP_){
 		ConsoleMsgQueue.EnqueMsg("Initialize UDP");
-
-		portRecvUdp += networkId;
-		portServerUDP += networkId;
+		portServerUDP = portServerUDP_;
 
 		try{
-			IPEndPoint ep = new IPEndPoint(IPAddress.Any, portRecvUdp);
+			IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
 			socketUdp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			socketUdp.Bind(ep);
 		}catch(Exception e){
-			ConsoleMsgQueue.EnqueMsg(e.Message);
+			ConsoleMsgQueue.EnqueMsg("Init UDP: " + e.Message);
 		}
+
 		epServer = new IPEndPoint(IPAddress.Parse(serverAddress), portServerUDP);
 
 		threadReceive_UDP = new Thread(ReceivingUDP);
@@ -187,21 +185,49 @@ public class Network_Client {
 				streamReader.Close();
 				streamWriter.Close();
 				
-				try{
+				try{					
 					tcpClient.Close();
 				}catch(Exception e){
 					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 				}
 				
 				try{
-					socketUdp.Close();
+					socketUdp.Shutdown(SocketShutdown.Both);
 				}catch(Exception e){
 					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				}finally{
+					socketUdp.Close();
 				}
 
 				MsgSegment h = new MsgSegment(MsgAttr.misc);
 				MsgSegment b = new MsgSegment(MsgAttr.Misc.disconnect);
 				ReceiveQueue.SyncEnqueMsg(new NetworkMessage(h, b));
+			}
+		}
+	}
+
+	public static void SoftShutDown(){
+		lock(shutDownLock){
+			if(isConnected){
+				isConnected = false;
+
+				streamReader.Close();
+				streamWriter.Close();
+
+				try{
+					tcpClient.Close();
+				}catch(Exception e){
+					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				}
+
+				try{
+					socketUdp.Shutdown(SocketShutdown.Both);
+				}catch(Exception e){
+					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
+				}finally{
+					socketUdp.Close();
+				}
+
 			}
 		}
 	}

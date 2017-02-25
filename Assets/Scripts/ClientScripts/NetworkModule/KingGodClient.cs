@@ -33,10 +33,11 @@ public class KingGodClient : MonoBehaviour {
 		networkTranslator.SetMsgHandler(gameObject.AddComponent<Client_MsgHandler>());
 	}
 
+	private Coroutine netSetUpRoutine;
 	public void BeginNetworking(){//네트워킹이 최초 시동되는 부분
 		Network_Client.Begin();
 
-		StartCoroutine(NetworkSetup());
+		netSetUpRoutine = StartCoroutine(NetworkSetup());
 	}
 
 	private IEnumerator NetworkSetup(){
@@ -46,15 +47,19 @@ public class KingGodClient : MonoBehaviour {
 		}
 	
 		Network_Client.NetworkId = -1;
-		while(Network_Client.NetworkId == -1){			
+		while(Network_Client.NetworkId == -1){	
 			yield return null;
 		}
-
-		Network_Client.InitUdp();
 
 		ConsoleMsgQueue.EnqueMsg("Received Id: " + Network_Client.NetworkId);
 
 		StartSceneManager.instance.OnNetworkSetupDone();
+	}
+
+	public void OnConnectionFailed(){
+		if(netSetUpRoutine != null){
+			StopCoroutine(netSetUpRoutine);
+		}
 	}
 
 	void OnApplicationQuit(){
