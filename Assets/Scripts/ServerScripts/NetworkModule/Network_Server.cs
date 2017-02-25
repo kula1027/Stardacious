@@ -52,7 +52,7 @@ namespace ServerSide{
 			try{
 				tcpListener.Server.Shutdown(SocketShutdown.Both);
 			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message);
+				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 			}finally{
 				tcpListener.Server.Close();
 				tcpListener.Stop();

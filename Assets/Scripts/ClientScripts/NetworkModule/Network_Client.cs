@@ -78,7 +78,7 @@ public class Network_Client {
 	#region UDP
 	private static IPEndPoint epServer;
 	private static Thread threadReceive_UDP;
-	public static int portServerUDP = 12904;
+	public static int portServerUDP;
 
 	private static Socket socketUdp;
 
@@ -104,7 +104,11 @@ public class Network_Client {
 		if(isConnected){			
 			string str = nm_.ToString();
 			byte[] buff = Encoding.UTF8.GetBytes(str);
-			socketUdp.SendTo(buff, epServer);
+			try{
+				socketUdp.SendTo(buff, epServer);
+			}catch(Exception e){
+				ConsoleMsgQueue.EnqueMsg("SendUdp: " + e.Message, 2);
+			}
 		}
 	}
 
