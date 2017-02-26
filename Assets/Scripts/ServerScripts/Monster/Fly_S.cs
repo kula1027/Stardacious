@@ -37,7 +37,7 @@ namespace ServerSide{
 			//화면 밖에서 내려오는 연출
 			float speed = flyStartHeight / appearTime;
 			float timer = 0;
-			while (true) {
+			while (!IsDead) {
 				timer += Time.deltaTime;
 				transform.Translate (0, -Time.deltaTime * speed, 0);
 				if (timer > appearTime) {

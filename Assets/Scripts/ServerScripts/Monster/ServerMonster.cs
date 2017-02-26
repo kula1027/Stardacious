@@ -279,7 +279,7 @@ namespace ServerSide{
 		protected IEnumerator MonsterAppearence(float monAppearTime){
 			float timeAcc = 0;
 
-			while (true) {
+			while (!IsDead) {
 				timeAcc += Time.deltaTime;
 				if (timeAcc > monAppearTime)
 					break;
