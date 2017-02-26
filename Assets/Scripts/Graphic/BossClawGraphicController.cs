@@ -9,8 +9,6 @@ public class BossClawGraphicController : MonoBehaviour {
 	void Start () {
 		cameraGraphic = CameraGraphicController.instance;
 		originPos = transform.localPosition;
-
-		ClawAttack (2);
 	}
 	
 	public void Idle(){

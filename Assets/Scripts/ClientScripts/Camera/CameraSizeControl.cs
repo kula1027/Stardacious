@@ -9,7 +9,7 @@ public class CameraSizeControl : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		if(col.transform.parent.GetComponent<CharacterCtrl>()){
-			Camera.main.GetComponent<CameraControl>().SetCamSize(camSize);
+			CameraControl.instance.SetCamSize(camSize);
 			/*if(nextCamSC != null && prevCamSC != null){
 				prevCamSC.gameObject.SetActive(true);
 				nextCamSC.gameObject.SetActive(true);
@@ -20,7 +20,7 @@ public class CameraSizeControl : MonoBehaviour {
 
 	void OnTriggerExit2D(Collider2D col){
 		if(col.transform.parent.GetComponent<CharacterCtrl>()){
-			Camera.main.GetComponent<CameraControl>().SetCamSize(CameraConst.defaultCamSize);
+			CameraControl.instance.SetCamSize(CameraConst.defaultCamSize);
 		}
 	}
 }

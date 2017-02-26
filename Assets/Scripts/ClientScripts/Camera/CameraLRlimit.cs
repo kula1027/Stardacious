@@ -7,13 +7,13 @@ public class CameraLRlimit : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		if(col.transform.parent.GetComponent<CharacterCtrl>()){
-			Camera.main.GetComponent<CameraControl>().SetLimit(trLeft.position.x, trRight.position.x);
+			CameraControl.instance.SetLimit(trLeft.position.x, trRight.position.x);
 		}
 	}
 
 	void OnTriggerExit2D(Collider2D col){
 		if(col.transform.parent.GetComponent<CharacterCtrl>()){
-			Camera.main.GetComponent<CameraControl>().ReleaseLimit();
+			CameraControl.instance.ReleaseLimit();
 		}
 	}
 }

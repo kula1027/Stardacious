@@ -51,7 +51,7 @@ public class ClientMasterManager : MonoBehaviour {
 
 		CharacterCtrl.instance.Initialize ();
 
-		Camera.main.GetComponent<CameraControl>().SetTarget(CharacterCtrl.instance.transform);
+		CameraControl.instance.SetTarget(CharacterCtrl.instance.transform);
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){

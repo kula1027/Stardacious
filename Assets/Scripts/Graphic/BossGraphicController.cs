@@ -22,8 +22,6 @@ public class BossGraphicController : MonoBehaviour {
 				break;
 			}
 		};
-
-		SummonPattern ();
 	}
 
 	public void Idle(){
@@ -74,5 +72,35 @@ public class BossGraphicController : MonoBehaviour {
 			missileMuzzleR.Play ("Effect");
 			yield return new WaitForSeconds (0.34f);
 		}
+	}
+
+
+	private const float colorRMax = 1f;
+	private const float deltaR = 10f;
+	private bool isTwinkling = false;
+	private SkeletonRenderer skelRenderer;
+	public void Twinkle(){
+		if (isTwinkling) {
+			StopCoroutine (DoctorTwinkleColorAnimation ());	
+		}
+		StartCoroutine (DoctorTwinkleColorAnimation ());
+	}
+	IEnumerator DoctorTwinkleColorAnimation(){
+		isTwinkling = true;
+
+		float colorR = colorRMax;
+		while (true) {
+			colorR -= Time.deltaTime * deltaR;
+			if (colorR < 0) {
+				colorR = 0;
+			}
+			skelRenderer.skeleton.SetColor (new Color (colorR, 0, 0, 1));
+			if (colorR <=  0) {
+				break;
+			}
+			yield return null;
+		}
+
+		isTwinkling = false;
 	}
 }

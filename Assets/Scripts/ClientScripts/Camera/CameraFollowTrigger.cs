@@ -4,10 +4,10 @@ using System.Collections;
 public class CameraFollowTrigger : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
-		Camera.main.GetComponent<CameraControl>().FollowMode();
+		CameraControl.instance.FollowMode();
 	}
 
 	void OnTriggerExit2D(Collider2D col){
-		Camera.main.GetComponent<CameraControl>().ResumeMode();
+		CameraControl.instance.ResumeMode();
 	}
 }

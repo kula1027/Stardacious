@@ -481,8 +481,8 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 			}
 			for (int i = 0; i < unitParts.Length; i++) {
 				unitParts [i].color = new Color (colorR, 0, 0, 1);
-				hairRenderer.skeleton.SetColor (new Color (colorR, 0, 0, 1));
 			}
+			hairRenderer.skeleton.SetColor (new Color (colorR, 0, 0, 1));
 			if (colorR <=  0) {
 				break;
 			}

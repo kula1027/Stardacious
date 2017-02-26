@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CameraControl : MonoBehaviour {
-	
+	public static CameraControl instance;
 
 	private Camera cam;
 	private Transform targetTr;
@@ -22,7 +22,9 @@ public class CameraControl : MonoBehaviour {
 	private IEnumerator itplCamRoutineFollow;
 
 	void Awake(){
-		cam = GetComponent<Camera>();
+		instance = this;
+
+		cam = Camera.main;
 
 		camHeight = cam.orthographicSize;
 		camWidth = cam.orthographicSize * cam.aspect;

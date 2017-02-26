@@ -8,7 +8,7 @@ public class CameraHeightControl : MonoBehaviour {
 	public CameraHeightControl prevCamHC;
 
 	void OnTriggerEnter2D(Collider2D col){
-		Camera.main.GetComponent<CameraControl>().SetGroundHeight(trReference.position.y);
+		CameraControl.instance.SetGroundHeight(trReference.position.y);
 
 		if(nextCamHC != null && prevCamHC != null){
 			prevCamHC.gameObject.SetActive(true);

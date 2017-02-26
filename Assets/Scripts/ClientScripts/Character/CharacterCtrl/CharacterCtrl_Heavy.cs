@@ -94,6 +94,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 		nmAttack.Body[0].Content = NetworkMessage.sTrue;
 		Network_Client.SendTcp(nmAttack);
+
 		StartCoroutine(ShotGunRoutine());
 
 		if(isGround)
