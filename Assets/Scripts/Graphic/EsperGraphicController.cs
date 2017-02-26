@@ -25,6 +25,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	protected bool isAttackAnimationPlaying = false;
 	protected bool isAttackButtonPressing = false;
 	private bool canJumpAttack = true;
+	private bool isRushing = false;
 
 	protected Animator singleAnimator;
 
@@ -78,12 +79,14 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 		isPsying = false;
 		isFlying = false;
 		isAttackAnimationPlaying = false;
-		if (isAttackButtonPressing) {
-			SetAttackAnim (currentInputDirection);
-		} else {
-			SetSingleAnim (currentInputDirection);
-		}
 		canJumpAttack = true;
+		if (!isRushing) {
+			if (isAttackButtonPressing) {
+				SetAttackAnim (currentInputDirection);
+			} else {
+				SetSingleAnim (currentInputDirection);
+			}
+		}
 	}
 	public override void StartNormalAttack (){
 		isAttackButtonPressing = true;
@@ -135,6 +138,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void Rush(){
+		isRushing = true;
 		isPsying = false;
 		ReleaseAttackDelay ();
 		isAttackAnimationPlaying = false;
@@ -148,6 +152,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public void RushBack(){
+		isRushing = false;
 		if (isAttackButtonPressing) {
 			SetAttackAnim (currentInputDirection);
 		} else {
@@ -167,6 +172,7 @@ public class EsperGraphicController : CharacterGraphicCtrl {
 	}
 
 	public virtual void PsyShield(){
+		isAttackAnimationPlaying = false;
 		isPsying = true;
 		SetSkillDelay ();
 		if (attackAnimationRoutine != null) {
