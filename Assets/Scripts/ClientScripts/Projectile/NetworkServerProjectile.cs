@@ -72,7 +72,7 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	protected virtual void Boom(){
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
 		goHit.transform.position = transform.position + transform.right * 1.5f;
-		goHit.GetComponent<HitEffect>().Yellow();
+		goHit.GetComponent<HitEffect>().EnemyBlaster();
 	}
 		
 	public override void OnReturned (){

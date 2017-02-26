@@ -27,4 +27,10 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 			yield return new WaitForFixedUpdate();
 		}
 	}
+
+	protected override void Boom ()	{
+		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
+		goHit.transform.position = transform.position + transform.right * 1.5f;
+		goHit.GetComponent<HitEffect>().MissileExplosion();
+	}
 }

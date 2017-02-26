@@ -27,6 +27,7 @@ public class SdButton : EventTrigger {
 
 	private Coroutine colorRoutine = null;
 	public override void OnPointerDown (PointerEventData eventData){
+		StartSceneButtonSoundManager.instance.PlayClick ();
 		if (colorRoutine != null) {
 			StopCoroutine (colorRoutine);
 		}
