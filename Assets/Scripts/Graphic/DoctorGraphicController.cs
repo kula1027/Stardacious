@@ -124,10 +124,11 @@ public class DoctorGraphicController : CharacterGraphicCtrl {
 		if(isHovering){
 			EndHover ();
 		}
-
+			
 		nextBulletType = DoctorBulletType.Normal;
 		isEnergyCharging = false;
 		isAttackAnimationPlaying = false;
+		ReleaseAll ();
 	}
 
 	public override void ResumeAnimation(){
