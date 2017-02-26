@@ -82,9 +82,9 @@ public class Network_Client {
 
 	private static Socket socketUdp;
 
-	public static void InitUdp(int portServerUDP_){
-		ConsoleMsgQueue.EnqueMsg("Initialize UDP");
+	public static void InitUdp(int portServerUDP_){		
 		portServerUDP = portServerUDP_;
+		ConsoleMsgQueue.EnqueMsg("Initialize UDP");
 
 		try{
 			IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
@@ -200,7 +200,8 @@ public class Network_Client {
 				}catch(Exception e){
 					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 				}finally{
-					socketUdp.Close();
+					if(socketUdp != null)
+						socketUdp.Close();
 				}
 
 				MsgSegment h = new MsgSegment(MsgAttr.misc);
@@ -229,7 +230,8 @@ public class Network_Client {
 				}catch(Exception e){
 					ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 				}finally{
-					socketUdp.Close();
+					if(socketUdp != null)
+						socketUdp.Close();
 				}
 
 			}

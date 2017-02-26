@@ -58,6 +58,9 @@ public class ClientMasterManager : MonoBehaviour {
 		switch(networkMessage.Body[0].Attribute){
 		case MsgAttr.Misc.exitClient:
 			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			UI_TextStatus.instance.ShowText(PlayerData.nickNameOthers[exitIdx] + " 퇴장", ColorIdxStatus.Notice);
+			UI_CharacterStatus.instance.DeactivatePortrait(exitIdx);
+
 			ClientProjectileManager.instance.ResetClientPool(exitIdx);
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
 			break;

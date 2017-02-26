@@ -35,9 +35,9 @@ public static class NetworkConst{
 }
 
 public static class SceneName{
-	public const string scNameInGame = "scJH";
+	public const string scNameInGame = "scIngame";
 	public const string scNameAwake = "scAwake";
-	public const string scNameServer = "scJHServer";
+	public const string scNameServer = "scServer";
 }
 
 public static class MosnterConst{
@@ -76,9 +76,9 @@ public static class CharacterConst{
 		public const int damageShotgun = 220;
 		public const int damageShotgunDistDec = 10;//거리 단위당 데미지 감소 정도
 		public const int damageOvercharge = 50;
-		public const int damageMine = 1;
+		public const int damageMine = 250;
 		public const int forceMine = 800;
-		public const int damageMinigun = 20;
+		public const int damageMinigun = 40;
 		public const float rateMinigun = 0.1f;
 	}
 

@@ -139,6 +139,12 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		if (isAttacking && isMachineGunMode) {
 			StartMachineGun ();
 		}
+
+		NetworkMessage nmMachinegun = new NetworkMessage(
+			new MsgSegment(MsgAttr.character, Network_Client.NetworkId),
+			new MsgSegment(MsgAttr.Character.gunModeHeavy, isMachineGunMode ? "1" : "0")
+		);
+		Network_Client.SendTcp(nmMachinegun);
 	}
 
 	private void StartMachineGun(){
@@ -202,8 +208,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 	private void OverchargedShot(){
 		gcHeavy.OverChargeShot ();
 
-		audioSource.clip = audioOvercharge;
-		audioSource.Play();
+		MakeSound(audioOvercharge);
 
 		if(isMachineGunMode){
 			StopMachineGun();
@@ -264,6 +269,14 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	#endregion
 
+	public override void Freeze (){
+		base.Freeze ();
+
+		if(machinegunRoutine != null){
+			StopCoroutine(machinegunRoutine);
+		}
+	}
+
 	public override void OnDie (){
 		base.OnDie ();
 
@@ -279,7 +292,6 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 		isShootingShotgun = false;
 		moveSpeed = originalMoveSpeed;
 	}
-
 
 	public override bool UseSkill (int idx_){
 		if(base.UseSkill(idx_)){

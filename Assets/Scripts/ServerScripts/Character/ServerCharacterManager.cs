@@ -34,7 +34,7 @@ namespace ServerSide{
 			currentCharacterCount++;
 			currentAliveCharacterCount++;
 
-			ConsoleMsgQueue.EnqueMsg(character[idx_].NetworkId + " Joined, Current Player Count: " + currentCharacterCount);
+			ConsoleMsgQueue.EnqueMsg(character[idx_].NetworkId + ": Joined, Current Player Count: " + currentCharacterCount);
 
 			return character[idx_];
 		}

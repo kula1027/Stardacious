@@ -4,7 +4,6 @@ using System.Collections;
 public class PlayerData {
 	public static string nickName = "NoName";
 	public static ChIdx chosenCharacter = ChIdx.NotInitialized;
-	public static int hpMax = 1;
 
 	public static string[] nickNameOthers = new string[3];
 	public static string GetNickNames(int idx_){

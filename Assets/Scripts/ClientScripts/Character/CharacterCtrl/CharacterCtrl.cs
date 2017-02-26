@@ -64,7 +64,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hbt = GetComponentInChildren<HitBoxTrigger>();
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
-		CurrentHp = PlayerData.hpMax;
+		CurrentHp = CharacterConst.maxHp;
 	}
 
 	void Start(){
@@ -449,6 +449,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		if(CurrentHp <= 0 && IsDead == false){			
 			OnDie();
 		}
+
+		UI_HP.instance.SetTextHp(CurrentHp);
+		if(CurrentHp <= (int)(CharacterConst.maxHp * 0.3)){
+			UI_HP.instance.StartBlink();
+		}else{
+			UI_HP.instance.StopBlink();
+		}
 	}
 
 	public override void OnDie (){
@@ -497,7 +504,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		this.transform.position = respawnPoint;
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
-		this.CurrentHp = PlayerData.hpMax;
+		this.CurrentHp = CharacterConst.maxHp;
 
 		IsDead = false;
 

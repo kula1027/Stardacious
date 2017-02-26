@@ -154,6 +154,8 @@ public class MsgAttr{
 		public const string skill = "skill";
 		public const string summon = "summon";
 
+		public const string gunModeHeavy = "gmodeh";
+
 		public const string beginHover = "bghvr";
 		public const string endHover = "ehvr";
 		public const string boost = "bst";

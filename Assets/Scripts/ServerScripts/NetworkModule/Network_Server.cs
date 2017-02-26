@@ -33,7 +33,7 @@ namespace ServerSide{
 
 			tcpListener.Start();
 
-			ConsoleMsgQueue.EnqueMsg("Waiting for Clients...");
+			ConsoleMsgQueue.EnqueMsg("Waiting for Clients.. Listening to Port "+ tcpWelcomePort);
 			while (serverRunning) {
 				try {
 					Socket welcomeSocket = tcpListener.AcceptSocket();

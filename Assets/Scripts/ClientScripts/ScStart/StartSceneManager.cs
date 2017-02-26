@@ -186,6 +186,7 @@ public class StartSceneManager : MonoBehaviour {
 	}
 	public void OnClickBackReady(){
 		Network_Client.SoftShutDown();
+		readyPanel.Init();
 		animationRoutine = StartCoroutine(AnimationPlayWithCallBack (IntroAnimationName.BackReady));
 	}
 	public void OnClickBackToMain(){

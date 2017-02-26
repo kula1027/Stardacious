@@ -103,16 +103,19 @@ namespace ServerSide{
 		private EndPoint epSender;
 		private Thread threadReceive_UDP;
 		private void InitUdp(){
+			ConsoleMsgQueue.EnqueMsg(clientId + ": Initialize Udp");
 
 			try{
 				IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
 				socketUDP = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 				socketUDP.Bind(ep);
-
 			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message);
+				ConsoleMsgQueue.EnqueMsg(clientId + ": ReceivingUDP: " + e.Message);
 			}
+
 			udpRecvPort = ((IPEndPoint)socketUDP.LocalEndPoint).Port;
+			ConsoleMsgQueue.EnqueMsg(clientId + ": Recv Port Udp: " + udpRecvPort);
+
 			ReceiveQueue.SyncEnqueMsg(
 				new NetworkMessage(
 					new MsgSegment(MsgAttr.misc, clientId),
@@ -128,10 +131,12 @@ namespace ServerSide{
 		}
 
 		public void SendUdp(string str){	
-			try{
-				socketUDP.SendTo(Encoding.UTF8.GetBytes(str), epSender);
-			}catch(Exception e){
-				ConsoleMsgQueue.EnqueMsg(clientId + ": SendUdp: " + e.Message, 2);
+			if(isConnected){
+				try{
+					socketUDP.SendTo(Encoding.UTF8.GetBytes(str), epSender);
+				}catch(Exception e){
+					ConsoleMsgQueue.EnqueMsg(clientId + ": SendUdp: " + e.Message, 2);
+				}
 			}
 		}
 
@@ -155,8 +160,8 @@ namespace ServerSide{
 
 		public void ShutDown(){
 			lock(shutDownLock){
-				if(isConnected){//Synchronization
-					ConsoleMsgQueue.EnqueMsg(clientId + ": ShutDown.", 3);
+				if(isConnected){
+					ConsoleMsgQueue.EnqueMsg(clientId + ": ShutDown.");
 					isConnected = false;
 
 					try{

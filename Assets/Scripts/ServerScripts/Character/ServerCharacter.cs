@@ -18,6 +18,8 @@ namespace ServerSide{
 		private NetworkMessage nmPos;
 		private NetworkMessage nmHit;
 		private NetworkMessage nmDefault;
+
+		private bool amIHoldingAminiGun = false;//TODO
 		public void Initialize(){				
 			commonHeader = new MsgSegment(MsgAttr.character, networkId);
 
@@ -60,6 +62,11 @@ namespace ServerSide{
 				ServerCharacterManager.instance.OnCharacterDead();
 				break;
 
+			case MsgAttr.Character.gunModeHeavy:
+				int gMode = int.Parse(bodies[0].Content);
+				amIHoldingAminiGun = (gMode == 1 ? true : false);
+				break;
+
 			case MsgAttr.Character.revive:
 				IsDead = false;
 				nmDefault.Body = bodies;
@@ -78,7 +85,8 @@ namespace ServerSide{
 			MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
 			MsgSegment[] bAppear = {
 				new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString()),
-				new MsgSegment(transform.position)
+				new MsgSegment(transform.position),
+				new MsgSegment(MsgAttr.Character.gunModeHeavy, amIHoldingAminiGun ? "1" : "0")
 			};
 			NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 

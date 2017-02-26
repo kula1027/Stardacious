@@ -33,6 +33,13 @@ public class ReadyPanel : MonoBehaviour {
 		playerSlot[idx_].SetCharacter(pf);
 	}
 
+	public void Reset(){
+		for(int loop = 0; loop < 3; loop++){
+			playerSlot[loop].txtState.SetText("Empty");
+			playerSlot[loop].SetCharacter(null);
+		}
+	}
+
 	public void SetSlotState(int idx_, GameState gs){
 		switch(gs){
 		case GameState.Playing:

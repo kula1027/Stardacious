@@ -279,6 +279,13 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		base.OnDie ();
 
 		rushCount = 0;
+		StopAllCoroutines();
+
+		hitboxDistortion.SetActive(false);
+		hitterSlash.SetActive(false);
+		hitterJumpAttack.SetActive(false);
+		hitterDash.SetActive(false);
+		hitterRush.SetActive(false);
 	}
 
 	public override bool UseSkill (int idx_){

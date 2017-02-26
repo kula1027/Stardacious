@@ -199,6 +199,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private bool isChargingEnergy = false;
 	private DoctorEnergyBall activeEnergyBall;
 	private void ChargeEnergyBall(){
+		characterGraphicCtrl.StopNormalAttack ();
 		moveDir = Vector3.zero;
 		moveSpeed = originalMoveSpeed;
 
@@ -282,6 +283,10 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			nmBoostState.Body[0] = new MsgSegment(MsgAttr.Character.endHover);
 			Network_Client.SendTcp(nmBoostState);
 		}
+
+		if(activeEnergyBall != null && activeEnergyBall.isFlying == false){
+			activeEnergyBall.CancelObject();
+		}	
 
 		moveSpeed = originalMoveSpeed;
 		canBoostJump = true;

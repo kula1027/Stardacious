@@ -31,6 +31,10 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		SetNickName();
 	}
 
+	public virtual void SetState(MsgSegment msgSegment){
+		
+	}
+
 	private void SetNickName(){
 		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.GetNickNames(networkId);
 	}
