@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CameraControl : MonoBehaviour {
-	public const int defaultCamSize = 13;
+	
 
 	private Camera cam;
 	private Transform targetTr;
@@ -18,6 +18,9 @@ public class CameraControl : MonoBehaviour {
 
 	private BackgroundMovement[] bgMove;
 
+	private IEnumerator itplCamRoutine;
+	private IEnumerator itplCamRoutineFollow;
+
 	void Awake(){
 		cam = GetComponent<Camera>();
 
@@ -25,38 +28,55 @@ public class CameraControl : MonoBehaviour {
 		camWidth = cam.orthographicSize * cam.aspect;
 
 		bgMove = GetComponentsInChildren<BackgroundMovement>();
+
+		itplCamRoutine = CamRoutine();
+		itplCamRoutineFollow = CamRoutineFollow();
 	}
 		
 	void Start(){
-		StartCoroutine(CamRoutine());
+		StartCoroutine(itplCamRoutine);
 	}
 
 	public void SetTarget(Transform tr_){
 		targetTr = tr_;
 	}
 
+	private float lerpRate = CameraConst.defaultLerpSpd;
 	private IEnumerator CamRoutine(){
 		Vector3 prevPos = transform.position;
 		Vector3 dif;
 		float camPosY;
+		float difY;
+
+		float camPosX;
+
 		while(true){
-			if(targetTr != null){				
-				float difY = targetTr.position.y - groundHeight;
+			if(targetTr != null){		
+				//Y pos Lerp
+				difY = targetTr.position.y - groundHeight;
 				if(difY < 0){
 					camPosY = groundHeight + 10f;
 				}else{
-					camPosY = targetTr.position.y - difY * 0.8f + 10f;
+					camPosY = targetTr.position.y - difY * 0.6f + 10f;
+				}
+				camPosY = Mathf.Lerp(transform.position.y, camPosY, lerpRate);
+
+				//X pos Lerp
+				camPosX = targetTr.position.x;
+				if(lrLimited){
+					if(camPosX - camWidth * 0.6f < limitLeft){
+						camPosX = limitLeft + camWidth * 0.6f;
+					}
+					if(camPosX + camWidth * 0.6f > limitRight){
+						camPosX = limitRight - camWidth * 0.6f;
+					}
+
+					camPosX = Mathf.Lerp(transform.position.x, camPosX, lerpRate);
+				}else{
+					camPosX = Mathf.Lerp(transform.position.x, camPosX, lerpRate);
 				}
 
-				transform.position = Vector3.Lerp(
-										transform.position, 
-										new Vector3(
-											targetTr.position.x,
-											camPosY,
-											camDepth
-										),
-										0.3f
-									);
+				transform.position = new Vector3(camPosX, camPosY, camDepth);
 				dif = prevPos - transform.position;
 
 				for(int loop = 0; loop < bgMove.Length; loop++){
@@ -70,9 +90,53 @@ public class CameraControl : MonoBehaviour {
 		}
 	}
 
+	private IEnumerator CamRoutineFollow(){
+		while(true){
+			transform.position = Vector3.Lerp(
+				transform.position, 
+				new Vector3(targetTr.position.x, targetTr.position.y, camDepth), 
+				lerpRate
+			);
+				
+			yield return new WaitForFixedUpdate();
+		}
+	}
+
+	public void FollowMode(){
+
+		StopCoroutine(itplCamRoutine);
+		StartCoroutine(itplCamRoutineFollow);
+	}
+
+	public void ResumeMode(){
+		groundHeight = targetTr.position.y - 10;
+
+		StopCoroutine(itplCamRoutineFollow);
+		StartCoroutine(itplCamRoutine);
+	}
+
+	private bool lrLimited = false;
 	public void SetLimit(float l, float r){
+		lrLimited = true;
 		limitLeft = l;
 		limitRight = r;
+
+		StartCoroutine(LerpSpdChangeRoutine());
+	}
+
+	private IEnumerator LerpSpdChangeRoutine(){		
+		lerpRate = 0.01f;
+
+		while(lerpRate < CameraConst.defaultLerpSpd){
+			lerpRate += 0.01f;
+			yield return new WaitForSeconds(0.2f);
+		}
+	}
+
+	public void ReleaseLimit(){
+		lrLimited = false;
+
+		StartCoroutine(LerpSpdChangeRoutine());
 	}
 
 	public void SetLimitR(float r){
@@ -88,10 +152,9 @@ public class CameraControl : MonoBehaviour {
 	}
 
 	private IEnumerator GroundHeightChange(float gh){
-		float paramGh = gh;
 		while(true){
-			groundHeight = Mathf.Lerp(groundHeight, gh, 0.02f);
-			if(Mathf.Abs(paramGh - groundHeight) < 0.05f)break;
+			groundHeight = Mathf.Lerp(groundHeight, gh, 0.015f);
+			if(Mathf.Abs(gh - groundHeight) < 0.05f)break;
 
 			yield return new WaitForFixedUpdate();
 		}

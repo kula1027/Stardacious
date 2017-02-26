@@ -27,6 +27,11 @@ public enum ChIdx{
 	Doctor,
 	Esper
 }
+
+public static class CameraConst{
+	public const int defaultCamSize = 13;
+	public const float defaultLerpSpd = 0.3f;
+}
 	
 public static class NetworkConst{
 	public const int maxPlayer = 3;
