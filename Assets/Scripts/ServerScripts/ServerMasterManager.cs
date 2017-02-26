@@ -93,6 +93,7 @@ namespace ServerSide{
 				break;
 
 			case MsgAttr.Misc.udpPort:
+				Debug.Log ("A");
 				int recver = int.Parse(networkMessage.Header.Content);
 				Network_Server.UniCast(networkMessage, recver);
 				ConsoleMsgQueue.EnqueMsg(recver + " Udp Recv Port Set");

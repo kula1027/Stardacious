@@ -103,14 +103,4 @@ public class ClientStageManager : MonoBehaviour {
 	public GameObject GetMonster(int idx_){
 		return monsterPooler.GetGameObject(idx_);
 	}
-
-	/*
-	public void ResPointActive(){
-		// 현재걸 set deactive
-		resPoint [resPointIdx].gameObject.SetActive (false);
-
-		// 다음걸 set active
-		resPointIdx++;
-		resPoint [resPointIdx].gameObject.SetActive (true);
-	}*/
 }
