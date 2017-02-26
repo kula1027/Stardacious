@@ -24,7 +24,8 @@ public class MinigunBullet : FlyingProjectile {
 
 	protected override void Boom (){
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfHit);
-		goHit.transform.position = transform.position + transform.right * 1.5f;
+		goHit.transform.position = transform.position;
+		goHit.transform.right = transform.right;
 		goHit.GetComponent<HitEffect>().Yellow();
 	}
 }

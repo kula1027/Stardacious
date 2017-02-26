@@ -34,15 +34,27 @@ public class HitEffect : PoolingObject {
 		effectAnimator.Play ("Doctor");
 	}
 
-	public void GreenSlash(){
-		if (Random.Range (0, 1) == 0) {
-			effectAnimator.Play ("Slash");
-		} else {
-			effectAnimator.Play ("Green");
-		}
-	}
-
 	public void Red(){
 		effectAnimator.Play ("Spark");
+	}
+
+	public void EsperSlashHit(){
+		effectAnimator.Play ("Slash");
+	}
+
+	public void EsperRushHit(){
+		effectAnimator.Play ("Rush");
+	}
+
+	public void TrapBallExplosion(){
+		effectAnimator.Play ("TrapBall");
+	}
+
+	public void MissileExplosion(){
+		effectAnimator.Play ("MissileExp");
+	}
+
+	public void EnemyBlaster(){
+		effectAnimator.Play ("EnemyBlaster");
 	}
 }
