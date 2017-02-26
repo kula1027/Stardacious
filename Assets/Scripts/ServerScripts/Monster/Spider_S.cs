@@ -54,7 +54,7 @@ namespace ServerSide{
 		}
 
 		private IEnumerator SpiderRush(){	//대상 찾을때까지 전진
-			while(true){
+			while(!IsDead){
 				currentCharacterPos = new Vector3[NetworkConst.maxPlayer];
 				int currentPlayers = 0;
 				for (int i = 0 ; i < NetworkConst.maxPlayer; i++) {
