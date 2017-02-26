@@ -33,6 +33,13 @@ public class ReadyPanel : MonoBehaviour {
 		playerSlot[idx_].SetCharacter(pf);
 	}
 
+	public void Reset(){
+		for(int loop = 0; loop < 3; loop++){
+			playerSlot[loop].txtState.SetText("Empty");
+			playerSlot[loop].SetCharacter(null);
+		}
+	}
+
 	public void SetSlotState(int idx_, GameState gs){
 		switch(gs){
 		case GameState.Playing:
@@ -66,7 +73,7 @@ public class ReadyPanel : MonoBehaviour {
 			slotSelf.txtState.SetText("Ready");
 		}else{
 			slotSelf.btnSelect.SetInteractable(!isReady_);
-			slotSelf.btnReady.Glow();
+			//slotSelf.btnReady.Glow();
 			slotSelf.txtState.SetText("Waiting...");
 			slotSelf.txtState.Glow();
 		}

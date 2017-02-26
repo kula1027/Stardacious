@@ -29,6 +29,7 @@ public class StageControl_C : MonoBehaviour {
 			// body[1] content : 열어라,닫아라 / attribute : object index
 			if (bodies [1].Content.Equals (NetworkMessage.sTrue)) {
 				objects [int.Parse(bodies[1].Attribute)].Active ();
+				UI_TextStatus.instance.ShowText("문이 열렸다", ColorIdxStatus.Notice);
 			}
 			else if (bodies [1].Content.Equals (NetworkMessage.sFalse)) {
 				objects [int.Parse(bodies[1].Attribute)].DeActive ();

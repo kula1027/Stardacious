@@ -10,7 +10,17 @@ public class Spider_C : ClientMonster {
 
 	public override void Ready (){
 		base.Ready ();
+	}
 
+	protected override void MonsterSleep(){
+		base.MonsterSleep ();
+		gcSpider.AnimationFreeze ();
+	}
+
+	protected override void MonsterGetUp(){
+		// 요기서부터 시작
+		base.MonsterGetUp ();
+		gcSpider.AnimationResume ();
 		StartCoroutine(WakeUpRoutine());
 	}
 

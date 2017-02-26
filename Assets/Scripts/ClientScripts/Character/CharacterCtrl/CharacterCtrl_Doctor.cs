@@ -18,10 +18,6 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 
 		chrIdx = ChIdx.Doctor;
 
-		skillCoolDown[0] = 2f;
-		skillCoolDown[1] = 6f;
-		skillCoolDown[2] = 4f;
-
 		gcDoctor = (DoctorGraphicController)characterGraphicCtrl;
 		gcDoctor.Initialize();
 
@@ -203,6 +199,7 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	private bool isChargingEnergy = false;
 	private DoctorEnergyBall activeEnergyBall;
 	private void ChargeEnergyBall(){
+		characterGraphicCtrl.StopNormalAttack ();
 		moveDir = Vector3.zero;
 		moveSpeed = originalMoveSpeed;
 
@@ -264,10 +261,11 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 		activeEnergyBall.Throw(throwDir);
 
 		isChargingEnergy = false;
-		InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
 
-		InputModule.instance.ResumeSkill(0, skillCoolDown[0]);
-		InputModule.instance.ResumeSkill(1, skillCoolDown[1]);
+		InputModule.instance.BeginCoolDown(2, CharacterConst.Doctor.coolDownSkill2);
+
+		InputModule.instance.ResumeSkill(0, CharacterConst.Doctor.coolDownSkill0);
+		InputModule.instance.ResumeSkill(1, CharacterConst.Doctor.coolDownSkill1);
 	}
 
 	#endregion
@@ -286,6 +284,10 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			Network_Client.SendTcp(nmBoostState);
 		}
 
+		if(activeEnergyBall != null && activeEnergyBall.isFlying == false){
+			activeEnergyBall.CancelObject();
+		}	
+
 		moveSpeed = originalMoveSpeed;
 		canBoostJump = true;
 		isHovering = false;
@@ -296,8 +298,8 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 	public override void OnDie (){
 		base.OnDie ();
 
-		InputModule.instance.ResumeSkill(0, skillCoolDown[0]);
-		InputModule.instance.ResumeSkill(1, skillCoolDown[1]);
+		InputModule.instance.ResumeSkill(0, CharacterConst.Doctor.coolDownSkill0);
+		InputModule.instance.ResumeSkill(1, CharacterConst.Doctor.coolDownSkill1);
 
 		if(activeEnergyBall != null && activeEnergyBall.isFlying == false){
 			activeEnergyBall.CancelObject();
@@ -323,12 +325,12 @@ public class CharacterCtrl_Doctor : CharacterCtrl {
 			switch (idx_) {
 			case 0:			
 				gcDoctor.DeviceShot();
-				InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+				InputModule.instance.BeginCoolDown(0, CharacterConst.Doctor.coolDownSkill0);
 				break;
 
 			case 1:
 				gcDoctor.BindShot();
-				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				InputModule.instance.BeginCoolDown(1, CharacterConst.Doctor.coolDownSkill1);
 				break;
 
 			case 2:

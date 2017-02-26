@@ -14,6 +14,8 @@ public class ClientMasterManager : MonoBehaviour {
 
 	public GameObject pfAudio;
 
+	public HidableUI noticeDiscon;
+
 	public bool friendlyFire = false;
 
 	void Awake(){
@@ -56,6 +58,9 @@ public class ClientMasterManager : MonoBehaviour {
 		switch(networkMessage.Body[0].Attribute){
 		case MsgAttr.Misc.exitClient:
 			int exitIdx = int.Parse(networkMessage.Body[0].Content);
+			UI_TextStatus.instance.ShowText(PlayerData.nickNameOthers[exitIdx] + " 퇴장", ColorIdxStatus.Notice);
+			UI_CharacterStatus.instance.DeactivatePortrait(exitIdx);
+
 			ClientProjectileManager.instance.ResetClientPool(exitIdx);
 			ConsoleMsgQueue.EnqueMsg("Client " + exitIdx + ": Exit");
 			break;
@@ -67,9 +72,43 @@ public class ClientMasterManager : MonoBehaviour {
 			break;
 
 		case MsgAttr.Misc.disconnect:
-			ConsoleMsgQueue.EnqueMsg("Disconnect from Server.");
-			SceneManager.LoadScene("scAwake");
+			ConsoleMsgQueue.EnqueMsg("Disconnected from Server.");
+			noticeDiscon.Show();
+			break;
+
+		case MsgAttr.Misc.gameOverAnnih:
+			UI_ResultPanel.instance.Show();
+			CharacterCtrl.instance.GameOver();
+			SendResultInfo();
+			break;
+
+		case MsgAttr.Misc.result:
+			UI_ResultPanel.instance.ShowResultPanel(networkMessage.Body);
+			Network_Client.SoftShutDown();
 			break;
 		}
+	}
+
+	public void LoadAwakeScene(){
+		SceneManager.LoadScene(SceneName.scNameAwake);
+	}
+
+	private void SendResultInfo(){		
+		int dieCount = CharacterCtrl.instance.DieCount;
+		int fallOffCount = CharacterCtrl.instance.FallOffDieCount;
+		int damage = CharacterCtrl.instance.DamageAccum;
+		MsgSegment[] bodies = {
+			new MsgSegment(MsgAttr.Misc.result),
+			new MsgSegment(dieCount),
+			new MsgSegment(fallOffCount),
+			new MsgSegment(damage)
+		};
+
+		NetworkMessage nmResult = new NetworkMessage(
+			new MsgSegment(MsgAttr.misc),
+			bodies
+		);
+
+		Network_Client.SendTcp(nmResult);
 	}
 }

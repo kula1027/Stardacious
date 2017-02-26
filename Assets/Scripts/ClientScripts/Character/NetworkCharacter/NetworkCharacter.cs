@@ -31,8 +31,12 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		SetNickName();
 	}
 
+	public virtual void SetState(MsgSegment msgSegment){
+		
+	}
+
 	private void SetNickName(){
-		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.nickNameOthers[networkId];
+		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.GetNickNames(networkId);
 	}
 
 	Interpolater itpl;
@@ -101,12 +105,15 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		case MsgAttr.Character.dead:
 			IsDead = true;
 			characterGraphicCtrl.Die();
+			UI_TextStatus.instance.ShowText(PlayerData.nickNameOthers[networkId] + "... 죽어버렸어...", ColorIdxStatus.Death);
+			UI_CharacterStatus.instance.SetDead(networkId, int.Parse(bodies[0].Content));
 			break;
 
 		case MsgAttr.Character.revive:
 			characterGraphicCtrl.Initialize();
 			itpl = new Interpolater(bodies[1].ConvertToV3());
 			IsDead = false;
+			UI_TextStatus.instance.ShowText(PlayerData.nickNameOthers[networkId] + " 부활!", ColorIdxStatus.Revive);
 			break;
 
 		case MsgAttr.destroy:
@@ -123,6 +130,8 @@ public class NetworkCharacter : StardaciousObject, IReceivable, IHittable {
 		}
 	}
 	#endregion
+
+
 
 	protected virtual void OnRecvNormalAttack(MsgSegment[] bodies_){
 		if(bodies_[0].Content.Equals(NetworkMessage.sTrue)){

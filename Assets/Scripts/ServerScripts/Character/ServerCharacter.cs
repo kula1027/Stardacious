@@ -18,6 +18,8 @@ namespace ServerSide{
 		private NetworkMessage nmPos;
 		private NetworkMessage nmHit;
 		private NetworkMessage nmDefault;
+
+		private bool amIHoldingAminiGun = false;//TODO
 		public void Initialize(){				
 			commonHeader = new MsgSegment(MsgAttr.character, networkId);
 
@@ -26,6 +28,8 @@ namespace ServerSide{
 			nmHit = new NetworkMessage(commonHeader, new MsgSegment(MsgAttr.hit));
 
 			nmDefault = new NetworkMessage(commonHeader);
+
+			ServerStageManager.instance.NotifyMonsters(networkId);
 		}
 
 		public void OnRecvMsg (MsgSegment[] bodies){
@@ -55,12 +59,19 @@ namespace ServerSide{
 				IsDead = true;
 				nmDefault.Body = bodies;
 				Network_Server.BroadCastTcp(nmDefault, networkId);
+				ServerCharacterManager.instance.OnCharacterDead();
+				break;
+
+			case MsgAttr.Character.gunModeHeavy:
+				int gMode = int.Parse(bodies[0].Content);
+				amIHoldingAminiGun = (gMode == 1 ? true : false);
 				break;
 
 			case MsgAttr.Character.revive:
 				IsDead = false;
 				nmDefault.Body = bodies;
 				Network_Server.BroadCastTcp(nmDefault, networkId);
+				ServerCharacterManager.instance.OnCharacterAlive();
 				break;
 
 				default:
@@ -72,7 +83,11 @@ namespace ServerSide{
 
 		public void NotifyAppearence(){
 			MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
-			MsgSegment bAppear = new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString());
+			MsgSegment[] bAppear = {
+				new MsgSegment(networkId.ToString(), ((int)chrIdx).ToString()),
+				new MsgSegment(transform.position),
+				new MsgSegment(MsgAttr.Character.gunModeHeavy, amIHoldingAminiGun ? "1" : "0")
+			};
 			NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
 			Network_Server.BroadCastTcp(nmAppear, networkId);
@@ -93,23 +108,5 @@ namespace ServerSide{
 		}
 
 		#endregion
-
-		public override void OnHpChanged (int hpChange){
-			nmHit.Body[0].Content = CurrentHp.ToString();
-			Network_Server.BroadCastTcp(nmHit);
-		}
-
-		public override void OnDie (){
-			//Build Dead Msg
-			Debug.Log("i'mdead");
-			this.IsDead = true;
-
-			MsgSegment msgHeader = new MsgSegment(MsgAttr.character, networkId);
-			MsgSegment msgBody = new MsgSegment(MsgAttr.dead);
-			NetworkMessage nmDead = new NetworkMessage(msgHeader, msgBody);
-
-			Network_Server.BroadCastTcp(nmDead);
-			ConsoleMsgQueue.EnqueMsg(networkId + " is Dead", 2);
-		}
 	}
 }

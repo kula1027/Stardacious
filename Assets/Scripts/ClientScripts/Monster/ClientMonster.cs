@@ -10,6 +10,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	private AudioSource audioVoice;
 	public AudioClip audioDying;
+	public AudioClip audioHit;
 
 	private bool isSummonMonster = false;
 	public bool IsSummonMonster {
@@ -46,8 +47,8 @@ public class ClientMonster : PoolingObject, IHittable {
 		}
 	}
 
-	public override void OnHpChanged (int hpChange){
-		//Do Nothing
+	public override void OnHpChanged (int hpChange){		
+		CharacterCtrl.instance.DamageAccum -= hpChange;
 	}
 
 	public override void OnDie (){
@@ -72,6 +73,15 @@ public class ClientMonster : PoolingObject, IHittable {
 			IsDead = true;
 			OnDie();
 			break;
+
+		case MsgAttr.Monster.mSleep:
+			MonsterSleep();
+			break;
+
+		case MsgAttr.Monster.mGetUp:
+			MonsterGetUp ();
+			break;
+			
 
 		case MsgAttr.Monster.grounded:
 			if (IsDead == false) {
@@ -127,6 +137,11 @@ public class ClientMonster : PoolingObject, IHittable {
 		hTrigger.gameObject.SetActive(false);
 	}
 
+	protected virtual void MonsterSleep(){
+	}
+	protected virtual void MonsterGetUp(){
+	}
+
 	public override void Freeze (){
 		NetworkMessage nmFreeze = new NetworkMessage(
 			nmHit.Header,
@@ -173,6 +188,7 @@ public class ClientMonster : PoolingObject, IHittable {
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
+		MakeSound(audioHit);
 		gcMons.Twinkle();
 		hitObject_.Apply(this);
 

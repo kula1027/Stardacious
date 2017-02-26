@@ -7,7 +7,7 @@ public class FallOffChecker : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col){
 		if (col.transform.parent.GetComponent<CharacterCtrl>()) {
-			CharacterCtrl.instance.OnDie ();
+			CharacterCtrl.instance.FallOffDie ();
 		}
 	}
 }

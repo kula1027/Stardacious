@@ -21,6 +21,7 @@ namespace ServerSide{
 			base.Awake ();
 
 			objType = (int)MonsterType.Fly;
+			CurrentHp = MosnterConst.Fly.maxHp;
 		}
 
 		public override void OnRequested (){
@@ -30,7 +31,6 @@ namespace ServerSide{
 			this.GetComponent<Rigidbody2D>().gravityScale = 0;
 			// gravity
 
-			StartCoroutine(FlyMainAI());
 		}
 
 		private IEnumerator FlyAppearance(float appearTime){
@@ -45,6 +45,12 @@ namespace ServerSide{
 				}
 				yield return null;
 			}
+		}
+
+		public override void MonGetUp (){
+			base.MonGetUp ();
+
+			StartCoroutine(FlyMainAI());
 		}
 
 		private IEnumerator FlyMainAI(){

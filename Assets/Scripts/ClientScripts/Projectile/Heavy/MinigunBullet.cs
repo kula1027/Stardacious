@@ -2,24 +2,10 @@
 using System.Collections;
 
 public class MinigunBullet : FlyingProjectile {
-	public AudioClip audioFire;
 
 	void Awake(){
 		objType = (int)ProjType.MiniGunBullet;
-		hitObject = new HitObject(20);
-	}
-
-	public override void Ready (){
-		base.Ready ();
-
-		GameObject goAudio = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(PoolingAudioSource.pfAudioSource);
-		goAudio.transform.position = transform.position;
-		goAudio.GetComponent<AudioSource>().clip = audioFire;
-		goAudio.GetComponent<AudioSource>().Play();
-	}
-
-	public override void OnRequested (){
-		base.OnRequested ();
+		hitObject = new HitObject(CharacterConst.Heavy.damageMinigun);
 	}
 
 	protected override void Boom (){

@@ -47,6 +47,26 @@ public class ObjectPooler : MonoBehaviour {
 		}
 	}
 
+	public GameObject[] GetActiveGameObjectsAll(){
+		int objCount = 0;
+		List<GameObject>[] listObj = new List<GameObject>[managingPool.Count];
+		for(int loop = 0; loop < managingPool.Count; loop++){
+			listObj[loop] = managingPool[loop].GetActiveGameObjectsAll();
+			objCount += listObj[loop].Count;
+		}
+
+		GameObject[] arrActiveObj = new GameObject[objCount];
+		int counter = 0;
+		for(int loop = 0; loop < listObj.Length; loop++){
+			for(int loop2 = 0; loop2 < listObj[loop].Count; loop2++){
+				arrActiveObj[counter] = listObj[loop][loop2];
+				counter++;
+			}
+		}
+
+		return arrActiveObj;
+	}
+
 	public void ReturnObject(int idx_){
 		int pId = idx_ / poolIdRange;
 		managingPool[pId].ReturnObject(idx_ % poolIdRange);

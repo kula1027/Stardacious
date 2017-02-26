@@ -59,11 +59,17 @@ namespace ServerSide{
 			}
 		}
 			
-		public void BeginStage(int idx){
-			if(idx < stages.Length){
+		public void BeginStage(){
+			ConsoleMsgQueue.EnqueMsg("Begin Stage");
+			StartStage (0);
+		}
+
+	protected void StartStage(int idx_){
+			if(idx_ < stages.Length){
 				// 모든 stages 갯수를 안넘어가면
-				ConsoleMsgQueue.EnqueMsg("Begin Stage " + currentStage);
-				StartCoroutine (PlayerCheckEnterRoutine (idx));
+				stages[idx_].StartWave();	// 몬스터 생성,대기
+				StartCoroutine (PlayerCheckEnterRoutine (idx_));
+
 			} else {
 				// all stage cleared
 				// send stage cleared message
@@ -87,7 +93,15 @@ namespace ServerSide{
 			}
 		}
 
-		public void CurrentStageEnd(){	
+		public void NotifyMonsters(int networkId_){
+			GameObject[] monsterAll = monsterPooler.GetActiveGameObjectsAll();
+
+			for(int loop = 0; loop < monsterAll.Length; loop++){
+				monsterAll[loop].GetComponent<ServerMonster>().NotifyAppearence(networkId_);
+			}
+		}
+
+		public void CurrentStageEnd(){
 			ConsoleMsgQueue.EnqueMsg("End Stage");
 
 			// stage 끝낫으니 다음거 문열라고 보냄
@@ -115,7 +129,7 @@ namespace ServerSide{
 					currentStage++;
 					nmStageNumber.Body[0].Content = currentStage.ToString ();
 					Network_Server.BroadCastTcp (nmStageNumber);
-					BeginStage (currentStage);		// 다음 시작
+					StartStage (currentStage);		// 다음 시작
 					break;
 				}
 
@@ -138,7 +152,7 @@ namespace ServerSide{
 					// 캐릭터가 전부 들어오면 닫음
 					nmStageClear.Body[1].Content = NetworkMessage.sFalse;
 					Network_Server.BroadCastTcp (nmStageClear);
-					stages [idx_].StartWave(); // wave생성되게 함
+					stages [idx_].ActiveWave(); // wave생성되게 함
 					break;
 				}
 

@@ -122,12 +122,15 @@ public class MsgAttr{
 
 	public const string misc = "misc";
 	public class Misc{
+		public const string udpPort = "port";
 		public const string exitClient = "exit";
 		public const string failConnect = "fcon";
 		public const string disconnect = "disc";
 		public const string hello = "hlo";
 		public const string ready = "rdy";
 		public const string letsgo = "begingame";
+		public const string gameOverAnnih = "gameover";
+		public const string result = "result";
 	}
 
 	public const string stage = "stg";
@@ -151,6 +154,8 @@ public class MsgAttr{
 		public const string skill = "skill";
 		public const string summon = "summon";
 
+		public const string gunModeHeavy = "gmodeh";
+
 		public const string beginHover = "bghvr";
 		public const string endHover = "ehvr";
 		public const string boost = "bst";
@@ -173,5 +178,7 @@ public class MsgAttr{
 		public const string grounded = "mground";
 		public const string moving = "mmov";
 		public const string direction = "mdir";
+		public const string mSleep = "msleep";
+		public const string mGetUp = "mgetup";
 	}
 }

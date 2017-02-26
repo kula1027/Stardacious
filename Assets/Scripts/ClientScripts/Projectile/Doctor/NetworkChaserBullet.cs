@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NetworkChaserBullet : PoolingObject {
 	public GameObject pfHit;
+	public AudioClip audioFire;
 	private GameObject targetObj;
 
 	public void Initiate(MsgSegment[] bodies_){
@@ -21,6 +22,8 @@ public class NetworkChaserBullet : PoolingObject {
 				StartCoroutine(ChasingRoutine());
 			}
 		}
+
+		MakeSound(audioFire);
 	}
 
 	private GameObject FindTarget(MsgSegment targetInfo){

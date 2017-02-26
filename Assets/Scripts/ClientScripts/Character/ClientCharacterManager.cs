@@ -36,9 +36,13 @@ public class ClientCharacterManager : MonoBehaviour {
 		}
 	}
 
-	private void CreateNetCharacter(int idx_, int chIdx_){
+	private void CreateNetCharacter(NetworkMessage nm_){
+		int id = int.Parse(nm_.Body[0].Attribute);
+		int chIdx = int.Parse(nm_.Body[0].Content);
+		Vector3 pos = nm_.Body[1].ConvertToV3();
+
 		GameObject go = null;
-		switch((ChIdx)chIdx_){
+		switch((ChIdx)chIdx){
 		case ChIdx.Doctor:
 			go = (GameObject)Instantiate(pfNetworkDoctor);
 			break;
@@ -52,8 +56,12 @@ public class ClientCharacterManager : MonoBehaviour {
 			break;
 		}
 
-		characters[idx_] = go.GetComponent<NetworkCharacter>();
-		characters[idx_].NetworkId = idx_;
+		characters[id] = go.GetComponent<NetworkCharacter>();
+		characters[id].transform.position = pos;
+		characters[id].NetworkId = id;
+		characters[id].SetState(nm_.Body[2]);
+
+		UI_CharacterStatus.instance.ActivatePortrait(id, (ChIdx)chIdx);
 	}
 
 	public void OnRecv(NetworkMessage networkMessage){	
@@ -61,8 +69,7 @@ public class ClientCharacterManager : MonoBehaviour {
 		case MsgAttr.create:
 			int netId = int.Parse(networkMessage.Body[0].Attribute);
 			if(characters[netId] == null){
-				int chIdx = int.Parse(networkMessage.Body[0].Content);
-				CreateNetCharacter(netId, chIdx);
+				CreateNetCharacter(networkMessage);
 			}
 			break;
 

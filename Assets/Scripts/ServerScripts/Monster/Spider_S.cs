@@ -21,13 +21,21 @@ namespace ServerSide{
 			base.Awake ();
 
 			objType = (int)MonsterType.Spider;
+
+			CurrentHp = MosnterConst.Spider.maxHp;
 		}
 
 		public override void OnRequested (){
 			base.OnRequested();
+		}
+
+		public override void MonGetUp(){
+			base.MonGetUp ();
 
 			StartCoroutine(AIPreprocess());
 		}
+
+
 
 		private IEnumerator AIPreprocess(){
 			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));

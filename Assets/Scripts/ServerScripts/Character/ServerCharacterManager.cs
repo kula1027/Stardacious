@@ -5,23 +5,25 @@ namespace ServerSide{
 	public class ServerCharacterManager : MonoBehaviour {
 		public static ServerCharacterManager instance;
 
-		private GameObject prefabServerCharacter;
+		public GameObject prefabServerCharacter;
 		private ServerCharacter[] character = new ServerCharacter[NetworkConst.maxPlayer];
 		public int currentCharacterCount = 0;
 
+		private int currentAliveCharacterCount = 0;
+
 		void Awake(){
 			instance = this;
-			prefabServerCharacter = (GameObject)Resources.Load("chTestServer");
 		}
 			
 		public ServerCharacter GetCharacter(int idx_){
 			return character[idx_];
 		}
 
-		public ServerCharacter CreateCharacter(int idx_, ChIdx chIdx_){
+		public ServerCharacter CreateCharacter(int idx_, ChIdx chIdx_, Vector3 initPos_){
 			character[idx_] = Instantiate(prefabServerCharacter).GetComponent<ServerCharacter>();
 			character[idx_].NetworkId = idx_;
 			character[idx_].ChrIdx = chIdx_;
+			character[idx_].transform.position = initPos_;
 			character[idx_].Initialize();
 
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
@@ -30,10 +32,23 @@ namespace ServerSide{
 				}
 			}
 			currentCharacterCount++;
+			currentAliveCharacterCount++;
 
-			// monsterapp
+			ConsoleMsgQueue.EnqueMsg(character[idx_].NetworkId + ": Joined, Current Player Count: " + currentCharacterCount);
 
 			return character[idx_];
+		}
+
+		public void OnCharacterDead(){
+			currentAliveCharacterCount--;
+
+			if(currentAliveCharacterCount < 1 && currentCharacterCount > 1){
+				ServerMasterManager.instance.OnAnnihilation();
+			}
+		}
+
+		public void OnCharacterAlive(){
+			currentAliveCharacterCount++;
 		}
 
 		public void RemoveCharacter(int idx_){
@@ -52,7 +67,8 @@ namespace ServerSide{
 				case MsgAttr.create:
 					int sender = int.Parse(networkMessage.Adress.Attribute);
 					ChIdx chrIdx = (ChIdx)int.Parse(networkMessage.Body[0].Attribute);
-					ServerCharacterManager.instance.CreateCharacter(sender, chrIdx);
+					Vector3 pos = networkMessage.Body[1].ConvertToV3();
+					CreateCharacter(sender, chrIdx, pos);
 					break;
 
 				default:

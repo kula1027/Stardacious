@@ -33,7 +33,7 @@ namespace ServerSide{
 
 			tcpListener.Start();
 
-			ConsoleMsgQueue.EnqueMsg("Waiting for Clients...");
+			ConsoleMsgQueue.EnqueMsg("Waiting for Clients.. Listening to Port "+ tcpWelcomePort);
 			while (serverRunning) {
 				try {
 					Socket welcomeSocket = tcpListener.AcceptSocket();
@@ -52,7 +52,7 @@ namespace ServerSide{
 			try{
 				tcpListener.Server.Shutdown(SocketShutdown.Both);
 			}catch(Exception e){
-				//Debug.Log("Shut Down: " + e.Message);
+				ConsoleMsgQueue.EnqueMsg("Shut Down: " + e.Message, 2);
 			}finally{
 				tcpListener.Server.Close();
 				tcpListener.Stop();

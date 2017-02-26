@@ -13,6 +13,18 @@ namespace ServerSide{
 		}
 		// 0 : spider | 1 : walker | 2 : fly
 
+		private bool isTarget;
+		public bool IsTarget{
+			set{ isTarget = value; }
+			get{ return isTarget; }
+		}
+
+		private int waveIdx;
+		public int WaveIdx{
+			set{ waveIdx = value; }
+			get{ return waveIdx; }
+		}
+
 		private StageControl masterWave;
 		public StageControl MasterWave{
 			set{ masterWave = value; }
@@ -42,12 +54,15 @@ namespace ServerSide{
 		private NetworkMessage nmGround;		// for ground check
 		private NetworkMessage nmMoving;
 		private NetworkMessage nmDir;
+		private NetworkMessage nmSleep;
+		private NetworkMessage nmGetUp;
 		protected NetworkMessage nmAttk;
 
 		protected Rigidbody2D rgd2d;
 
 		protected void Awake(){
 			rgd2d = GetComponent<Rigidbody2D>();
+			isTarget = false;
 		}
 
 		public override void OnRequested (){
@@ -57,7 +72,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 150; // for debug hp is 1
+			maxHp = 1; // for debug hp is 1
  			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -69,12 +84,21 @@ namespace ServerSide{
 			nmGround = new NetworkMessage (h, new MsgSegment(MsgAttr.Monster.grounded));
 			nmMoving = new NetworkMessage (h, new MsgSegment(MsgAttr.Monster.moving));
 			nmAttk = new NetworkMessage (h, new MsgSegment(MsgAttr.Monster.attack));
+			nmSleep = new NetworkMessage (h, new MsgSegment(MsgAttr.Monster.mSleep));
+			nmGetUp = new NetworkMessage (h, new MsgSegment(MsgAttr.Monster.mGetUp));
 
 			NotifyAppearence();
 
 			StartCoroutine (SendPosRoutine ());
 			StartCoroutine (GroundCheckRoutine ());
 			StartCoroutine (StateCheckRoutine ());
+		}
+
+		public void MonSleep(){
+			Network_Server.BroadCastTcp (nmSleep);
+		}
+		public virtual void MonGetUp(){
+			Network_Server.BroadCastTcp (nmGetUp);
 		}
 
 		public override void OnRecv (MsgSegment[] bodies){
@@ -185,6 +209,17 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp(nmAppear);
 		}
 
+		public void NotifyAppearence(int targetNetworkId_){
+			MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.create);
+			MsgSegment[] b = {
+				new MsgSegment(objType.ToString(), GetOpIndex().ToString()),
+				new MsgSegment(transform.position)
+			};
+			NetworkMessage nmAppear = new NetworkMessage(h, b);
+
+			Network_Server.UniCast(nmAppear, targetNetworkId_);
+		}
+
 		private IEnumerator SendPosRoutine(){
 			while(true){
 				nmPos.Body[0] = new MsgSegment(transform.position);
@@ -204,8 +239,10 @@ namespace ServerSide{
 			IsDead = true;
 
 			SetGravityOn ();
-			masterWave.WaveMonsterDead ();
-			// 내가 속한 stagecontrol 에게 죽음을 알림.
+			if (isTarget == true) {
+				// 내가 속한 stagecontrol 에게 죽음을 알림.
+				masterWave.WaveMonsterDead ();
+			}
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);
 			NetworkMessage nmDestroy = new NetworkMessage(h, b);

@@ -69,6 +69,13 @@ public class PlayerSlot : MonoBehaviour {
 				Noise ();
 				recentCharName = goChar_.name;
 			}
+		}else{
+			if (trChar.childCount > 0) {
+				int cCount = trChar.childCount;
+				for (int loop = 0; loop < cCount; loop++) {
+					Destroy (trChar.GetChild (0).gameObject);
+				}
+			}
 		}
 	}
 

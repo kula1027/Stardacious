@@ -4,10 +4,22 @@ using UnityEngine.UI;
 
 public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public static CharacterCtrl instance;
+
 	public bool isGround = false;
 	private int dieCount = 0;
-	private bool isAwaked = true;	// 방금 생성됨
-	private float defaultRespawnTime = 5f;
+	public int DieCount{
+		get{return dieCount;}
+	}
+	private int fallOffDieCount = 0;
+	public int FallOffDieCount{
+		get{return fallOffDieCount;}
+	}
+
+	private int damageAccum = 0;
+	public int DamageAccum{
+		get{return damageAccum;}
+		set{damageAccum = value;}
+	}
 
 	public BoxCollider2D colGroundChecker;
 	public Transform trCanvas;
@@ -45,7 +57,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	public float jumpPower;//controled by unity editor
 
 	protected ChIdx chrIdx;
-	protected float[] skillCoolDown = new float[3];
 	#endregion
 
 	void Awake(){		
@@ -53,8 +64,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hbt = GetComponentInChildren<HitBoxTrigger>();
 		audioSource = GetComponent<AudioSource>();
 		instance = this;
-		isAwaked = true;
-		CurrentHp = 9999999;
+		CurrentHp = CharacterConst.maxHp;
 	}
 
 	void Start(){
@@ -63,6 +73,12 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	private void SetNickName(){
 		trCanvas.FindChild("Text").GetComponent<Text>().text = PlayerData.nickName;
+	}
+
+	public void GameOver(){
+		gameOver = true;
+		canControl = false;
+		hbt.gameObject.SetActive(false);
 	}
 
 	public virtual void Initialize(){
@@ -105,22 +121,23 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 			commonHeader, 
 			bodyRevive
 		);
-		
-		transform.position = new Vector3(5, 4.5f, 0);
 
 		controlFlags = new ControlFlags ();
 
 		StartCoroutine (GroundCheckRoutine ());
 		StartCoroutine(FixedUpdateMovement());
 
-		transform.position = new Vector3(-4.7f, 12f, 0f);
+		transform.position = new Vector3(20f, 12f, 0f);
 
 		characterGraphicCtrl.Jump();
 	}
 
 	protected void NotifyAppearence(){
 		MsgSegment hAppear = new MsgSegment(MsgAttr.character, MsgAttr.create);
-		MsgSegment bAppear = new MsgSegment(((int)chrIdx).ToString());
+		MsgSegment[] bAppear = {
+			new MsgSegment(((int)chrIdx).ToString()),
+			new MsgSegment(transform.position)
+		};
 		NetworkMessage nmAppear = new NetworkMessage(hAppear, bAppear);
 
 		MsgSegment hStgNum = new MsgSegment (MsgAttr.stage, MsgAttr.Stage.stgNumber);
@@ -432,6 +449,13 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		if(CurrentHp <= 0 && IsDead == false){			
 			OnDie();
 		}
+
+		UI_HP.instance.SetTextHp(CurrentHp);
+		if(CurrentHp <= (int)(CharacterConst.maxHp * 0.3)){
+			UI_HP.instance.StartBlink();
+		}else{
+			UI_HP.instance.StopBlink();
+		}
 	}
 
 	public override void OnDie (){
@@ -439,6 +463,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 		moveDir = Vector3.zero;
 
+		nmDead.Body[0].Content = dieCount.ToString();
 		Network_Client.SendTcp(nmDead);
 
 		IsDead = true;
@@ -450,12 +475,18 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		StartCoroutine (CharacterRespawn());
 		//respawn at respawn Point of current stage.
 
-		//dieCount++;
+		dieCount++;
+	}
+
+	public void FallOffDie(){
+		fallOffDieCount++;
+
+		OnDie();
 	}
 
 	private IEnumerator CharacterRespawn(){
 
-		yield return new WaitForSeconds(defaultRespawnTime + (float)dieCount);
+		yield return new WaitForSeconds(CharacterConst.GetRespawnTime(dieCount));
 			
 		OnRevive();
 
@@ -464,14 +495,16 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		hbt.gameObject.SetActive(true);
 	}
 
+	private bool gameOver = false;
 	protected virtual void OnRevive(){
-		int stageIdx = 0; // 현재 stage number
+		if(gameOver)return;
+
 
 		characterGraphicCtrl.Initialize();
 		this.transform.position = respawnPoint;
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
-		this.CurrentHp = 9999999;
+		this.CurrentHp = CharacterConst.maxHp;
 
 		IsDead = false;
 

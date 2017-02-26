@@ -13,14 +13,16 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public GameObject pfRecallBullet;
 
+	public AudioClip audioNormal;
+	public AudioClip audioNormal2;
+	public AudioClip audioDash;
+	public AudioClip audioRush;
+
+
 	public override void Initialize (){
 		base.Initialize ();
 
 		chrIdx = ChIdx.Esper;
-
-		skillCoolDown[0] = 0.4f;
-		skillCoolDown[1] = 2f;
-		skillCoolDown[2] = 2f;
 
 		PrepareWeapons();
 
@@ -58,8 +60,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 
 	#region DashAttack
-	private const int damagedash = 50;
-	private HitObject hoDash = new HitObject(damagedash);
+	private HitObject hoDash = new HitObject(CharacterConst.Esper.damageDash);
 	private const float dashAttackTime = 0.2f;
 
 	public void OnHitDashAttack(Collider2D col){
@@ -84,17 +85,19 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region SlashAttack
-	private const int damageSlash = 60;
 	private const float slashAttackTime = 0.05f;
-	private HitObject hoSlash = new HitObject(damageSlash);
+	private HitObject hoSlash = new HitObject(CharacterConst.Esper.damageNormal);
 
-	public void OnAttackSlash(int idx){
+	public void OnAttackSlash(int idx){		
 		StartCoroutine(AttackRoutine(hitterSlash, slashAttackTime));
 		if (idx == 0) {
 			nmAttack.Body[0].Content = ((int)EsperAttackType.Slash0).ToString();
+			audioSource.clip = audioNormal;
 		} else if(idx == 1) {
 			nmAttack.Body[0].Content = ((int)EsperAttackType.Slash1).ToString();
+			audioSource.clip = audioNormal2;
 		}
+		audioSource.Play();
 
 		Network_Client.SendTcp(nmAttack);
 	}
@@ -106,9 +109,8 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region JumpAttack
-	private const int damageJumpAttack = 25;
 	private const float jumpAttackTime = 0.05f;
-	private HitObject hoJump = new HitObject(damageJumpAttack);
+	private HitObject hoJump = new HitObject(CharacterConst.Esper.damageJumpAttack);
 
 	public void OnJumpAttack(){
 		nmAttack.Body[0].Content = ((int)EsperAttackType.JumpAttack).ToString();
@@ -143,23 +145,22 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	#region SwiftRush
 	private int rushCount = 0;
-	private const int damageRush = 80;
-	private HitObject hoRush = new HitObject(damageRush);
+	private HitObject hoRush = new HitObject(CharacterConst.Esper.damageRush);
 	private bool isRushing = true;
 
-	private const float rushSpeed = 1f;
-	private const float dashTime = 0.33f;
-
-	private void SwiftRush(Vector3 dirRush){
+	private void SwiftRush(Vector3 dirRush){		
 		dirRush.Normalize();	
 		StartCoroutine(SwiftRushRoutine(dirRush));
 
+		audioSource.clip = audioRush;
+		audioSource.Play();
+
 		rushCount++;
 		if(rushCount > 2){
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0] * 14);
+			InputModule.instance.BeginCoolDown(0, CharacterConst.Esper.coolDownSkill0);
 			rushCount = 0;
 		}else{
-			InputModule.instance.BeginCoolDown(0, skillCoolDown[0]);
+			InputModule.instance.BeginCoolDown(0, CharacterConst.Esper.itvRush);
 		}
 
 	}
@@ -180,9 +181,9 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 		float timeAcc = 0;
 
-		while(dashTime > timeAcc){
+		while(CharacterConst.Esper.timeRush > timeAcc){
 			timeAcc += Time.deltaTime;
-			transform.position += dirRush * rushSpeed;
+			transform.position += dirRush * CharacterConst.Esper.speedRush;
 
 			yield return new WaitForFixedUpdate();
 		}
@@ -198,12 +199,6 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	#endregion
 
 	#region Recall
-
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.L)){
-			Recall();
-		}
-	}
 
 	NetworkMessage nmRecall;
 	private int recallTarget = -1;
@@ -254,7 +249,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnMissRecallBullet(){
 		recallTarget = -1;
-		InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+		InputModule.instance.BeginCoolDown(2, CharacterConst.Esper.coolDownSkill2);
 	}
 
 	public void SetRecallTarget(int targetIdx_){
@@ -284,6 +279,13 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		base.OnDie ();
 
 		rushCount = 0;
+		StopAllCoroutines();
+
+		hitboxDistortion.SetActive(false);
+		hitterSlash.SetActive(false);
+		hitterJumpAttack.SetActive(false);
+		hitterDash.SetActive(false);
+		hitterRush.SetActive(false);
 	}
 
 	public override bool UseSkill (int idx_){
@@ -300,7 +302,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 			case 1:
 				SpaceDistortion();
 				moveDir = Vector3.zero;
-				InputModule.instance.BeginCoolDown(1, skillCoolDown[1]);
+				InputModule.instance.BeginCoolDown(1, CharacterConst.Esper.coolDownSkill1);
 				break;
 
 			case 2:
@@ -309,7 +311,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 					InputModule.instance.BeginCoolDown(2, 1.2f);
 				}else{
 					Recall();
-					InputModule.instance.BeginCoolDown(2, skillCoolDown[2]);
+					InputModule.instance.BeginCoolDown(2, CharacterConst.Esper.coolDownSkill2);
 				}
 				break;
 			}

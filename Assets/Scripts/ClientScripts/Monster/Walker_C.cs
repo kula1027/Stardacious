@@ -8,7 +8,17 @@ public class Walker_C : ClientMonster {
 
 	public override void OnRequested (){
 		base.OnRequested();
+	}
 
+	protected override void MonsterSleep(){
+		base.MonsterSleep ();
+		gcWalker.AnimationFreeze ();
+	}
+
+	protected override void MonsterGetUp(){
+		// 요기서부터 시작
+		base.MonsterGetUp ();
+		gcWalker.AnimationResume ();
 		StartCoroutine(WakeUpRoutine());
 	}
 
@@ -17,7 +27,6 @@ public class Walker_C : ClientMonster {
 		// wakeup animation 재생 중 바로 죽을때 애니메이션이 씹히는 이슈 때문
 
 		yield return new WaitForSeconds(1);
-		// walker는 wakeup 모션이 없다.
 		gcWalker.WakeUp ();
 
 		yield return new WaitForSeconds (1);

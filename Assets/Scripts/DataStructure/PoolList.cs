@@ -107,4 +107,18 @@ public class PoolList : MonoBehaviour{
 			return null;
 		}
 	}
+
+	public List<GameObject> GetActiveGameObjectsAll(){
+		List<GameObject> listObjects = new List<GameObject>();
+
+		int childCount = transform.childCount;
+		for(int loop = 0; loop < childCount; loop++){
+			GameObject go = transform.GetChild(loop).gameObject;
+			if(go.activeSelf){
+				listObjects.Add(go);
+			}
+		}
+
+		return listObjects;
+	}
 }

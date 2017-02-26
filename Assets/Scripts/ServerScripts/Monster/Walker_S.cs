@@ -23,10 +23,21 @@ namespace ServerSide{
 
 			MonsterDefaultSpeed = new Vector3 (4,0,0);
 			objType = (int)MonsterType.Walker;
+
+			CurrentHp = MosnterConst.Walker.maxHp;
+		}
+
+		void Start(){
+			rgd2d.AddForce(new Vector2(800, 800));	
 		}
 
 		public override void OnRequested (){
 			base.OnRequested();
+
+		}
+
+		public override void MonGetUp(){
+			base.MonGetUp ();
 
 			StartCoroutine(WalkerMainAI());
 		}
@@ -148,12 +159,12 @@ namespace ServerSide{
 
 				if (currentDir == false) {
 					go.transform.position = transform.position + Vector3.up * 5f + Vector3.left * 4.5f;
+					go.transform.right = Vector3.left;
 
 				} else if (currentDir == true) {
 					go.transform.position = transform.position + Vector3.up * 5f + Vector3.right * 4.5f;
-				}
-
-				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+					go.transform.right = Vector3.right;
+				}					
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 
