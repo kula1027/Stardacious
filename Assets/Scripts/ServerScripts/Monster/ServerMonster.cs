@@ -83,8 +83,8 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 1; // for debug hp is 1
- 			CurrentHp = maxHp;
+			//maxHp = 1; // for debug hp is 1
+ 			//CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
 

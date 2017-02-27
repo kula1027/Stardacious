@@ -49,7 +49,7 @@ namespace ServerSide{
 					yield return null;
 				}
 
-				int timePullClaw = Random.Range(2, 7);
+				int timePullClaw = Random.Range(2, 4);
 				MsgSegment[] bodyAttack = {
 					new MsgSegment(MsgAttr.Monster.attack,  MsgAttr.Monster.snakeClawAttack), 
 					new MsgSegment(idx, timePullClaw)
@@ -60,7 +60,7 @@ namespace ServerSide{
 				);
 				Network_Server.BroadCastTcp(nmAttack);
 
-				yield return new WaitForSeconds(timePullClaw + 2);
+				yield return new WaitForSeconds(timePullClaw + 3);
 			}
 		}
 

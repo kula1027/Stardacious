@@ -70,7 +70,7 @@ public static class MosnterConst{
 	}
 
 	public class Snake{
-		public const int maxHp = 6000;
+		public const int maxHp = 10000;
 	}
 }
 	
@@ -78,7 +78,7 @@ public static class CharacterConst{
 	public const float defaultRespawnTime = 10;
 	public const float incRespawnTimePerDeath = 0f;
 	public const float maxRespawnTime = 20f;
-	public const int maxHp = 100;
+	public const int maxHp = 5;
 
 	public static float GetRespawnTime(int dieCount){
 		float dieTime = CharacterConst.defaultRespawnTime  + CharacterConst.incRespawnTimePerDeath * dieCount;

@@ -26,6 +26,10 @@ namespace ServerSide{
 			character[idx_].transform.position = initPos_;
 			character[idx_].Initialize();
 
+			if(currentCharacterCount == 0){
+				StartCoroutine(BeginInSecs());
+			}
+
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
 				if(character[loop] != null){
 					character[loop].NotifyAppearence();
@@ -36,14 +40,21 @@ namespace ServerSide{
 
 			ConsoleMsgQueue.EnqueMsg(character[idx_].NetworkId + ": Joined, Current Player Count: " + currentCharacterCount);
 
+
 			return character[idx_];
+		}
+
+		private IEnumerator BeginInSecs(){
+			yield return new WaitForSeconds(5);
+
+			ServerStageManager.instance.BeginStage();
 		}
 
 		public void OnCharacterDead(){
 			currentAliveCharacterCount--;
 
 			if(currentAliveCharacterCount < 1 && currentCharacterCount > 1){
-				ServerMasterManager.instance.OnAnnihilation();
+				//ServerMasterManager.instance.OnAnnihilation();
 			}
 		}
 
