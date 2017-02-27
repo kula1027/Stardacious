@@ -21,7 +21,7 @@ public class FlyGraphicController : MonsterGraphicCtrl {
 	}
 
 	public override void Jump (){
-
+		
 	}
 
 	public override void Attack (){

@@ -71,4 +71,27 @@ public class CameraGraphicController : MonoBehaviour {
 		yield return new WaitForSeconds (0.05f);
 		blocker.color = Color.clear;
 	}
+
+	public void OuchEffect(){
+		if (ouchTimer > 0) {
+			ouchTimer = 0.5f;
+		} else {
+			StartCoroutine (OuchRoutine ());
+		}
+	}
+	private float ouchTimer = 0f;
+	IEnumerator OuchRoutine(){
+		ouchTimer = 0.5f;
+		while (true) {
+			if (ouchTimer <= 0) {
+				ouchTimer = 0;
+				blocker.color = Color.clear;
+				break;
+			}
+			blocker.color = new Color (1, 0, 0, ouchTimer);
+			ouchTimer -= Time.deltaTime * 2;
+			yield return null;
+		}
+
+	}
 }

@@ -113,15 +113,7 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.Monster.attack:
-			Debug.Log ("tatkatak");
-
-			if (IsDead == false) {
-				if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
-					gcMons.Attack ();
-				} else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
-					gcMons.Idle ();
-				}
-			}
+			MonsterAttack (bodies);
 			break;
 
 		case MsgAttr.freeze:
@@ -129,6 +121,15 @@ public class ClientMonster : PoolingObject, IHittable {
 			effectIce = localPool.RequestObject (ClientProjectileManager.instance.pfIceEffect);
 			StartCoroutine(FreezeRoutine());
 			break;
+		}
+	}
+	protected virtual void MonsterAttack(MsgSegment[] bodies){
+		if (IsDead == false) {
+			if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+				gcMons.Attack ();
+			} else if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
+				gcMons.Idle ();
+			}
 		}
 	}
 	protected virtual void MonsterFreezeEnd(){

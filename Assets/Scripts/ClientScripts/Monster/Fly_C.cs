@@ -4,6 +4,8 @@ using System.Collections;
 public class Fly_C : ClientMonster {
 	public FlyGraphicController gcFly;
 
+	public AudioClip audioEnergy;
+	public AudioClip audioShoot;
 	//private 
 
 	public override void OnRequested (){
@@ -20,6 +22,24 @@ public class Fly_C : ClientMonster {
 		base.MonsterGetUp ();
 		gcFly.AnimationResume ();
 		StartCoroutine(WakeUpRoutine());
+	}
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.A)){
+			gcFly.Attack ();
+			StartCoroutine (AttackSoundRoutine ());
+		}
+	}
+	protected override void MonsterAttack (MsgSegment[] bodies){
+		base.MonsterAttack (bodies);
+		StartCoroutine (AttackSoundRoutine ());
+
+	}
+	private IEnumerator AttackSoundRoutine(){
+		MakeSound (audioEnergy);
+		yield return new WaitForSeconds (1.5f);
+		if (!IsDead) {
+			MakeSound (audioShoot);
+		}
 	}
 
 	private IEnumerator WakeUpRoutine(){
