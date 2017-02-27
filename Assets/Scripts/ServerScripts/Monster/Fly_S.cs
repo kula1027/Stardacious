@@ -21,7 +21,7 @@ namespace ServerSide{
 			base.Awake ();
 
 			objType = (int)MonsterType.Fly;
-			CurrentHp = MosnterConst.Fly.maxHp;
+
 		}
 
 		public override void OnRequested (){
@@ -30,7 +30,7 @@ namespace ServerSide{
 			// fly 만의 speed 를 정함
 			this.GetComponent<Rigidbody2D>().gravityScale = 0;
 			// gravity
-
+			CurrentHp = MosnterConst.Fly.maxHp;
 		}
 
 		private IEnumerator FlyAppearance(float appearTime){

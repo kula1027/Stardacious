@@ -505,7 +505,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		if(gameOver)return;
 
 		characterGraphicCtrl.Initialize();
-		this.transform.position = respawnPoint;
+		this.transform.position = new Vector3(respawnPoint.x, respawnPoint.y, 0);
 		nmRevive.Body[1] = new MsgSegment(transform.position);
 		Network_Client.SendTcp(nmRevive);
 		this.CurrentHp = CharacterConst.maxHp;

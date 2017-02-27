@@ -22,10 +22,11 @@ namespace ServerSide{
 
 			objType = (int)MonsterType.Spider;
 
-			CurrentHp = MosnterConst.Spider.maxHp;
+
 		}
 
 		public override void OnRequested (){
+			CurrentHp = MosnterConst.Spider.maxHp;
 			base.OnRequested();
 		}
 
@@ -107,7 +108,6 @@ namespace ServerSide{
 
 		private IEnumerator SpiderMainAI(){
 
-			Debug.Log("mainstart" + IsDead);
 
 			/************ AI START ************/
 			while(IsDead == false){				// 나는 죽엇나?
@@ -200,7 +200,6 @@ namespace ServerSide{
 		}
 
 		private IEnumerator SpiderInRange(Vector3 closestCharacterPos_){
-			Debug.Log("inrange");
 			// 몬스터가 근접햇을때
 			int beHaviorFactor = Random.Range (0,10);
 

@@ -248,8 +248,6 @@ namespace ServerSide{
 
 		protected void ActiveWaveMonster(){
 
-			Debug.Log("active");
-
 			if (currentWaveIdx >= waveCountTotal) {
 				// 더이상 남은 wave 가 없다.
 				ServerStageManager.instance.CurrentStageEnd ();

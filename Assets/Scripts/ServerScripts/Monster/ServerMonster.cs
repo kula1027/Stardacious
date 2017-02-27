@@ -80,11 +80,10 @@ namespace ServerSide{
 		public override void OnRequested (){
 			IsDead = false;
 			canControl = true;
-			CurrentHp = maxHp;
 		}
 			
 		public override void Ready(){
-			maxHp = 150; // for debug hp is 1
+			maxHp = 1; // for debug hp is 1
  			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -407,7 +406,6 @@ namespace ServerSide{
 			float currentCharacterDistance = Vector3.Distance (currentCharacterPos_[i], this.transform.position);
 			float tempCharacterDistance;
 
-			Debug.Log("?");
 
 			if (factor == 0) {
 				for (i = 1; i < curruentPlayers; i++) {
@@ -432,7 +430,6 @@ namespace ServerSide{
 			}
 			Network_Server.BroadCastTcp (nmDir);
 
-			Debug.Log("no");
 			return returnCharacterPos;
 		}
 

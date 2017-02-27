@@ -75,10 +75,10 @@ public static class MosnterConst{
 }
 	
 public static class CharacterConst{
-	public const float defaultRespawnTime = 10f;
-	public const float incRespawnTimePerDeath = 2f;
+	public const float defaultRespawnTime = 5;
+	public const float incRespawnTimePerDeath = 1f;
 	public const float maxRespawnTime = 20f;
-	public const int maxHp = 2;
+	public const int maxHp = 100;
 
 	public static float GetRespawnTime(int dieCount){
 		float dieTime = CharacterConst.defaultRespawnTime  + CharacterConst.incRespawnTimePerDeath * dieCount;

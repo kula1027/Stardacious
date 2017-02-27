@@ -164,6 +164,7 @@ public class CharacterCtrl_Heavy : CharacterCtrl {
 
 	private IEnumerator MachineGunRoutine(){
 		while(true){
+			if(isMachineGunMode == false)yield break;
 			yield return new WaitForSeconds(CharacterConst.Heavy.rateMinigun);
 
 			GameObject go = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(pfMinigunBullet);

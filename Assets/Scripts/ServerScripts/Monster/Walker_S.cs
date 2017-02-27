@@ -24,16 +24,13 @@ namespace ServerSide{
 			MonsterDefaultSpeed = new Vector3 (4,0,0);
 			objType = (int)MonsterType.Walker;
 
-			CurrentHp = MosnterConst.Walker.maxHp;
-		}
 
-		void Start(){
-			rgd2d.AddForce(new Vector2(800, 800));	
 		}
 
 		public override void OnRequested (){
 			base.OnRequested();
 
+			CurrentHp = MosnterConst.Walker.maxHp;
 		}
 
 		public override void MonGetUp(){

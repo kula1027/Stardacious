@@ -204,9 +204,11 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	private HitObject hoRush = new HitObject(CharacterConst.Esper.damageRush);
 	private bool isRushing = true;
 
+	private Coroutine rushRoutine;
+
 	private void SwiftRush(Vector3 dirRush){		
 		dirRush.Normalize();	
-		StartCoroutine(SwiftRushRoutine(dirRush));
+		rushRoutine = StartCoroutine(SwiftRushRoutine(dirRush));
 
 		audioSource.clip = audioRush;
 		audioSource.Play();
@@ -352,13 +354,16 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		base.OnDie ();
 
 		rushCount = 0;
-		StopAllCoroutines();
 
 		hitboxDistortion.SetActive(false);
 		hitterSlash.SetActive(false);
 		hitterJumpAttack.SetActive(false);
 		hitterDash.SetActive(false);
 		hitterRush.SetActive(false);
+
+		if(rushRoutine != null)
+			StopCoroutine(rushRoutine);
+
 	}
 
 	public override bool UseSkill (int idx_){
