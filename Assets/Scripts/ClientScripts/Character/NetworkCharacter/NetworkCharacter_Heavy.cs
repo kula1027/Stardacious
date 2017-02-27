@@ -25,6 +25,18 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 			break;
 		}			
 	}
+
+	protected override void OnRecvNormalAttack(MsgSegment[] bodies_){
+		if(bodies_[0].Content.Equals(NetworkMessage.sTrue)){
+			characterGraphicCtrl.StartNormalAttack();
+			if (!isMiniGun) {
+				audioShotgun.Play ();
+			}
+		}
+		if(bodies_[0].Content.Equals(NetworkMessage.sFalse)){
+			characterGraphicCtrl.StopNormalAttack();
+		}
+	}
 		
 	public override void UseSkill (int idx_){
 		switch(idx_){

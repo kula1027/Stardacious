@@ -17,7 +17,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	public AudioClip audioNormal2;
 	public AudioClip audioDash;
 	public AudioClip audioRush;
-
+	public AudioClip audioShield;
 
 	public override void Initialize (){
 		base.Initialize ();
@@ -72,6 +72,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	public void OnAttackDash(){		
 		nmAttack.Body[0].Content = ((int)EsperAttackType.StabAttack).ToString();
 		Network_Client.SendTcp(nmAttack);
+		MakeSound (audioDash);
 
 		StartCoroutine(AttackRoutine(hitterDash, dashAttackTime));
 		float dir = 0;
@@ -115,7 +116,7 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	public void OnJumpAttack(){
 		nmAttack.Body[0].Content = ((int)EsperAttackType.JumpAttack).ToString();
 		Network_Client.SendTcp(nmAttack);
-
+		MakeSound (audioNormal);
 		StartCoroutine(AttackRoutine(hitterJumpAttack, jumpAttackTime));
 	}
 	public override bool InputStartAttack (){
@@ -260,11 +261,12 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	#region SpaceDistortion
 
-	private void SpaceDistortion(){		
+	private void SpaceDistortion(){	
 		StartCoroutine(DistortionRoutine());
 	}
 
 	private IEnumerator DistortionRoutine(){
+		MakeSound (audioShield);
 		gcEsper.PsyShield();
 		hitboxDistortion.gameObject.SetActive(true);
 
