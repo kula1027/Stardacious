@@ -11,7 +11,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 
 	void Awake(){
 		objType = (int)ProjType.ChaserBullet;
-		hitObject = new HitObject(40);
+		hitObject = new HitObject(CharacterConst.Doctor.damageChaserBullet);
 	}
 		
 	public override void Ready (){

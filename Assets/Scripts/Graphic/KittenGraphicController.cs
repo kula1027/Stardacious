@@ -5,6 +5,7 @@ public class KittenGraphicController : MonsterGraphicCtrl {
 
 	void Awake(){
 		animator = transform.FindChild("Offset").FindChild("Pivot").GetComponent<Animator>();
+		unitParts = GetComponentsInChildren<SpriteRenderer>();
 	}
 
 	#region implemented abstract members of MonsterGraphicCtrl

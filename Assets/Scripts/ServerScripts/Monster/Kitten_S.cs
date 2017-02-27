@@ -11,7 +11,7 @@ namespace ServerSide{
 
 			objType = (int)MonsterType.Kitten;
 
-			CurrentHp = MosnterConst.Spider.maxHp;
+			CurrentHp = MosnterConst.Kitten.maxHp;
 		}
 
 		public override void Ready (){

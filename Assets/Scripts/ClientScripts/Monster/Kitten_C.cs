@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Kitten_C : ClientMonster {
+public class Kitten_C : ClientMonster, IHitter {
 	public KittenGraphicController gcKit;
 	public AudioClip audioSummon;
 	public AudioClip audioBomb;
 	//private 
 
+	public GameObject goExpHit;
+
 	public override void OnRequested (){
 		base.OnRequested();
+		goExpHit.gameObject.SetActive(false);	
+
+		StartCoroutine(WakeUpRoutine());
 	}
 
 	protected override void MonsterSleep(){
@@ -31,12 +36,11 @@ public class Kitten_C : ClientMonster {
 
 		/*yield return new WaitForSeconds(1);
 
-		gcFly.WakeUp ();
+		gcFly.WakeUp ();*/
 
-		yield return new WaitForSeconds (1);*/
+		yield return new WaitForSeconds (1f);
 
 		hTrigger.gameObject.SetActive (true);
-		yield break;
 	}
 
 	public override void OnDie (){
@@ -48,8 +52,15 @@ public class Kitten_C : ClientMonster {
 	}
 
 	private IEnumerator BombSoundRoutine(){
-		yield return new WaitForSeconds (1.5f);
+		yield return new WaitForSeconds (0.8f);
+
 		MakeSound (audioBomb);
+
+		goExpHit.gameObject.SetActive(true);
+
+		yield return new WaitForSeconds (0.5f);
+
+		goExpHit.gameObject.SetActive(false);	
 	}
 
 	protected override void MonsterFreeze(){
@@ -63,4 +74,20 @@ public class Kitten_C : ClientMonster {
 
 		gcKit.AnimationResume ();
 	}
+
+	#region IHitter implementation
+
+	public void OnHitSomebody (Collider2D col){
+		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
+
+		if(hbt){
+			if(hbt.transform.parent.GetComponent<CharacterCtrl>() != null){				
+				hbt.OnHit(new HitObject(1));
+				Vector3 dirF = (col.transform.position - transform.position).normalized;
+				hbt.transform.parent.GetComponent<CharacterCtrl>().AddForce((dirF + Vector3.up) * 1000);
+			}
+		}
+	}
+
+	#endregion
 }

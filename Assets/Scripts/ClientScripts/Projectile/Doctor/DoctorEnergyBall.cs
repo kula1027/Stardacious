@@ -19,7 +19,7 @@ public class DoctorEnergyBall : PoolingObject, IHitter {
 		gcBall = GetComponent<EnergyBallGraphic>();
 		col2d = GetComponentInChildren<CircleCollider2D>();
 		objType = (int)ProjType.EnergyBall;
-		hitObject = new HitObject(30);
+		hitObject = new HitObject(CharacterConst.Doctor.damageEnergyBall);
 
 		MsgSegment[] bodyEnergyAttack = {
 			new MsgSegment(MsgAttr.Projectile.energyBallAttack),

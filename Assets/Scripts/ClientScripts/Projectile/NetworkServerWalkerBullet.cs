@@ -34,5 +34,7 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 		goHit.transform.rotation = Quaternion.identity;
 		goHit.GetComponent<HitEffect>().MissileExplosion();
 		CameraGraphicController.instance.ShakeEffect (0.5f);
+
+		MakeSound(audioBoom);
 	}
 }

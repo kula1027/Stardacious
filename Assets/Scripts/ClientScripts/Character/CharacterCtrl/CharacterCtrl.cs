@@ -433,7 +433,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 			timeAcc += Time.deltaTime;
 
-			if(timeAcc > BindBullet.freezeTime){
+			if(timeAcc > CharacterConst.Doctor.freezeTime){
 				break;
 			}
 				

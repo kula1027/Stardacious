@@ -33,13 +33,11 @@ public class ClientMonster : PoolingObject, IHittable {
 
 		hTrigger.gameObject.SetActive (false);
 		// wakeup animation 을 위해 일시적으로 hitbox set false
-	}
 
-	public override void Ready (){
 		MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 		MsgSegment b = new MsgSegment(MsgAttr.hit);
 		nmHit = new NetworkMessage(h, b);
-	}	
+	}
 		
 	private IEnumerator PositionRoutine(){	
 		while(true){
@@ -54,9 +52,8 @@ public class ClientMonster : PoolingObject, IHittable {
 	}
 
 	public override void OnDie (){
-		//audioVoice.clip = audioDying;
-		//audioVoice.Play();
-		//gcMons.Die();
+
+		MakeSound(audioDying);
 
 		IsDead = true;
 		hTrigger.gameObject.SetActive(false);
@@ -172,7 +169,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 			timeAcc += Time.deltaTime;
 
-			if(timeAcc > BindBullet.freezeTime){
+			if(timeAcc > CharacterConst.Doctor.freezeTime){
 				// freeze 끝!
 				MonsterFreezeEnd ();
 				break;

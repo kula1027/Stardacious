@@ -8,5 +8,7 @@ public class NetworkMeteoBullet : NetworkServerProjectile {
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
 		goHit.transform.position = transform.position;
 		goHit.GetComponent<HitEffect>().TrapBallExplosion();
+
+		MakeSound(audioBoom);
 	}
 }

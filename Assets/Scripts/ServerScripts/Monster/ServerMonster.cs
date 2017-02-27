@@ -279,7 +279,7 @@ namespace ServerSide{
 			while (true) {
 				timeAcc += Time.deltaTime;
 
-				if (timeAcc > BindBullet.freezeTime)
+				if (timeAcc > CharacterConst.Doctor.freezeTime)
 					break;
 				
 				yield return null;

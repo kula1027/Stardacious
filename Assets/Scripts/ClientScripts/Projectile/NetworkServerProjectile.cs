@@ -8,6 +8,7 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 	protected Coroutine flyingRoutine;
 
 	public AudioClip audioFire;
+	public AudioClip audioBoom;
 
 	public virtual void Initiate(MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
@@ -74,6 +75,8 @@ public class NetworkServerProjectile : PoolingObject, IHitter {
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
 		goHit.transform.position = transform.position + new Vector3 (1, 1, 0);
 		goHit.GetComponent<HitEffect>().EnemyBlaster();
+
+		MakeSound(audioBoom);
 	}
 		
 	public override void OnReturned (){

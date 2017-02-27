@@ -88,7 +88,6 @@ public class ClientStageManager : MonoBehaviour {
 		switch(mType){
 		case MonsterType.Spider:
 			objMon = monsterPooler.RequestObjectAt (pfSpider, monsIdx_);
-
 			break;
 
 		case MonsterType.Walker:

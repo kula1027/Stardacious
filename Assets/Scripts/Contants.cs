@@ -45,9 +45,9 @@ public static class NetworkConst{
 }
 
 public static class SceneName{
-	public const string scNameInGame = "scJH";
+	public const string scNameInGame = "scIngame";
 	public const string scNameAwake = "scAwake";
-	public const string scNameServer = "scJHServer";
+	public const string scNameServer = "scServer";
 }
 
 public static class MosnterConst{
@@ -66,11 +66,11 @@ public static class MosnterConst{
 	}
 
 	public class Kitten{
-		public const int maxHp = 80;
+		public const int maxHp = 300;
 	}
 
 	public class Snake{
-		public const int maxHp = 8000;
+		public const int maxHp = 2000;
 	}
 }
 	
@@ -104,6 +104,10 @@ public static class CharacterConst{
 		public const float coolDownSkill0 = 1f;
 		public const float coolDownSkill1 = 1f;//ice shot
 		public const float coolDownSkill2 = 1f;
+
+		public const int damageEnergyBall = 30;
+		public const int damageChaserBullet = 40;
+		public const int freezeTime = 8;
 	}
 
 	public class Esper{
