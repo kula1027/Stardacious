@@ -22,26 +22,33 @@ public class BuildingDoor : ObjectActive {
 	private IEnumerator DoorOpen(){
 
 		while (true) {
-			if (isOpenEnd == false && doorOpenStack.y < 7f) {
-				// 열림이 끝나지 않앗고, 아직 다 안열렷을땐 계속 연다.
-				this.transform.position += doorOpenSpeed * Time.deltaTime;
-				doorOpenStack += doorOpenSpeed * Time.deltaTime;
-
-			} else if (isOpenEnd == true && doorOpenStack.y >= 0f) {
-				// 열림이 끝나게 되면 닫기 시작.
-				this.transform.position -= doorOpenSpeed * Time.deltaTime;
-				doorOpenStack -= doorOpenSpeed * Time.deltaTime;
-				
-			} else if (doorOpenStack.y < 0f) {
-				// 전부다 닫히면 
-				isOpenEnd = false;
-				doorOpenStack = new Vector3(0, 0, 0);
-				// 초기화 후 종료
+			if (isOpenEnd == false) {
+				if (doorOpenStack.y < 7f) {
+					// 열림이 끝나지 않앗고, 아직 다 안열렷을땐 계속 연다.
+					this.transform.position += doorOpenSpeed * Time.deltaTime;
+					doorOpenStack += doorOpenSpeed * Time.deltaTime;
+				}
+			} else {
 				break;
 			}
 			
 			yield return null;
 		}
+
+		while (true) {
+			if (doorOpenStack.y >= 0f) {
+				// 열림이 끝나게 되면 닫기 시작.
+				this.transform.position -= doorOpenSpeed * Time.deltaTime;
+				doorOpenStack -= doorOpenSpeed * Time.deltaTime;
+			} else {
+				break;
+			}
+			yield return null;
+		}
+		// 전부다 닫히면 
+		isOpenEnd = false;
+		doorOpenStack = new Vector3 (0, 0, 0);
+		// 초기화 후 종료
 
 	}
 }

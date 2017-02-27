@@ -85,7 +85,7 @@ namespace ServerSide{
 				isMoving = true; // set the ismoving flag
 				float timeAcc = 0; // 움직임 명령 시간잼
 
-				while (true) {
+				while (!IsDead) {
 					if (currentDir == true) {
 						// move to right
 						transform.position += monsterDefaultSpeed * Time.deltaTime;

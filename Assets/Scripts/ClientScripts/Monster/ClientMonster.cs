@@ -54,8 +54,9 @@ public class ClientMonster : PoolingObject, IHittable {
 	}
 
 	public override void OnDie (){
-		audioVoice.clip = audioDying;
-		audioVoice.Play();
+		//audioVoice.clip = audioDying;
+		//audioVoice.Play();
+		gcMons.Die();
 
 		IsDead = true;
 		hTrigger.gameObject.SetActive(false);
