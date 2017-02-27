@@ -12,6 +12,14 @@ public class KittenGraphicController : MonsterGraphicCtrl {
 	public override void Initialize (){
 	}
 
+	public void AnimationFreeze(){
+		animator.enabled = false;
+	}
+
+	public void AnimationResume(){
+		animator.enabled = true;
+	}
+
 	public override void Jump (){
 	}
 
