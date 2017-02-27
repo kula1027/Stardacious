@@ -486,8 +486,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 
 	private IEnumerator CharacterRespawn(){
 
+
 		yield return new WaitForSeconds(CharacterConst.GetRespawnTime(dieCount));
-			
 		OnRevive();
 
 		yield return new WaitForSeconds(2f);
@@ -498,7 +498,6 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	private bool gameOver = false;
 	protected virtual void OnRevive(){
 		if(gameOver)return;
-
 
 		characterGraphicCtrl.Initialize();
 		this.transform.position = respawnPoint;
