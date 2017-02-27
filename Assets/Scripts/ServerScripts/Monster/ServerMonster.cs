@@ -253,7 +253,7 @@ namespace ServerSide{
 			SetGravityOn ();
 			if (isTarget == true) {
 				// 내가 속한 stagecontrol 에게 죽음을 알림.
-				masterWave.WaveMonsterDead ();
+				masterWave.WaveMonsterDead (this.waveIdx);
 			}
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(MsgAttr.destroy);

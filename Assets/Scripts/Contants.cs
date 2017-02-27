@@ -43,9 +43,9 @@ public static class NetworkConst{
 }
 
 public static class SceneName{
-	public const string scNameInGame = "scIngame";
+	public const string scNameInGame = "scJH";
 	public const string scNameAwake = "scAwake";
-	public const string scNameServer = "scServer";
+	public const string scNameServer = "scJHServer";
 }
 
 public static class MosnterConst{
@@ -72,7 +72,7 @@ public static class CharacterConst{
 	public const float defaultRespawnTime = 10f;
 	public const float incRespawnTimePerDeath = 2f;
 	public const float maxRespawnTime = 20f;
-	public const int maxHp = 5;
+	public const int maxHp = 999;
 
 	public static float GetRespawnTime(int dieCount){
 		float dieTime = CharacterConst.defaultRespawnTime  + CharacterConst.incRespawnTimePerDeath * dieCount;
