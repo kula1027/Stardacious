@@ -95,6 +95,7 @@ public class Network_Client {
 		}
 
 		epServer = new IPEndPoint(IPAddress.Parse(serverAddress), portServerUDP);
+		ConsoleMsgQueue.EnqueMsg("Udp Rcv Port: " + ((IPEndPoint)socketUdp.LocalEndPoint).Port);
 
 		threadReceive_UDP = new Thread(ReceivingUDP);
 		threadReceive_UDP.Start();
@@ -129,6 +130,8 @@ public class Network_Client {
 		}catch(Exception e){
 			ConsoleMsgQueue.EnqueMsg("ReceivingUDP: " + e.Message, 2);
 		}
+
+		ConsoleMsgQueue.EnqueMsg("ReceivingUDP: exit");
 
 		//ShutDown();
 	}
