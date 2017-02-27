@@ -407,6 +407,8 @@ namespace ServerSide{
 			float currentCharacterDistance = Vector3.Distance (currentCharacterPos_[i], this.transform.position);
 			float tempCharacterDistance;
 
+			Debug.Log("?");
+
 			if (factor == 0) {
 				for (i = 1; i < curruentPlayers; i++) {
 					tempCharacterDistance = Vector3.Distance (currentCharacterPos_ [i], this.transform.position);
@@ -430,6 +432,7 @@ namespace ServerSide{
 			}
 			Network_Server.BroadCastTcp (nmDir);
 
+			Debug.Log("no");
 			return returnCharacterPos;
 		}
 
