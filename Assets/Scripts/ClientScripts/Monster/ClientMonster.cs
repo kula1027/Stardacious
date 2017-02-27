@@ -113,6 +113,8 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.Monster.attack:
+			Debug.Log ("tatkatak");
+
 			if (IsDead == false) {
 				if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
 					gcMons.Attack ();

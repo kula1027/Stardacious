@@ -241,6 +241,7 @@ namespace ServerSide{
 
 				go.transform.position = transform.position + Vector3.up * 2f;
 				go.transform.right = (closestCharacterPos_ + Vector3.up * (Random.Range (0, 5))) - go.transform.position;
+				go.transform.right = new Vector3 (go.transform.position.x, go.transform.position.y, 0);
 				//right : 투사체 진행방향 결정
 				go.GetComponent<ServerLocalProjectile> ().Ready ();
 

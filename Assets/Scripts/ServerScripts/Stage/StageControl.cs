@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace ServerSide{
 	public class StageControl : MonoBehaviour {
 		public BoxCollider2D colPlayerChecker;
+		public int[] monInputCount;	// 사용자 입력 카운트
+		private int[] monDieCount;	// 진짜 카운트
 
 		private int isPlayerExist = 0;
 		public int IsPlayerExist{
@@ -40,6 +43,7 @@ namespace ServerSide{
 			waveCountTotal = objWave.transform.childCount;
 			waveMonsterCount = new int[waveCountTotal];
 			waveMonsterArray = new ServerMonster[totalMonsterCount];
+			monDieCount = new int[waveCountTotal];
 		}
 
 		public void StartWave(){
@@ -60,15 +64,26 @@ namespace ServerSide{
 			// 이후 wave 재생은 active 에서.
 			int tempCount = waves [currentWaveIdx].childCount;
 			int startMonCount = monsterCountIdx;
-
 			waveMonsterCount [currentWaveIdx] = 0;
+
+			try{
+				if(monInputCount [currentWaveIdx] <= tempCount){
+					monDieCount [currentWaveIdx] = monInputCount [currentWaveIdx];
+				}else {
+					monDieCount [currentWaveIdx] = tempCount;
+				}
+			}
+			catch(Exception e){
+				monDieCount[currentWaveIdx] = tempCount;
+			}
+
 			if (tempCount > 0) {
 				GameObject mGo;
 				GameObject pf;
 				for (int loop = 0; loop < tempCount; loop++) {
 					ServerMonster sm;
 					string goName = waves [currentWaveIdx].GetChild (loop).name;
-						Vector3 goPos = waves [currentWaveIdx].GetChild (loop).transform.position;
+					Vector3 goPos = waves [currentWaveIdx].GetChild (loop).transform.position;
 
 					if (goName.Contains ("spider")) {
 						pf = ServerStageManager.instance.pfSpider;
@@ -215,9 +230,9 @@ namespace ServerSide{
 
 		public void WaveMonsterDead(){
 			// 한마리의 몬스터가 죽으면 콜됨
-			this.waveMonsterCount[currentWaveIdx]--;
+			this.monDieCount[currentWaveIdx]--;
 
-			if (waveMonsterCount[currentWaveIdx] <= 0) {
+			if (monDieCount[currentWaveIdx] <= 0) {
 				// 타겟이 다 죽거나 없으면 다음 wave active.
 				currentWaveIdx++;
 				ActiveWaveMonster ();

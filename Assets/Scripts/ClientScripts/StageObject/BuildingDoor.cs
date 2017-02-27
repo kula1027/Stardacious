@@ -34,6 +34,9 @@ public class BuildingDoor : ObjectActive {
 				
 			} else if (doorOpenStack.y < 0f) {
 				// 전부다 닫히면 
+				isOpenEnd = false;
+				doorOpenStack = new Vector3(0, 0, 0);
+				// 초기화 후 종료
 				break;
 			}
 			
