@@ -56,6 +56,10 @@ namespace ServerSide{
 			Network_Server.BroadCastTcp(nmGameOver);
 		}
 
+		public void OnVictory(){
+
+		}
+
 		public void OnResponseGameOver(NetworkMessage networkMsg_){
 			gameOverResponseCount++;
 
@@ -121,7 +125,7 @@ namespace ServerSide{
 				Network_Server.BroadCastTcp(networkMessage, senderr);
 				break;
 			}
-		}			
+		}
 
 		private void SendInfo(int recver){
 			MsgSegment[] otherInfo = {

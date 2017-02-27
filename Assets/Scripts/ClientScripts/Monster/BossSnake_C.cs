@@ -7,12 +7,18 @@ public class BossSnake_C : StardaciousObject {
 	public BossGraphicController bgc;
 	public NetworkBossClaw[] netClaw;//left -> 0
 
+	private NetworkMessage nmHit;
+
 	void Awake(){
 		instance = this;
 
 		for(int loop = 0; loop < netClaw.Length; loop++){
 			netClaw[loop].SetIndex(loop);
 		}
+
+		MsgSegment h = new MsgSegment(MsgAttr.monster, MsgAttr.Monster.bossSnake);
+		MsgSegment b = new MsgSegment(MsgAttr.hit);
+		nmHit = new NetworkMessage(h, b);
 	}
 
 	public void OnRecv(MsgSegment[] bodies){
@@ -29,7 +35,25 @@ public class BossSnake_C : StardaciousObject {
 			int idxPosClaw = int.Parse(bodies[0].Content);
 			netClaw[idxPosClaw].SetItpl(bodies[1].ConvertToV3());
 			break;
+
+		case MsgAttr.hit:
+			int hpLeft = int.Parse(bodies[0].Content);
+			SetBossHpUi(hpLeft);
+			if(hpLeft < 0){
+				//gc dying anim
+				OnVictory();
+			}
+			break;
 		}
+	}
+
+	private void SetBossHpUi(int hpLeft_){
+
+	}
+
+	private void OnVictory(){
+		UI_ResultPanel.instance.txtResult.text = "임무 성공!";
+		ClientMasterManager.instance.SendResultInfo();
 	}
 
 	private void Begin(){
@@ -62,6 +86,9 @@ public class BossSnake_C : StardaciousObject {
 
 	public void OnHit(HitObject ho){
 		bgc.Twinkle();
+
+		nmHit.Body[0].Content = ho.Damage.ToString();
+		Network_Client.SendTcp(nmHit);
 	}		
 
 	public override void OnDie (){

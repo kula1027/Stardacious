@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class UI_ResultPanel : HidableUI {
 	public static UI_ResultPanel instance;
 
 	public UI_ResultInfo[] uiInfo;
 	public RectTransform rtrPanel;
+
+	public Text txtResult;
 
 	protected new void Awake(){
 		base.Awake();

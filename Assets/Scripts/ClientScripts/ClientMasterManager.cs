@@ -77,6 +77,7 @@ public class ClientMasterManager : MonoBehaviour {
 			break;
 
 		case MsgAttr.Misc.gameOverAnnih:
+			UI_ResultPanel.instance.txtResult.text = "모든 대원이 사망하여 임무에 실패했습니다.";
 			UI_ResultPanel.instance.Show();
 			CharacterCtrl.instance.GameOver();
 			SendResultInfo();
@@ -93,7 +94,7 @@ public class ClientMasterManager : MonoBehaviour {
 		SceneManager.LoadScene(SceneName.scNameAwake);
 	}
 
-	private void SendResultInfo(){		
+	public void SendResultInfo(){		
 		int dieCount = CharacterCtrl.instance.DieCount;
 		int fallOffCount = CharacterCtrl.instance.FallOffDieCount;
 		int damage = CharacterCtrl.instance.DamageAccum;

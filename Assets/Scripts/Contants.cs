@@ -20,6 +20,8 @@ public enum ProjType{
 	GuidenceBullet,
 	RecallBullet,
 	EffectIce,
+	EffectRush,
+	EffectSlash,
 	EffectPortalIn,
 	EffectPortalOut
 }
@@ -65,6 +67,10 @@ public static class MosnterConst{
 
 	public class Kitten{
 		public const int maxHp = 80;
+	}
+
+	public class Snake{
+		public const int maxHp = 8000;
 	}
 }
 	

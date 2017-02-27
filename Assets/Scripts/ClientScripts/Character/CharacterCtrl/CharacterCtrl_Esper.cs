@@ -4,6 +4,7 @@ using System.Collections;
 public class CharacterCtrl_Esper : CharacterCtrl {
 
 	private EsperGraphicController gcEsper;
+	public GameObject pfEffect;
 
 	public GameObject hitboxDistortion;
 	public GameObject hitterSlash;
@@ -65,8 +66,26 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnHitDashAttack(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt && hbt.tag.Equals("Player") == false)
+		if(hbt && hbt.tag.Equals("Player") == false){
 			hbt.OnHit(hoDash);
+
+			GameObject go = Instantiate(pfEffect);
+			if(col.tag.Equals("Spider")){
+				go.transform.position = col.transform.position + new Vector3(0, 2, 0);
+			}
+			if(col.tag.Equals("Fly")){
+				go.transform.position = col.transform.position + new Vector3(0, 0, 0);
+			}
+			if(col.tag.Equals("Walker")){
+				go.transform.position = col.transform.position + new Vector3(0, 4, 0);
+			}
+			if(col.tag.Equals("Boss")){
+				go.transform.position = col.transform.position + new Vector3(0, 15, 0);
+			}
+
+			go.GetComponent<HitEffect>().EsperSlashHit();
+			Destroy(go, 2f);
+		}
 	}
 
 	public void OnAttackDash(){		
@@ -104,8 +123,26 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 	}
 	public void OnHitNormalAttack(Collider2D col){		
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt && hbt.tag.Equals("Player") == false)
+		if(hbt && hbt.tag.Equals("Player") == false){
 			hbt.OnHit(hoSlash);
+
+			GameObject go = Instantiate(pfEffect);
+			if(col.tag.Equals("Spider")){
+				go.transform.position = col.transform.position + new Vector3(0, 2, 0);
+			}
+			if(col.tag.Equals("Fly")){
+				go.transform.position = col.transform.position + new Vector3(0, 0, 0);
+			}
+			if(col.tag.Equals("Walker")){
+				go.transform.position = col.transform.position + new Vector3(0, 4, 0);
+			}
+			if(col.tag.Equals("Boss")){
+				go.transform.position = col.transform.position + new Vector3(0, 15, 0);
+			}
+
+			go.GetComponent<HitEffect>().EsperSlashHit();
+			Destroy(go, 2f);
+		}
 	}
 	#endregion
 
@@ -139,8 +176,26 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 
 	public void OnHitJumpAttack(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt && hbt.tag.Equals("Player") == false)
+		if(hbt && hbt.tag.Equals("Player") == false){
 			hbt.OnHit(hoJump);
+
+			GameObject go = Instantiate(pfEffect);
+			if(col.tag.Equals("Spider")){
+				go.transform.position = col.transform.position + new Vector3(0, 2, 0);
+			}
+			if(col.tag.Equals("Fly")){
+				go.transform.position = col.transform.position + new Vector3(0, 0, 0);
+			}
+			if(col.tag.Equals("Walker")){
+				go.transform.position = col.transform.position + new Vector3(0, 4, 0);
+			}
+			if(col.tag.Equals("Boss")){
+				go.transform.position = col.transform.position + new Vector3(0, 15, 0);
+			}
+
+			go.GetComponent<HitEffect>().EsperSlashHit();
+			Destroy(go, 2f);
+		}
 	}
 	#endregion
 
@@ -163,13 +218,29 @@ public class CharacterCtrl_Esper : CharacterCtrl {
 		}else{
 			InputModule.instance.BeginCoolDown(0, CharacterConst.Esper.itvRush);
 		}
-
 	}
 
 	public void OnHitSwiftRush(Collider2D col){
 		HitBoxTrigger hbt = col.GetComponent<HitBoxTrigger>();
-		if(hbt && hbt.tag.Equals("Player") == false)
+		if(hbt && hbt.tag.Equals("Player") == false){
 			hbt.OnHit(hoRush);
+			GameObject go = Instantiate(pfEffect);
+			if(col.tag.Equals("Spider")){
+				go.transform.position = col.transform.position + new Vector3(0, 2, 0);
+			}
+			if(col.tag.Equals("Fly")){
+				go.transform.position = col.transform.position + new Vector3(0, 0, 0);
+			}
+			if(col.tag.Equals("Walker")){
+				go.transform.position = col.transform.position + new Vector3(0, 4, 0);
+			}
+			if(col.tag.Equals("Boss")){
+				go.transform.position = col.transform.position + new Vector3(0, 15, 0);
+			}
+
+			go.GetComponent<HitEffect>().EsperRushHit();
+			Destroy(go, 2f);
+		}
 	}
 
 	private IEnumerator SwiftRushRoutine(Vector3 dirRush){

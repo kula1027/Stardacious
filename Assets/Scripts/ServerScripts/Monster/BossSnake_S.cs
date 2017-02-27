@@ -15,7 +15,7 @@ namespace ServerSide{
 
 		public BossClaw[] bossClaw;// 0 -> left, 1 -> right
 
-		private int hpCurrent;
+		private int hpCurrent = MosnterConst.Snake.maxHp;
 		private MsgSegment commonHeader;
 
 		private NetworkMessage nmHit;
@@ -44,13 +44,26 @@ namespace ServerSide{
 		public void OnRecv(MsgSegment[] bodies){
 			switch(bodies[0].Attribute){
 			case MsgAttr.hit:
-
+				OnHpChange(int.Parse(bodies[0].Content));
 				break;
+			}
+		}
+
+		private void OnHpChange(int value_){
+			hpCurrent -= value_;
+
+			nmHit.Body[0].Content = hpCurrent.ToString();
+			Network_Server.BroadCastTcp(nmHit);
+
+			if(hpCurrent < 0){
+				StopAllCoroutines();
 			}
 		}
 
 
 		public void Begin(){
+			hpCurrent = MosnterConst.Snake.maxHp;
+
 			for(int loop = 0; loop < bossClaw.Length; loop++){
 				bossClaw[loop].Begin();
 			}
