@@ -4,6 +4,7 @@ using System.Collections;
 public class BossSnake_C : StardaciousObject {
 	public static BossSnake_C instance;
 
+	public BossHpPanel bossUI;
 	public BossGraphicController bgc;
 	public NetworkBossClaw[] netClaw;//left -> 0
 
@@ -71,14 +72,17 @@ public class BossSnake_C : StardaciousObject {
 			break;
 
 		case MsgAttr.Monster.snakeBombing:
+			AmbientSoundManager.instance.EctPlay (audioFear [0]);
 			bgc.MeteoPattern();
 			break;
 
 		case MsgAttr.Monster.snakeSummon:
+			AmbientSoundManager.instance.EctPlay (audioFear [1]);
 			bgc.SummonPattern();
 			break;
 
 		case MsgAttr.Monster.snakeMissile:
+			AmbientSoundManager.instance.EctPlay (audioFear [0]);
 			bgc.MissilePattern();
 			break;
 		}
@@ -94,4 +98,56 @@ public class BossSnake_C : StardaciousObject {
 	public override void OnDie (){
 		
 	}
+
+	#region Effect
+	void Update(){
+		if (Input.GetKeyDown (KeyCode.A)) {
+			StartAction ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.S)) {
+			AmbientSoundManager.instance.EctPlay (audioFear [2]);
+			bgc.MeteoPattern();
+		}
+		if (Input.GetKeyDown (KeyCode.D)) {
+			AmbientSoundManager.instance.EctPlay (audioFear [1]);
+			bgc.SummonPattern();
+		}
+	}
+	public ParticleSystem dustDrop;
+	public AudioClip[] audioFear;
+	public AudioClip audioEnemyDetected;
+	public AudioClip audioBossBgm;
+	private void StartAction(){
+		StartCoroutine (StartEffectRoutine ());
+	}
+
+	private IEnumerator StartEffectRoutine(){
+		AmbientSoundManager soundManager = AmbientSoundManager.instance;
+		CameraGraphicController cameraGraphic = CameraGraphicController.instance;
+		soundManager.EctPlay (audioEnemyDetected);
+		cameraGraphic.SirenEffect (2, 4);
+		soundManager.BgmPlay (audioFear [0]);
+		yield return new WaitForSeconds (4);
+		soundManager.BgmPlay (audioFear [1]);
+		yield return new WaitForSeconds (6);
+		netClaw [0].StartPierce ();
+		yield return new WaitForSeconds (0.5f);
+		netClaw [1].StartPierce ();
+		yield return new WaitForSeconds (0.5f);
+
+		bgc.FadeIn ();
+		yield return new WaitForSeconds (1f);
+		soundManager.EctPlay (audioFear [2]);
+		cameraGraphic.ShakeEffect (0.5f, 3f);
+		dustDrop.Emit (50);
+		yield return new WaitForSeconds (2f);
+		soundManager.BgmPlay (audioBossBgm);
+		bossUI.Show ();
+		inputBloacker.SetActive (false);
+		yield break;
+	}
+
+	public GameObject inputBloacker;
+	#endregion
 }

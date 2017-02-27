@@ -5,6 +5,7 @@ using Spine.Unity;
 public class BossGraphicController : MonoBehaviour {
 
 	public SkeletonAnimation spineAnimator;
+	public SpriteRenderer blocker;
 
 	public Animator missileMuzzleL;
 	public Animator missileMuzzleR;
@@ -23,6 +24,21 @@ public class BossGraphicController : MonoBehaviour {
 				break;
 			}
 		};
+	}
+
+	public void FadeIn(){
+		StartCoroutine (FadeInRoutine ());
+	}
+	IEnumerator FadeInRoutine(){
+		float timer = 0;
+		while (true) {
+			timer += Time.deltaTime / 2;
+			blocker.color = new Color (0, 0, 0, 1 - timer);
+			if (timer > 1) {
+				break;
+			}
+			yield return null;
+		}
 	}
 
 	public void Idle(){
@@ -63,11 +79,11 @@ public class BossGraphicController : MonoBehaviour {
 	private SkeletonRenderer skelRenderer;
 	public void Twinkle(){
 		if (isTwinkling) {
-			StopCoroutine (DoctorTwinkleColorAnimation ());	
+			StopCoroutine (BossTwinkleColorAnimation ());	
 		}
-		StartCoroutine (DoctorTwinkleColorAnimation ());
+		StartCoroutine (BossTwinkleColorAnimation ());
 	}
-	IEnumerator DoctorTwinkleColorAnimation(){
+	IEnumerator BossTwinkleColorAnimation(){
 		isTwinkling = true;
 
 		float colorR = colorRMax;

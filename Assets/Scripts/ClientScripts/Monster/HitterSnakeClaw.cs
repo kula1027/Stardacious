@@ -17,4 +17,12 @@ public class HitterSnakeClaw : MonoBehaviour {
 			CharacterCtrl.instance.CurrentHp -= 2;
 		}
 	}
+
+	private AudioSource audioSource;
+	void Awake(){
+		audioSource = GetComponent<AudioSource> ();
+	}
+	public void PlayKuang(){
+		audioSource.Play ();
+	}
 }

@@ -11,24 +11,33 @@ public class CameraGraphicController : MonoBehaviour {
 		instance = this;
 	}
 
-	public void ShakeEffect(float degree){
+	public void ShakeEffect(float degree, float sustain = 0){
+		if (shakeSustain < sustain) {
+			shakeSustain += sustain;
+		}
 		shakeDegree = degree;
 		if (!isShaking) {
 			StartCoroutine (ShakeRoutine ());
 		}
 	}
 	private float shakeDegree = 0;
+	private float shakeSustain = 0;
 	private bool isShaking = false;
 	IEnumerator ShakeRoutine(){
 		Vector3 origin = transform.localPosition;
 		while (true) {
 			transform.localPosition = origin + new Vector3 (Random.Range (-shakeDegree / 2, shakeDegree / 2), Random.Range (-shakeDegree, shakeDegree), 0);
-			shakeDegree -= 0.1f;
-			if (shakeDegree <= 0) {
-				break;
+			if (shakeSustain > 0) {
+				shakeSustain -= 0.05f;
+			}else{
+				shakeDegree -= 0.1f;
+				if (shakeDegree <= 0) {
+					break;
+				}
 			}
 			yield return new WaitForSeconds (0.05f);
 		}
+		shakeSustain = 0;
 		isShaking = false;
 	}
 
@@ -42,7 +51,7 @@ public class CameraGraphicController : MonoBehaviour {
 		for (int i = 0; i < loopCount; i++) {
 			while (true) {
 				timer += Time.deltaTime;
-				blocker.color = new Color (1, 0, 0, timer);
+				blocker.color = new Color (1, 0, 0, timer / halfLoop / 2);
 				if (timer > halfLoop) {
 					timer = halfLoop;
 					break;
@@ -52,7 +61,7 @@ public class CameraGraphicController : MonoBehaviour {
 
 			while (true) {
 				timer -= Time.deltaTime;
-				blocker.color = new Color (1, 0, 0, timer);
+				blocker.color = new Color (1, 0, 0, timer / halfLoop / 2);
 				if (timer < 0) {
 					timer = 0;
 					break;
