@@ -83,12 +83,13 @@ namespace ServerSide{
 				for (int loop = 0; loop < tempCount; loop++) {
 					ServerMonster sm;
 					string goName = waves [currentWaveIdx].GetChild (loop).name;
-					Vector3 goPos = waves [currentWaveIdx].GetChild (loop).transform.position;
+					Vector3 goPos = waves [currentWaveIdx].GetChild (loop).position;
+					goPos.z = 0f;
 
 					if (goName.Contains ("spider")) {
 						pf = ServerStageManager.instance.pfSpider;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 0;
@@ -105,7 +106,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("spdnm")) {
 						pf = ServerStageManager.instance.pfSpider;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 0;
@@ -123,7 +124,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("spdsm")) {
 						pf = ServerStageManager.instance.pfSpider;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 0;
@@ -141,7 +142,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("spdrs")) {
 						pf = ServerStageManager.instance.pfSpider;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 0;
@@ -160,7 +161,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("walker")) {
 						pf = ServerStageManager.instance.pfWalker;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 1;
@@ -177,7 +178,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("wkrnm")) {
 						pf = ServerStageManager.instance.pfWalker;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position;
+						mGo.transform.position = goPos;
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 1;
@@ -195,7 +196,7 @@ namespace ServerSide{
 					} else if (goName.Contains ("fly")) {
 						pf = ServerStageManager.instance.pfFly;
 						mGo = ServerStageManager.instance.MonsterPooler.RequestObject (pf);
-						mGo.transform.position = waves [currentWaveIdx].GetChild (loop).position + new Vector3 (0, Fly_S.flyStartHeight, 0);
+						mGo.transform.position = goPos + new Vector3 (0, Fly_S.flyStartHeight, 0);
 						sm = mGo.GetComponent<ServerMonster> ();
 						sm.MasterWave = this;
 						sm.MonsterIdx = 2;
