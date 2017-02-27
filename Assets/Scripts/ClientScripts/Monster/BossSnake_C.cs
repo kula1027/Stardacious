@@ -48,13 +48,14 @@ public class BossSnake_C : StardaciousObject {
 		}
 	}
 
-	private void SetBossHpUi(int hpLeft_){
+	private void SetBossHpUi(int hpLeft_){	
 		bossUI.SetHp(hpLeft_/(float)MosnterConst.Snake.maxHp);
 	}
 
 	private void OnVictory(){
 		bossUI.Hide();
 		UI_ResultPanel.instance.txtResult.text = "임무 성공!";
+		UI_ResultPanel.instance.Show();
 		ClientMasterManager.instance.SendResultInfo();
 	}
 

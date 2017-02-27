@@ -201,7 +201,7 @@ namespace ServerSide{
 						sm.MasterWave = this;
 						sm.MonsterIdx = 2;
 						sm.WaveIdx = currentWaveIdx;
-						sm.FlightMaxHeight = goPos.y+5;
+						sm.FlightMaxHeight = goPos.y + 5;
 						sm.FlightMinHeight = goPos.y;
 						waveMonsterArray [monsterCountIdx] = sm;
 

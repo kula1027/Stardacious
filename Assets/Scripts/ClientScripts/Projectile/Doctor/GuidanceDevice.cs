@@ -44,7 +44,7 @@ public class GuidanceDevice : FlyingProjectile {
 
 			ReturnObject(10f);
 
-			attachedTarget = col.transform.parent.GetComponent<StardaciousObject>();
+			attachedTarget = col.transform.parent.GetComponentInParent<StardaciousObject>();
 			localPosition = transform.position - attachedTarget.transform.position;
 
 			NotifyAttach();

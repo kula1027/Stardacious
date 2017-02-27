@@ -85,6 +85,10 @@ namespace ServerSide{
 				Network_Server.BroadCastTcp (nmStageNumber);
 				break;
 
+			case MsgAttr.Monster.bossSnake:
+				BossSnake_S.instance.OnRecv(networkMsg.Body);
+				break;
+
 			default:
 				int monsIdx = int.Parse(networkMsg.Header.Content);
 				IRecvPoolable obj = monsterPooler.GetObject(monsIdx);

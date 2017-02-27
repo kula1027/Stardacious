@@ -28,6 +28,7 @@ public class NetworkGuidenceBullet : NetworkServerProjectile {
 
 		while(true){
 			targetDir = (targetPos - transform.position).normalized;
+			targetDir = new Vector3(targetDir.x, targetDir.y, 0);
 			transform.right = Vector2.Lerp(transform.right, targetDir, Time.deltaTime * 10);
 			transform.position += transform.right * flyingSpeed * Time.deltaTime;
 			if(Vector3.Distance(targetPos, transform.position) < 0.2f){

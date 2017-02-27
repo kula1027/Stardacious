@@ -5,7 +5,6 @@ using System.Collections.Generic;
 namespace ServerSide{
 	public class BossSnake_S : MonoBehaviour {
 		private enum SnakePattern{
-			ClawAttack,
 			Bombing,
 			SummonMinions,
 			GuidanceMissile
@@ -70,6 +69,11 @@ namespace ServerSide{
 
 			if(hpCurrent < 0){
 				StopAllCoroutines();
+				for(int loop = 0; loop < bossClaw.Length; loop++){
+					bossClaw[loop].Stop();
+				}
+
+		
 			}
 		}
 
@@ -79,10 +83,6 @@ namespace ServerSide{
 				isStarted = true;
 
 				hpCurrent = MosnterConst.Snake.maxHp;
-
-				for(int loop = 0; loop < bossClaw.Length; loop++){
-					bossClaw[loop].Begin();
-				}
 
 				NotifyAppearence();
 
@@ -95,17 +95,19 @@ namespace ServerSide{
 		
 			Network_Server.BroadCastTcp(nmAppear);
 		}
-			
+
+
 		private IEnumerator AiRoutine(){
 			yield return new WaitForSeconds(16);
+
+			for(int loop = 0; loop < bossClaw.Length; loop++){
+				bossClaw[loop].Begin();
+			}
+
 			while(true){
-				SnakePattern currentPattern = (SnakePattern)Random.Range(0, patternCount);
+				SnakePattern currentPattern = (SnakePattern)Random.Range(0, 3);
 
 				switch(currentPattern){
-				case SnakePattern.ClawAttack:
-					yield return StartCoroutine(ClawAttack());
-					break;
-
 				case SnakePattern.Bombing:
 					yield return StartCoroutine(Bombing());
 					break;
@@ -116,20 +118,15 @@ namespace ServerSide{
 
 				case SnakePattern.GuidanceMissile:
 					yield return StartCoroutine(GuidanceMissile());
-					break;
-				
+					break;				
 				}
 
-				yield return new WaitForSeconds(Random.Range(10f, 12f));
+				yield return new WaitForSeconds(Random.Range(1f, 5f));
 			}
 		}
 
 		public void tempFuncUseSkill(int idx){
 			switch((SnakePattern)idx){
-			case SnakePattern.ClawAttack:
-				StartCoroutine(ClawAttack());
-				break;
-
 			case SnakePattern.Bombing:
 				StartCoroutine(Bombing());
 				break;
@@ -143,20 +140,6 @@ namespace ServerSide{
 				break;
 
 			}
-		}
-
-		private IEnumerator ClawAttack(){
-			ConsoleMsgQueue.EnqueMsg("Boss ClawAttack");
-
-			int timePullClaw = Random.Range(2, 7);
-			int clawIdx = Random.Range(0, bossClaw.Length);
-			bossClaw[clawIdx].StopMove(timePullClaw);
-
-			nmAttack.Body[0].Content = MsgAttr.Monster.snakeClawAttack;
-			nmAttack.Body[1] = new MsgSegment(clawIdx, timePullClaw);
-			Network_Server.BroadCastTcp(nmAttack);
-
-			yield return null;
 		}
 
 		private IEnumerator Bombing(){
@@ -183,6 +166,8 @@ namespace ServerSide{
 
 				yield return new WaitForSeconds(0.2f);
 			}
+
+			yield return new WaitForSeconds(1f);
 		}
 
 		private IEnumerator SummonMinions(){
@@ -252,7 +237,7 @@ namespace ServerSide{
 				yield return new WaitForSeconds (0.34f);
 			}
 
-
+			yield return new WaitForSeconds (1f);
 		}
 	}
 }

@@ -32,31 +32,35 @@ namespace ServerSide{
 			StartCoroutine(moveRoutine);
 		}
 
-		public void StopMove(int timePull){
-			StartCoroutine(StopMoveRoutine(timePull));
+		public void Stop(){
+			StopAllCoroutines();
 		}
-
-		private IEnumerator StopMoveRoutine(int t){
-			StopCoroutine(moveRoutine);
-
-			yield return new WaitForSeconds(t);
-
-			StartCoroutine(moveRoutine);
-		}
+			
 
 		public IEnumerator MovementRoutine(){
 			while(true){				
-				float targetX = Random.Range(oriPosX - 3, oriPosX + 3);
+				float targetX = Random.Range(oriPosX - 8, oriPosX + 8);
 				while(Mathf.Abs(targetX - transform.position.x) > 0.1f){
 					transform.position = Vector3.MoveTowards(
 						transform.position , new Vector3(targetX, transform.position.y, transform.position.z),
-						Time.deltaTime * 4
+						Time.deltaTime * 15
 					);
 
 					yield return null;
 				}
 
-				yield return new WaitForSeconds(Random.Range(2, 6));
+				int timePullClaw = Random.Range(2, 7);
+				MsgSegment[] bodyAttack = {
+					new MsgSegment(MsgAttr.Monster.attack,  MsgAttr.Monster.snakeClawAttack), 
+					new MsgSegment(idx, timePullClaw)
+				};
+				NetworkMessage nmAttack = new NetworkMessage(
+					new MsgSegment(MsgAttr.monster, MsgAttr.Monster.bossSnake), 
+					bodyAttack
+				);
+				Network_Server.BroadCastTcp(nmAttack);
+
+				yield return new WaitForSeconds(timePullClaw + 2);
 			}
 		}
 

@@ -27,6 +27,7 @@ public class ClientMasterManager : MonoBehaviour {
 
 	void Start(){
 		InitiatePlayerCharacter();
+
 	}
 		
 	private void InitiatePlayerCharacter(){
@@ -83,7 +84,7 @@ public class ClientMasterManager : MonoBehaviour {
 			SendResultInfo();
 			break;
 
-		case MsgAttr.Misc.result:
+		case MsgAttr.Misc.result:			
 			UI_ResultPanel.instance.ShowResultPanel(networkMessage.Body);
 			Network_Client.SoftShutDown();
 			break;

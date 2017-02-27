@@ -58,7 +58,7 @@ public static class MosnterConst{
 	}
 
 	public class Walker{
-		public const int maxHp = 300;
+		public const int maxHp = 700;
 	}
 
 	public class Fly{
@@ -70,13 +70,13 @@ public static class MosnterConst{
 	}
 
 	public class Snake{
-		public const int maxHp = 2000;
+		public const int maxHp = 6000;
 	}
 }
 	
 public static class CharacterConst{
-	public const float defaultRespawnTime = 5;
-	public const float incRespawnTimePerDeath = 1f;
+	public const float defaultRespawnTime = 10;
+	public const float incRespawnTimePerDeath = 0f;
 	public const float maxRespawnTime = 20f;
 	public const int maxHp = 100;
 
@@ -101,27 +101,27 @@ public static class CharacterConst{
 	}
 
 	public class Doctor{
-		public const float coolDownSkill0 = 1f;
-		public const float coolDownSkill1 = 1f;//ice shot
-		public const float coolDownSkill2 = 1f;
+		public const float coolDownSkill0 = 12f;
+		public const float coolDownSkill1 = 8f;//ice shot
+		public const float coolDownSkill2 = 7f;
 
-		public const int damageEnergyBall = 30;
-		public const int damageChaserBullet = 40;
-		public const int freezeTime = 8;
+		public const int damageEnergyBall = 40;
+		public const int damageChaserBullet = 75;
+		public const int freezeTime = 6;
 	}
 
 	public class Esper{
-		public const float coolDownSkill0 = 1f;//rush
-		public const float coolDownSkill1 = 1f;//shield
-		public const float coolDownSkill2 = 1f;//recall
+		public const float coolDownSkill0 = 4f;//rush
+		public const float coolDownSkill1 = 1.5f;//shield
+		public const float coolDownSkill2 = 5f;//recall
 
 		public const float itvRush = 0.4f;
 
-		public const int damageDash = 50;
-		public const int damageNormal = 75;
-		public const int damageJumpAttack = 75;
+		public const int damageDash = 140;
+		public const int damageNormal = 140;
+		public const int damageJumpAttack = 140;
 	
-		public const int damageRush = 50;
+		public const int damageRush = 140;
 		public const float speedRush = 1f;
 		public const float timeRush = 0.33f;
 	}

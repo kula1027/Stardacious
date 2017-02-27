@@ -70,7 +70,7 @@ public class ChaserBullet : PoolingObject, IHitter {
 				yield break;
 			}
 				
-			targetPos = targetObj.transform.position + new Vector3(0, 2, 0);
+			targetPos = targetObj.transform.position + new Vector3(0, 2, -targetObj.transform.position.z);
 			targetDir = (targetPos - transform.position).normalized;
 			transform.right = Vector2.Lerp(transform.right, targetDir, Time.deltaTime * 10);
 			transform.position += transform.right * flyingSpeed * Time.deltaTime;
