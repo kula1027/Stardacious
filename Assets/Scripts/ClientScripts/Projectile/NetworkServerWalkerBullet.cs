@@ -32,5 +32,6 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
 		goHit.transform.position = transform.position + transform.right * 1.5f;
 		goHit.GetComponent<HitEffect>().MissileExplosion();
+		CameraGraphicController.instance.ShakeEffect (0.5f);
 	}
 }
