@@ -43,9 +43,9 @@ public static class NetworkConst{
 }
 
 public static class SceneName{
-	public const string scNameInGame = "scJH";
+	public const string scNameInGame = "scIngame";
 	public const string scNameAwake = "scAwake";
-	public const string scNameServer = "scJHServer";
+	public const string scNameServer = "scServer";
 }
 
 public static class MosnterConst{
