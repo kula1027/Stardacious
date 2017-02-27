@@ -42,6 +42,10 @@ public class NetworkBossClaw : MonoBehaviour {
 		itpl = new Interpolater(posNoZ);
 	}
 
+	public void StartPierce(){
+		gcClaw.StartPierce ();
+	}
+
 	private IEnumerator PositionRoutine(){	
 		while(true){
 			transform.position = itpl.Interpolate();

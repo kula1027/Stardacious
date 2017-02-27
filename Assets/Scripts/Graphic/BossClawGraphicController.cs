@@ -54,4 +54,20 @@ public class BossClawGraphicController : MonoBehaviour {
 		cameraGraphic.ShakeEffect (0.5f);
 		shatterParticle.Emit (15);
 	}
+
+	public void StartPierce(){
+		StartCoroutine (StartPierceRoutine ());
+	}
+
+	IEnumerator StartPierceRoutine(){
+		animator.Play ("Start");
+		yield return new WaitForSeconds (0.5f);
+		cameraGraphic.FlashEffect ();
+		cameraGraphic.ShakeEffect (1.5f);
+		shatterParticle.Emit (30);
+		yield return new WaitForSeconds (1.5f);
+		cameraGraphic.ShakeEffect (0.5f);
+		shatterParticle.Emit (15);
+	}
+
 }

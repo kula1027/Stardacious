@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class RespawnPanel : HidableUI {
 
 	public static RespawnPanel instance;
-	private AudioSource audioSource;
+	public AudioClip deadClip;
+	private AudioClip recentClip;
 
 	public Image thatImage;
 
@@ -18,20 +19,20 @@ public class RespawnPanel : HidableUI {
 		base.Awake ();
 
 		instance = this;
-		audioSource = GetComponent<AudioSource>();
 	}
 
 	public override void Show ()
 	{
 		base.Show ();
 		StartCoroutine (RespawnGage());
-		audioSource.Play();
+		recentClip = AmbientSoundManager.instance.bgmSource.clip;
+		AmbientSoundManager.instance.BgmPlay (deadClip);
 	}
 
 	public override void Hide ()
 	{
 		base.Hide ();
-		audioSource.Stop();
+		AmbientSoundManager.instance.BgmPlay (recentClip);
 	}
 
 	private IEnumerator RespawnGage(){
