@@ -69,7 +69,7 @@ namespace ServerSide{
 			try{
 				if(monInputCount [currentWaveIdx] <= tempCount){
 					monDieCount [currentWaveIdx] = monInputCount [currentWaveIdx];
-				}else {
+				} else {
 					monDieCount [currentWaveIdx] = tempCount;
 				}
 			}
@@ -229,14 +229,20 @@ namespace ServerSide{
 			}
 		}
 
-		public void WaveMonsterDead(){
+		public void WaveMonsterDead(int waveIdx_){
 			// 한마리의 몬스터가 죽으면 콜됨
-			this.monDieCount[currentWaveIdx]--;
-
-			if (monDieCount[currentWaveIdx] <= 0) {
-				// 타겟이 다 죽거나 없으면 다음 wave active.
-				currentWaveIdx++;
-				ActiveWaveMonster ();
+			try {
+				if(waveIdx_ == currentWaveIdx) {
+					monDieCount[currentWaveIdx]--;
+				}
+			
+				if (monDieCount[currentWaveIdx] <= 0) {
+					// 타겟이 다 죽거나 없으면 다음 wave active.
+					currentWaveIdx++;
+					ActiveWaveMonster ();
+				}
+			}
+			catch(Exception e) {
 			}
 		}
 

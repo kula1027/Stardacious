@@ -56,7 +56,7 @@ public class ClientMonster : PoolingObject, IHittable {
 	public override void OnDie (){
 		//audioVoice.clip = audioDying;
 		//audioVoice.Play();
-		gcMons.Die();
+		//gcMons.Die();
 
 		IsDead = true;
 		hTrigger.gameObject.SetActive(false);
@@ -119,7 +119,7 @@ public class ClientMonster : PoolingObject, IHittable {
 
 		case MsgAttr.Monster.attack:
 			MonsterAttack (bodies);
-			break;
+		break;
 
 		case MsgAttr.freeze:
 			ObjectPooler localPool = ClientProjectileManager.instance.GetLocalProjPool ();
