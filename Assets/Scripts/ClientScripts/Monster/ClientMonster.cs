@@ -10,13 +10,15 @@ public class ClientMonster : PoolingObject, IHittable {
 
 	private AudioSource audioVoice;
 	public AudioClip audioDying;
-	public AudioClip audioHit;
+	public AudioClip[] audioHit = new AudioClip[5];
 
 	private bool isSummonMonster = false;
 	public bool IsSummonMonster {
 		get{ return isSummonMonster; }
 		set{ this.isSummonMonster = value; }
 	}
+
+	protected bool isSleep = false;
 
 	void Awake(){
 		hTrigger = GetComponentInChildren<HitBoxTrigger>();
@@ -75,16 +77,18 @@ public class ClientMonster : PoolingObject, IHittable {
 			break;
 
 		case MsgAttr.Monster.mSleep:
-			MonsterSleep();
+			MonsterSleep ();
+			isSleep = true;
 			break;
 
 		case MsgAttr.Monster.mGetUp:
 			MonsterGetUp ();
+			isSleep = false;
 			break;
 			
 
 		case MsgAttr.Monster.grounded:
-			if (IsDead == false) {
+			if (IsDead == false && isSleep == false) {
 				if (bodies [0].Content.Equals (NetworkMessage.sFalse)) {
 					gcMons.Jump ();
 				} else if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
@@ -184,14 +188,13 @@ public class ClientMonster : PoolingObject, IHittable {
 			new MsgSegment(MsgAttr.monster, GetOpIndex()), 
 			new MsgSegment(MsgAttr.addForce, dirForce_)
 		);
-
 		Network_Client.SendTcp(nmForce);
 	} 
 		
 	#region ICollidable implementation
 
 	public void OnHit (HitObject hitObject_){
-		MakeSound(audioHit);
+		MakeSound (audioHit [Random.Range (0, audioHit.Length)]);
 		gcMons.Twinkle();
 		hitObject_.Apply(this);
 

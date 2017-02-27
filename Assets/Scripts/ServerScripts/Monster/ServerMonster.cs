@@ -84,7 +84,7 @@ namespace ServerSide{
 		}
 			
 		public override void Ready(){
-			maxHp = 1; // for debug hp is 1
+			maxHp = 150; // for debug hp is 1
  			CurrentHp = maxHp;
 			MsgSegment h = new MsgSegment(MsgAttr.monster, GetOpIndex().ToString());
 			MsgSegment b = new MsgSegment(new Vector3());
@@ -313,7 +313,7 @@ namespace ServerSide{
 
 		}
 
-		protected IEnumerator MonsterApproach(Vector3 closestCharacterPos_){
+		protected IEnumerator MonsterApproach(Vector3 closestCharacterPos_, float duringTime){
 			float timeAcc = 0; // 움직임 명령 시간잼
 			isMoving = true; // set the ismoving flag
 
@@ -328,7 +328,7 @@ namespace ServerSide{
 
 				timeAcc += Time.deltaTime;
 
-				if (timeAcc > 1.3f)
+				if (timeAcc > duringTime)
 					break;
 
 				yield return null;

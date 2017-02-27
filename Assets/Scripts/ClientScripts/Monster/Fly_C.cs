@@ -14,7 +14,7 @@ public class Fly_C : ClientMonster {
 
 	protected override void MonsterSleep(){
 		base.MonsterSleep ();
-		gcFly.AnimationFreeze ();
+		//gcFly.AnimationFreeze ();
 	}
 
 	protected override void MonsterGetUp(){
@@ -23,16 +23,11 @@ public class Fly_C : ClientMonster {
 		gcFly.AnimationResume ();
 		StartCoroutine(WakeUpRoutine());
 	}
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.A)){
-			gcFly.Attack ();
-			StartCoroutine (AttackSoundRoutine ());
-		}
-	}
 	protected override void MonsterAttack (MsgSegment[] bodies){
 		base.MonsterAttack (bodies);
-		StartCoroutine (AttackSoundRoutine ());
-
+		if (bodies [0].Content.Equals (NetworkMessage.sTrue)) {
+			StartCoroutine (AttackSoundRoutine ());
+		}
 	}
 	private IEnumerator AttackSoundRoutine(){
 		MakeSound (audioEnergy);

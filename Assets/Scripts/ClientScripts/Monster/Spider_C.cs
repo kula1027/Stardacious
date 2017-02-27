@@ -14,7 +14,7 @@ public class Spider_C : ClientMonster {
 
 	protected override void MonsterSleep(){
 		base.MonsterSleep ();
-		gcSpider.AnimationFreeze ();
+		//gcSpider.AnimationFreeze ();
 	}
 
 	protected override void MonsterGetUp(){

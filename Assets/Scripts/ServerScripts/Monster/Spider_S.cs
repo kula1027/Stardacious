@@ -199,7 +199,7 @@ namespace ServerSide{
 
 			if (!isStop) {
 				// moving
-				yield return StartCoroutine (MonsterApproach (closestCharacterPos_));
+				yield return StartCoroutine (MonsterApproach (closestCharacterPos_, 1.5f));
 			}
 		}
 

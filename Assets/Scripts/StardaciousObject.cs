@@ -26,7 +26,7 @@ public class StardaciousObject : MonoBehaviour {
 
 	public void MakeSound(AudioClip audioClip_){
 		GameObject goAudio = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(PoolingAudioSource.pfAudioSource);
-		goAudio.transform.position = transform.position;
+		goAudio.transform.position = new Vector3 (transform.position.x, transform.position.y, 0);
 		goAudio.GetComponent<AudioSource>().clip = audioClip_;
 		goAudio.GetComponent<AudioSource>().Play();
 	}

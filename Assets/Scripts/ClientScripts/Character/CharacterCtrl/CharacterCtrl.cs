@@ -446,6 +446,9 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public override void OnHpChanged (int hpChange){
+		if (hpChange < 0) {
+			CameraGraphicController.instance.OuchEffect ();
+		}
 		if(CurrentHp <= 0 && IsDead == false){			
 			OnDie();
 		}

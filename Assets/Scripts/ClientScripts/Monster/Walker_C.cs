@@ -12,7 +12,7 @@ public class Walker_C : ClientMonster {
 
 	protected override void MonsterSleep(){
 		base.MonsterSleep ();
-		gcWalker.AnimationFreeze ();
+		//gcWalker.AnimationFreeze ();
 	}
 
 	protected override void MonsterGetUp(){

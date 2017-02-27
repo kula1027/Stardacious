@@ -30,7 +30,8 @@ public class NetworkServerWalkerBullet : NetworkServerProjectile {
 
 	protected override void Boom ()	{
 		GameObject goHit = ClientProjectileManager.instance.GetLocalProjPool().RequestObject(tempPfHit);
-		goHit.transform.position = transform.position + transform.right * 1.5f;
+		goHit.transform.position = transform.position + new Vector3 (0f, 1.5f, 0f);
+		goHit.transform.rotation = Quaternion.identity;
 		goHit.GetComponent<HitEffect>().MissileExplosion();
 		CameraGraphicController.instance.ShakeEffect (0.5f);
 	}
