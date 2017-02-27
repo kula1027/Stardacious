@@ -58,7 +58,7 @@ public static class MosnterConst{
 	}
 
 	public class Walker{
-		public const int maxHp = 700;
+		public const int maxHp = 800;
 	}
 
 	public class Fly{
@@ -111,7 +111,7 @@ public static class CharacterConst{
 	}
 
 	public class Esper{
-		public const float coolDownSkill0 = 4f;//rush
+		public const float coolDownSkill0 = 3f;//rush
 		public const float coolDownSkill1 = 1.5f;//shield
 		public const float coolDownSkill2 = 5f;//recall
 

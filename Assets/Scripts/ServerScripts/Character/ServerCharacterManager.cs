@@ -54,7 +54,7 @@ namespace ServerSide{
 			currentAliveCharacterCount--;
 
 			if(currentAliveCharacterCount < 1 && currentCharacterCount > 1){
-				//ServerMasterManager.instance.OnAnnihilation();
+				ServerMasterManager.instance.OnAnnihilation();
 			}
 		}
 
