@@ -459,23 +459,26 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	public override void OnDie (){
-		hbt.gameObject.SetActive(false);
+		if(IsDead == false){
+			dieCount++;
 
-		moveDir = Vector3.zero;
+			hbt.gameObject.SetActive(false);
 
-		nmDead.Body[0].Content = dieCount.ToString();
-		Network_Client.SendTcp(nmDead);
+			moveDir = Vector3.zero;
 
-		IsDead = true;
+			nmDead.Body[0].Content = dieCount.ToString();
+			Network_Client.SendTcp(nmDead);
 
-		RespawnPanel.instance.DieCount = dieCount;
-		RespawnPanel.instance.Show ();
-		characterGraphicCtrl.Die();
+			IsDead = true;
 
-		StartCoroutine (CharacterRespawn());
-		//respawn at respawn Point of current stage.
+			RespawnPanel.instance.DieCount = dieCount;
+			RespawnPanel.instance.Show ();
+			characterGraphicCtrl.Die();
 
-		dieCount++;
+			StartCoroutine (CharacterRespawn());
+			//respawn at respawn Point of current stage.
+		}
+
 	}
 
 	public void FallOffDie(){
@@ -485,9 +488,8 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 	}
 
 	private IEnumerator CharacterRespawn(){
-
-
 		yield return new WaitForSeconds(CharacterConst.GetRespawnTime(dieCount));
+
 		OnRevive();
 
 		yield return new WaitForSeconds(2f);

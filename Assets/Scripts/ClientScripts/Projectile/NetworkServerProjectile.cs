@@ -3,6 +3,7 @@ using System.Collections;
 
 public class NetworkServerProjectile : PoolingObject, IHitter {
 	public float flyingSpeed = 10f;
+
 	private HitObject hitObject = new HitObject(MosnterConst.monsterBulletDamage);
 	protected Coroutine flyingRoutine;
 
