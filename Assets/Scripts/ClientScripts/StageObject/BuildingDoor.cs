@@ -20,7 +20,7 @@ public class BuildingDoor : ObjectActive {
 	}
 
 	private IEnumerator DoorOpen(){
-
+		AmbientSoundManager.instance.OpenDoor();
 		while (true) {
 			if (isOpenEnd == false) {
 				if (doorOpenStack.y < 7f) {
@@ -34,7 +34,7 @@ public class BuildingDoor : ObjectActive {
 			
 			yield return null;
 		}
-
+		AmbientSoundManager.instance.CloseDoor();
 		while (true) {
 			if (doorOpenStack.y >= 0f) {
 				// 열림이 끝나게 되면 닫기 시작.

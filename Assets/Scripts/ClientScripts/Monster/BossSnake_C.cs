@@ -25,7 +25,7 @@ public class BossSnake_C : StardaciousObject {
 	public void OnRecv(MsgSegment[] bodies){
 		switch(bodies[0].Attribute){
 		case MsgAttr.create:
-			Begin();
+			StartAction();
 			break;
 
 		case MsgAttr.Monster.attack:
@@ -100,20 +100,6 @@ public class BossSnake_C : StardaciousObject {
 	}
 
 	#region Effect
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.A)) {
-			StartAction ();
-		}
-
-		if (Input.GetKeyDown (KeyCode.S)) {
-			AmbientSoundManager.instance.EctPlay (audioFear [2]);
-			bgc.MeteoPattern();
-		}
-		if (Input.GetKeyDown (KeyCode.D)) {
-			AmbientSoundManager.instance.EctPlay (audioFear [1]);
-			bgc.SummonPattern();
-		}
-	}
 	public ParticleSystem dustDrop;
 	public AudioClip[] audioFear;
 	public AudioClip audioEnemyDetected;
@@ -145,6 +131,7 @@ public class BossSnake_C : StardaciousObject {
 		soundManager.BgmPlay (audioBossBgm);
 		bossUI.Show ();
 		inputBloacker.SetActive (false);
+		Begin();
 		yield break;
 	}
 

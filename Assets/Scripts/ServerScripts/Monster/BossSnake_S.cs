@@ -15,6 +15,8 @@ namespace ServerSide{
 
 		public BossClaw[] bossClaw;// 0 -> left, 1 -> right
 
+		public Transform[] kingGodMuszzle;
+
 		private int hpCurrent = MosnterConst.Snake.maxHp;
 		private MsgSegment commonHeader;
 
@@ -22,6 +24,8 @@ namespace ServerSide{
 		private NetworkMessage nmAttack;
 
 		public GameObject pfKitten;
+
+		private bool isStarted = false;
 
 		void Awake(){
 			instance = this;
@@ -49,6 +53,15 @@ namespace ServerSide{
 			}
 		}
 
+		public int playerFront = 0;
+		public void PlayerEntered(){
+			playerFront++;
+
+			if(playerFront >= ServerCharacterManager.instance.currentCharacterCount){
+				Begin();
+			}
+		}
+
 		private void OnHpChange(int value_){
 			hpCurrent -= value_;
 
@@ -62,15 +75,19 @@ namespace ServerSide{
 
 
 		public void Begin(){
-			hpCurrent = MosnterConst.Snake.maxHp;
+			if(isStarted == false){
+				isStarted = true;
 
-			for(int loop = 0; loop < bossClaw.Length; loop++){
-				bossClaw[loop].Begin();
+				hpCurrent = MosnterConst.Snake.maxHp;
+
+				for(int loop = 0; loop < bossClaw.Length; loop++){
+					bossClaw[loop].Begin();
+				}
+
+				NotifyAppearence();
+
+				StartCoroutine(AiRoutine());
 			}
-
-			NotifyAppearence();
-
-			StartCoroutine(AiRoutine());
 		}
 
 		private void NotifyAppearence(){
@@ -78,8 +95,9 @@ namespace ServerSide{
 		
 			Network_Server.BroadCastTcp(nmAppear);
 		}
-
+			
 		private IEnumerator AiRoutine(){
+			yield return new WaitForSeconds(16);
 			while(true){
 				SnakePattern currentPattern = (SnakePattern)Random.Range(0, patternCount);
 
@@ -209,10 +227,9 @@ namespace ServerSide{
 			ObjectPooler poolProj = ServerProjectileManager.instance.GetLocalProjPool();
 
 			int targetIdx = 0;
+
 			for(int loop = 0; loop < 8; loop++){
 				GameObject goMissile = poolProj.RequestObject(pfMissile);
-				goMissile.transform.position = new Vector3(0, 10, 0) + transform.position;
-				goMissile.transform.right = new Vector3(0,	0,	0) + transform.position - goMissile.transform.position;
 
 				Vector3 targetPos = new Vector3();
 				while(ServerCharacterManager.instance.currentCharacterCount != 0){
@@ -228,10 +245,11 @@ namespace ServerSide{
 					targetIdx %= NetworkConst.maxPlayer;
 				}
 			
+				goMissile.transform.position = kingGodMuszzle[loop % 2].position;
 				goMissile.transform.right = Vector3.up;
 				goMissile.GetComponent<ServerGuidenceBullet>().Ready(targetPos);
 
-				yield return new WaitForSeconds(0.5f);
+				yield return new WaitForSeconds (0.34f);
 			}
 
 

@@ -4,6 +4,8 @@ using System.Collections;
 public class NetworkGuidenceBullet : NetworkServerProjectile {
 
 	private Vector3 targetPos;
+	public GameObject pfEffect;
+	private GameObject effectTarget;
 
 	public override void Initiate (MsgSegment[] bodies_){
 		transform.position = bodies_[1].ConvertToV3();
@@ -36,7 +38,14 @@ public class NetworkGuidenceBullet : NetworkServerProjectile {
 		}
 	}
 
-	private void MakeMark(Vector3 targetPos_){
+	private void MakeMark(Vector3 targetPos_){		
+		effectTarget = Instantiate(pfEffect);
+		effectTarget.transform.position = targetPos;
+	}
 
+	public override void OnReturned (){
+		base.OnReturned ();
+
+		Destroy(effectTarget);
 	}
 }

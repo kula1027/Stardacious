@@ -31,7 +31,6 @@ namespace ServerSide{
 
 		public override void MonGetUp(){
 			base.MonGetUp ();
-
 			StartCoroutine(AIPreprocess());
 		}
 
@@ -108,11 +107,11 @@ namespace ServerSide{
 
 		private IEnumerator SpiderMainAI(){
 
+			Debug.Log("mainstart" + IsDead);
 
 			/************ AI START ************/
 			while(IsDead == false){				// 나는 죽엇나?
 				// 안죽었네
-
 				if (canControl == false) {		// 움직일 수 있나?
 					yield return StartCoroutine(MonsterFreeze());
 				}
@@ -123,18 +122,16 @@ namespace ServerSide{
 				int curruentPlayers = 0;
 				int inRangePlayers = 0;
 				int i = 0;
-
 				isAgroed = false;
 				isInRanged = false;
-
 				// check every character's position first
 				// 어그로 거리 안에 있나 check
 				for (i = 0 ; i < NetworkConst.maxPlayer; i++) {
+					
 					if (ServerCharacterManager.instance.GetCharacter (i) != null && ServerCharacterManager.instance.GetCharacter (i).IsDead == false) {
 						// servercharacter 가 존재하고 죽지 않앗을 때
 						Vector3 charPos = ServerCharacterManager.instance.GetCharacter (i).transform.position;
 						Vector3 myPos = this.transform.position;
-
 						if (Vector3.Distance (myPos, charPos) <= spiderAgroRange) {
 							// if character is in agro range..
 							isAgroed = true;
@@ -150,7 +147,6 @@ namespace ServerSide{
 						}
 					}
 				}
-					
 				// main AIpart
 				if (AiType == MonsterAIType.NotMove && isInRanged) {
 					closestCharacterPos = SetCharacterPos (currentCharacterPos, curruentPlayers, 0);
@@ -173,7 +169,6 @@ namespace ServerSide{
 				} else if (!isAgroed) {
 					// nothing
 				}
-
 				yield return new WaitForSeconds((Random.Range(3f, 4f)));
 				// 3~4초 대기
 			}
@@ -181,6 +176,7 @@ namespace ServerSide{
 
 		private IEnumerator SpiderApproach(Vector3 closestCharacterPos_){
 			// 몬스터가 근접하는 코드 
+
 			int beHaviorFactor = Random.Range (0,10);
 
 			isJump = false;
@@ -204,6 +200,7 @@ namespace ServerSide{
 		}
 
 		private IEnumerator SpiderInRange(Vector3 closestCharacterPos_){
+			Debug.Log("inrange");
 			// 몬스터가 근접햇을때
 			int beHaviorFactor = Random.Range (0,10);
 

@@ -14,8 +14,9 @@ public class StardaciousObject : MonoBehaviour {
 			return currentHp;
 		}
 		set{
+			int prevHp = currentHp;
 			currentHp = value;
-			OnHpChanged(value);
+			OnHpChanged(currentHp - prevHp);
 		}
 	}
 
