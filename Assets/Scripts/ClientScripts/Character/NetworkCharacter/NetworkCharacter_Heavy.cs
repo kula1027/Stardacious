@@ -23,7 +23,7 @@ public class NetworkCharacter_Heavy : NetworkCharacter {
 				isMiniGun = true;
 			}
 			break;
-		}
+		}			
 	}
 		
 	public override void UseSkill (int idx_){

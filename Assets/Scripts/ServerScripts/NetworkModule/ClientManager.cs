@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
+using UnityEngine;
 
 namespace ServerSide{
 	public static class ClientManager {
@@ -43,9 +44,8 @@ namespace ServerSide{
 		public static void BroadCastUdp(NetworkMessage nm_){
 			if(arrayClient == null)return;
 
-
 			for(int loop = 0; loop < NetworkConst.maxPlayer; loop++){
-				if(arrayClient[loop] != null){
+				if(arrayClient[loop] != null){					
 					if (arrayClient [loop].IsConnected) {
 						nm_.Adress.Content = loop.ToString ();
 						arrayClient [loop].SendUdp (nm_.ToString ());

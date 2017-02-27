@@ -19,6 +19,7 @@ public class ClientStageManager : MonoBehaviour {
 	public GameObject pfSpider;
 	public GameObject pfWalker;
 	public GameObject pfFly;
+	public GameObject pfKitten;
 
 	void Awake(){
 		instance = this;
@@ -67,6 +68,10 @@ public class ClientStageManager : MonoBehaviour {
 			CharacterCtrl.instance.SetRespawnPoint(stages [currentStage].GetResPoint (0));
 			break;
 
+		case MsgAttr.Monster.bossSnake:
+			BossSnake_C.instance.OnRecv(networkMessage.Body);
+			break;
+
 		default:
 			int monsIdx = int.Parse(networkMessage.Header.Content);
 			IRecvPoolable obj = monsterPooler.GetObject(monsIdx);
@@ -92,6 +97,10 @@ public class ClientStageManager : MonoBehaviour {
 
 		case MonsterType.Fly:
 			objMon = monsterPooler.RequestObjectAt (pfFly, monsIdx_);
+			break;
+
+		case MonsterType.Kitten:
+			objMon = monsterPooler.RequestObjectAt (pfKitten, monsIdx_);
 			break;
 		}
 

@@ -21,6 +21,8 @@ public class ClientProjectileManager : MonoBehaviour {
 	public GameObject pfSpiderBullet;
 	public GameObject pfFlyBullet;
 	public GameObject pfWalkerBullet;
+	public GameObject pfMeteoBullet;
+	public GameObject pfGuidenceBullet;
 
 	//Effect
 	public GameObject pfIceEffect;
@@ -131,7 +133,7 @@ public class ClientProjectileManager : MonoBehaviour {
 			proj.GetComponent<NetworkRecallBullet>().Initiate(bodies);
 			break;
 
-		//MonsterSpider
+		//Monster
 		case ProjType.SpiderBullet:
 			proj = pooler_.RequestObjectAt(pfSpiderBullet, projIdx_);
 			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
@@ -142,6 +144,15 @@ public class ClientProjectileManager : MonoBehaviour {
 			break;
 		case ProjType.WalkerBullet:
 			proj = pooler_.RequestObjectAt(pfWalkerBullet, projIdx_);
+			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
+			break;
+		case ProjType.MeteoBullet:
+			proj = pooler_.RequestObjectAt(pfMeteoBullet, projIdx_);
+			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
+			break;
+
+		case ProjType.GuidenceBullet:
+			proj = pooler_.RequestObjectAt(pfGuidenceBullet, projIdx_);
 			proj.GetComponent<NetworkServerProjectile>().Initiate(bodies);
 			break;
 		}

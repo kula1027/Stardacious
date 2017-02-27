@@ -10,6 +10,8 @@ namespace ServerSide{
 		private const string ConsoleState = "console";
 		private const string Begin = "begin";
 
+		private const string Boss = "boss";
+
 		public override void Parse(string command){
 			base.Parse(command);
 
@@ -27,6 +29,15 @@ namespace ServerSide{
 
 				case Begin:
 					ServerStageManager.instance.BeginStage();
+					break;
+
+				case Boss:
+					if(splitCommand[1].Equals("skill")){
+						BossSnake_S.instance.tempFuncUseSkill(int.Parse(splitCommand[2]));
+					}
+					if(splitCommand[1].Equals("begin")){
+						BossSnake_S.instance.Begin();
+					}
 					break;
 				}
 			}catch(Exception e){

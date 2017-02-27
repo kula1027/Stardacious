@@ -12,6 +12,7 @@ public class BossGraphicController : MonoBehaviour {
 
 	void Start(){
 		cameraGraphic = CameraGraphicController.instance;
+		skelRenderer = spineAnimator;
 
 		spineAnimator.state.Complete += delegate(Spine.TrackEntry trackEntry) {
 			switch(trackEntry.Animation.Name){
@@ -34,27 +35,8 @@ public class BossGraphicController : MonoBehaviour {
 
 	public void SummonPattern(){
 		spineAnimator.AnimationName = "pattern1";
-		StartCoroutine (SummonRoutine());
 	}
-
-	IEnumerator SummonRoutine(){
-		yield return new WaitForSeconds (4.3f);
-		SummonKitten (new Vector3 (4, 0, 0));
-		yield return new WaitForSeconds (0.21f);
-		SummonKitten (new Vector3 (2, 0, 0));
-		yield return new WaitForSeconds (0.21f);
-		SummonKitten (new Vector3 (0, 0, 0));
-		yield return new WaitForSeconds (0.21f);
-		SummonKitten (new Vector3 (-2, 0, 0));
-		yield return new WaitForSeconds (0.21f);
-		SummonKitten (new Vector3 (-4, 0, 0));
-
-	}
-	private void SummonKitten(Vector3 position){
-		GameObject kitten = Instantiate (Resources.Load ("Kitten", typeof(GameObject)))as GameObject;
-		kitten.transform.position = transform.position + position;
-	}
-
+		
 	public void LaserPattern(){
 		spineAnimator.AnimationName = "pattern2";
 	}

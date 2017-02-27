@@ -32,6 +32,16 @@ public class MsgSegment {
 		content = NotInitialized;
 	}
 
+	public MsgSegment(int attribute_, int content_){
+		attribute = attribute_.ToString();
+		content = content_.ToString();;
+	}
+
+	public MsgSegment(int attribute_, string content_){
+		attribute = attribute_.ToString();
+		content = content_;
+	}
+
 	public MsgSegment(string attribute_, string content_){
 		attribute = attribute_;
 		content = content_;
@@ -180,5 +190,12 @@ public class MsgAttr{
 		public const string direction = "mdir";
 		public const string mSleep = "msleep";
 		public const string mGetUp = "mgetup";
+
+		public const string bossSnake = "bosss";
+		public const string snakeClawAttack = "snkclaw";
+		public const string snakeClawPos = "snkclawpos";
+		public const string snakeBombing = "snkbmb";
+		public const string snakeSummon = "snksmmn";
+		public const string snakeMissile = "snkmssl";
 	}
 }

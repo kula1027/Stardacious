@@ -127,7 +127,7 @@ public class CharacterCtrl : StardaciousObject, IReceivable, IHittable {
 		StartCoroutine (GroundCheckRoutine ());
 		StartCoroutine(FixedUpdateMovement());
 
-		transform.position = new Vector3(20f, 12f, 0f);
+		transform.position = new Vector3(10f, 12f, 0f);
 
 		characterGraphicCtrl.Jump();
 	}

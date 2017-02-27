@@ -35,8 +35,6 @@ namespace ServerSide{
 			StartCoroutine(AIPreprocess());
 		}
 
-
-
 		private IEnumerator AIPreprocess(){
 			yield return StartCoroutine (MonsterAppearence(spiderAppearTime));
 			// 생성되는 애니메이션을 위해 n초 대기

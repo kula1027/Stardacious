@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class NetworkServerProjectile : PoolingObject, IHitter {
-	protected float flyingSpeed = 10f;
+	public float flyingSpeed = 10f;
 	private HitObject hitObject = new HitObject(MosnterConst.monsterBulletDamage);
 	protected Coroutine flyingRoutine;
 

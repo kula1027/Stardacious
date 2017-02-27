@@ -101,7 +101,7 @@ public class Network_Client {
 	}
 
 	public static void SendUdp(NetworkMessage nm_){
-		if(isConnected){			
+		if(isConnected){		
 			string str = nm_.ToString();
 			byte[] buff = Encoding.UTF8.GetBytes(str);
 			try{

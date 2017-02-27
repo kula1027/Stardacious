@@ -2,7 +2,8 @@
 	NotInitialized,
 	Spider,
 	Walker,
-	Fly
+	Fly,
+	Kitten
 }
 
 public enum ProjType{
@@ -15,6 +16,8 @@ public enum ProjType{
 	SpiderBullet,
 	FlyBullet,
 	WalkerBullet,
+	MeteoBullet,
+	GuidenceBullet,
 	RecallBullet,
 	EffectIce,
 	EffectPortalIn,
@@ -58,6 +61,10 @@ public static class MosnterConst{
 
 	public class Fly{
 		public const int maxHp = 150;
+	}
+
+	public class Kitten{
+		public const int maxHp = 80;
 	}
 }
 	

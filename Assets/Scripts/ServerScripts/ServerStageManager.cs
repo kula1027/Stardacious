@@ -30,6 +30,7 @@ namespace ServerSide{
 		public GameObject pfSpider;
 		public GameObject pfWalker;
 		public GameObject pfFly;
+		public GameObject pfKitten;
 
 		void Awake(){
 			instance = this;
@@ -64,7 +65,7 @@ namespace ServerSide{
 			StartStage (0);
 		}
 
-	protected void StartStage(int idx_){
+		protected void StartStage(int idx_){
 			if(idx_ < stages.Length){
 				// 모든 stages 갯수를 안넘어가면
 				stages[idx_].StartWave();	// 몬스터 생성,대기

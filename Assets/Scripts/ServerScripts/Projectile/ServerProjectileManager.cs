@@ -16,6 +16,8 @@ namespace ServerSide {
 		public GameObject pfSpiderBullet;
 		public GameObject pfWalkerBullet;
 		public GameObject pfFlyBullet;
+		public GameObject pfMeteoBullet;
+		public GameObject pfGuidenceMissile;
 
 		void Awake () {
 			instance = this;

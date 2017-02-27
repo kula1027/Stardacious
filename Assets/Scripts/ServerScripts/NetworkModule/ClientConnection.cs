@@ -130,7 +130,7 @@ namespace ServerSide{
 			threadReceive_UDP.Start();
 		}
 
-		public void SendUdp(string str){	
+		public void SendUdp(string str){
 			if(isConnected){
 				try{
 					socketUDP.SendTo(Encoding.UTF8.GetBytes(str), epSender);
